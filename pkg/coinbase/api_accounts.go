@@ -29,17 +29,17 @@ type apiGetAccountRequest struct {
 	ctx               _context.Context
 	apiService        *AccountsApiService
 	accountId         string
-	cBAccessSign      *string
-	cBAccessTimestamp *int32
+	cBACCESSSIGN      *string
+	cBACCESSTIMESTAMP *int32
 }
 
-func (r apiGetAccountRequest) CBAccessSign(cBAccessSign string) apiGetAccountRequest {
-	r.cBAccessSign = &cBAccessSign
+func (r apiGetAccountRequest) CBACCESSSIGN(cBACCESSSIGN string) apiGetAccountRequest {
+	r.cBACCESSSIGN = &cBACCESSSIGN
 	return r
 }
 
-func (r apiGetAccountRequest) CBAccessTimestamp(cBAccessTimestamp int32) apiGetAccountRequest {
-	r.cBAccessTimestamp = &cBAccessTimestamp
+func (r apiGetAccountRequest) CBACCESSTIMESTAMP(cBACCESSTIMESTAMP int32) apiGetAccountRequest {
+	r.cBACCESSTIMESTAMP = &cBACCESSTIMESTAMP
 	return r
 }
 
@@ -78,7 +78,7 @@ func (r apiGetAccountRequest) Execute() (Account, *_nethttp.Response, error) {
 	}
 
 	localVarPath := localBasePath + "/accounts/{account_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"account_id"+"}", _neturl.QueryEscape(parameterToString(r.accountId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"account_id"+"}", _neturl.PathEscape(parameterToString(r.accountId, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -101,23 +101,25 @@ func (r apiGetAccountRequest) Execute() (Account, *_nethttp.Response, error) {
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.cBAccessSign != nil {
-		localVarHeaderParams["CB-Access-Sign"] = parameterToString(*r.cBAccessSign, "")
+	if r.cBACCESSSIGN != nil {
+		localVarHeaderParams["CB-ACCESS-SIGN"] = parameterToString(*r.cBACCESSSIGN, "")
+	} else {
+		localVarHeaderParams["CB-ACCESS-SIGN"] = "auto"
 	}
-	if r.cBAccessTimestamp != nil {
-		localVarHeaderParams["CB-Access-Timestamp"] = parameterToString(*r.cBAccessTimestamp, "")
+
+	if r.cBACCESSTIMESTAMP != nil {
+		localVarHeaderParams["CB-ACCESS-TIMESTAMP"] = parameterToString(*r.cBACCESSTIMESTAMP, "")
+	} else {
+		localVarHeaderParams["CB-ACCESS-TIMESTAMP"] = "auto"
 	}
+
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if auth, ok := auth["ApiKeyAuth"]; ok {
 				var key string
-				if auth.Prefix != "" {
-					key = auth.Prefix + " " + auth.Key
-				} else {
-					key = auth.Key
-				}
-				localVarHeaderParams["CB-Access-Key"] = key
+				key = auth.Key
+				localVarHeaderParams["CB-ACCESS-KEY"] = key
 			}
 		}
 	}
@@ -142,6 +144,15 @@ func (r apiGetAccountRequest) Execute() (Account, *_nethttp.Response, error) {
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = r.apiService.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
+		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -160,17 +171,17 @@ func (r apiGetAccountRequest) Execute() (Account, *_nethttp.Response, error) {
 type apiListAccountsRequest struct {
 	ctx               _context.Context
 	apiService        *AccountsApiService
-	cBAccessSign      *string
-	cBAccessTimestamp *int32
+	cBACCESSSIGN      *string
+	cBACCESSTIMESTAMP *int32
 }
 
-func (r apiListAccountsRequest) CBAccessSign(cBAccessSign string) apiListAccountsRequest {
-	r.cBAccessSign = &cBAccessSign
+func (r apiListAccountsRequest) CBACCESSSIGN(cBACCESSSIGN string) apiListAccountsRequest {
+	r.cBACCESSSIGN = &cBACCESSSIGN
 	return r
 }
 
-func (r apiListAccountsRequest) CBAccessTimestamp(cBAccessTimestamp int32) apiListAccountsRequest {
-	r.cBAccessTimestamp = &cBAccessTimestamp
+func (r apiListAccountsRequest) CBACCESSTIMESTAMP(cBACCESSTIMESTAMP int32) apiListAccountsRequest {
+	r.cBACCESSTIMESTAMP = &cBACCESSTIMESTAMP
 	return r
 }
 
@@ -229,23 +240,25 @@ func (r apiListAccountsRequest) Execute() ([]Account, *_nethttp.Response, error)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.cBAccessSign != nil {
-		localVarHeaderParams["CB-Access-Sign"] = parameterToString(*r.cBAccessSign, "")
+	if r.cBACCESSSIGN != nil {
+		localVarHeaderParams["CB-ACCESS-SIGN"] = parameterToString(*r.cBACCESSSIGN, "")
+	} else {
+		localVarHeaderParams["CB-ACCESS-SIGN"] = "auto"
 	}
-	if r.cBAccessTimestamp != nil {
-		localVarHeaderParams["CB-Access-Timestamp"] = parameterToString(*r.cBAccessTimestamp, "")
+
+	if r.cBACCESSTIMESTAMP != nil {
+		localVarHeaderParams["CB-ACCESS-TIMESTAMP"] = parameterToString(*r.cBACCESSTIMESTAMP, "")
+	} else {
+		localVarHeaderParams["CB-ACCESS-TIMESTAMP"] = "auto"
 	}
+
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
 			if auth, ok := auth["ApiKeyAuth"]; ok {
 				var key string
-				if auth.Prefix != "" {
-					key = auth.Prefix + " " + auth.Key
-				} else {
-					key = auth.Key
-				}
-				localVarHeaderParams["CB-Access-Key"] = key
+				key = auth.Key
+				localVarHeaderParams["CB-ACCESS-KEY"] = key
 			}
 		}
 	}

@@ -5,4 +5,4 @@
 The one used for this project is from [here](https://openapi-generator.tech/docs/installation)
 ```bash
 npm install @openapitools/openapi-generator-cli -g
-```# go-crypto-sync
+```
