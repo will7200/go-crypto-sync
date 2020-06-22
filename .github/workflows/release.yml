@@ -1,4 +1,6 @@
-on: release
+on:
+  release:
+    types: [created]
 name: Build Release
 jobs:
   publish:
@@ -12,7 +14,7 @@ jobs:
           asset_name: crypto-sync-linux-amd64
         - os: windows-latest
           artifact_name: crypto-sync.exe
-          asset_name: crypto-sync-windows-amd64
+          asset_name: crypto-sync-windows-amd64.exe
         - os: macos-latest
           artifact_name: crypto-sync
           asset_name: crypto-sync-macos-amd64
