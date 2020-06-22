@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/alecthomas/kong"
@@ -21,10 +22,11 @@ type Context struct {
 }
 
 var cli struct {
-	tree  *toml.Tree
-	Debug bool `help:"Enable debug mode."`
+	tree           *toml.Tree
+	Debug          bool   `help:"Enable debug mode."`
+	ConfigFileName string `help:"File to read conf from" name:"file-name" default:"config.toml"`
 
-	Sync SyncCmd `cmd help:"Sync holdings to another account"`
+	Sync SyncCmd `cmd help:"Sync holdings to another account" default:"1"`
 }
 
 // Config holds details when syncing
@@ -80,6 +82,13 @@ func TOML(r io.Reader) (kong.Resolver, error) {
 
 func main() {
 	ctx := kong.Parse(&cli, kong.Configuration(TOML, "config.toml"))
+	if cli.ConfigFileName != "config.toml" {
+		if _, err := os.Stat(cli.ConfigFileName); err != nil {
+			fmt.Fprint(os.Stderr, err)
+			os.Exit(1)
+		}
+		ctx = kong.Parse(&cli, kong.Configuration(TOML, cli.ConfigFileName))
+	}
 	log.SetFlags(log.Lshortfile | log.Ldate)
 	conf := Config{
 		Holdings:     map[string]map[string]interface{}{},
