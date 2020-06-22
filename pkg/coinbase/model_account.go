@@ -11,28 +11,31 @@ package coinbase
 
 import (
 	"encoding/json"
+	"time"
 )
 
 // Account struct for Account
 type Account struct {
-	Id           string         `json:"id"`
-	Name         string         `json:"name"`
-	Primary      bool           `json:"primary"`
-	Type         string         `json:"type"`
-	Currency     string         `json:"currency"`
-	Balance      AccountBalance `json:"balance"`
-	CreatedAt    string         `json:"created_at"`
-	UpdatedAt    string         `json:"updated_at"`
-	Resource     string         `json:"resource"`
-	ResourcePath string         `json:"resource_path"`
-	Ready        bool           `json:"ready"`
+	Id               string         `json:"id"`
+	Name             string         `json:"name"`
+	Primary          bool           `json:"primary"`
+	Type             string         `json:"type"`
+	Currency         Currency       `json:"currency"`
+	Balance          AccountBalance `json:"balance"`
+	CreatedAt        time.Time      `json:"created_at"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+	Resource         string         `json:"resource"`
+	ResourcePath     string         `json:"resource_path"`
+	Ready            bool           `json:"ready"`
+	AllowDeposits    *bool          `json:"allow_deposits,omitempty"`
+	AllowWithdrawals *bool          `json:"allow_withdrawals,omitempty"`
 }
 
 // NewAccount instantiates a new Account object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccount(id string, name string, primary bool, type_ string, currency string, balance AccountBalance, createdAt string, updatedAt string, resource string, resourcePath string, ready bool) *Account {
+func NewAccount(id string, name string, primary bool, type_ string, currency Currency, balance AccountBalance, createdAt time.Time, updatedAt time.Time, resource string, resourcePath string, ready bool) *Account {
 	this := Account{}
 	this.Id = id
 	this.Name = name
@@ -153,9 +156,9 @@ func (o *Account) SetType(v string) {
 }
 
 // GetCurrency returns the Currency field value
-func (o *Account) GetCurrency() string {
+func (o *Account) GetCurrency() Currency {
 	if o == nil {
-		var ret string
+		var ret Currency
 		return ret
 	}
 
@@ -164,7 +167,7 @@ func (o *Account) GetCurrency() string {
 
 // GetCurrencyOk returns a tuple with the Currency field value
 // and a boolean to check if the value has been set.
-func (o *Account) GetCurrencyOk() (*string, bool) {
+func (o *Account) GetCurrencyOk() (*Currency, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -172,7 +175,7 @@ func (o *Account) GetCurrencyOk() (*string, bool) {
 }
 
 // SetCurrency sets field value
-func (o *Account) SetCurrency(v string) {
+func (o *Account) SetCurrency(v Currency) {
 	o.Currency = v
 }
 
@@ -201,9 +204,9 @@ func (o *Account) SetBalance(v AccountBalance) {
 }
 
 // GetCreatedAt returns the CreatedAt field value
-func (o *Account) GetCreatedAt() string {
+func (o *Account) GetCreatedAt() time.Time {
 	if o == nil {
-		var ret string
+		var ret time.Time
 		return ret
 	}
 
@@ -212,7 +215,7 @@ func (o *Account) GetCreatedAt() string {
 
 // GetCreatedAtOk returns a tuple with the CreatedAt field value
 // and a boolean to check if the value has been set.
-func (o *Account) GetCreatedAtOk() (*string, bool) {
+func (o *Account) GetCreatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -220,14 +223,14 @@ func (o *Account) GetCreatedAtOk() (*string, bool) {
 }
 
 // SetCreatedAt sets field value
-func (o *Account) SetCreatedAt(v string) {
+func (o *Account) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
 }
 
 // GetUpdatedAt returns the UpdatedAt field value
-func (o *Account) GetUpdatedAt() string {
+func (o *Account) GetUpdatedAt() time.Time {
 	if o == nil {
-		var ret string
+		var ret time.Time
 		return ret
 	}
 
@@ -236,7 +239,7 @@ func (o *Account) GetUpdatedAt() string {
 
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value
 // and a boolean to check if the value has been set.
-func (o *Account) GetUpdatedAtOk() (*string, bool) {
+func (o *Account) GetUpdatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -244,7 +247,7 @@ func (o *Account) GetUpdatedAtOk() (*string, bool) {
 }
 
 // SetUpdatedAt sets field value
-func (o *Account) SetUpdatedAt(v string) {
+func (o *Account) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
@@ -320,6 +323,70 @@ func (o *Account) SetReady(v bool) {
 	o.Ready = v
 }
 
+// GetAllowDeposits returns the AllowDeposits field value if set, zero value otherwise.
+func (o *Account) GetAllowDeposits() bool {
+	if o == nil || o.AllowDeposits == nil {
+		var ret bool
+		return ret
+	}
+	return *o.AllowDeposits
+}
+
+// GetAllowDepositsOk returns a tuple with the AllowDeposits field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Account) GetAllowDepositsOk() (*bool, bool) {
+	if o == nil || o.AllowDeposits == nil {
+		return nil, false
+	}
+	return o.AllowDeposits, true
+}
+
+// HasAllowDeposits returns a boolean if a field has been set.
+func (o *Account) HasAllowDeposits() bool {
+	if o != nil && o.AllowDeposits != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowDeposits gets a reference to the given bool and assigns it to the AllowDeposits field.
+func (o *Account) SetAllowDeposits(v bool) {
+	o.AllowDeposits = &v
+}
+
+// GetAllowWithdrawals returns the AllowWithdrawals field value if set, zero value otherwise.
+func (o *Account) GetAllowWithdrawals() bool {
+	if o == nil || o.AllowWithdrawals == nil {
+		var ret bool
+		return ret
+	}
+	return *o.AllowWithdrawals
+}
+
+// GetAllowWithdrawalsOk returns a tuple with the AllowWithdrawals field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Account) GetAllowWithdrawalsOk() (*bool, bool) {
+	if o == nil || o.AllowWithdrawals == nil {
+		return nil, false
+	}
+	return o.AllowWithdrawals, true
+}
+
+// HasAllowWithdrawals returns a boolean if a field has been set.
+func (o *Account) HasAllowWithdrawals() bool {
+	if o != nil && o.AllowWithdrawals != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowWithdrawals gets a reference to the given bool and assigns it to the AllowWithdrawals field.
+func (o *Account) SetAllowWithdrawals(v bool) {
+	o.AllowWithdrawals = &v
+}
+
 func (o Account) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
 	if true {
@@ -354,6 +421,12 @@ func (o Account) MarshalJSON() ([]byte, error) {
 	}
 	if true {
 		toSerialize["ready"] = o.Ready
+	}
+	if o.AllowDeposits != nil {
+		toSerialize["allow_deposits"] = o.AllowDeposits
+	}
+	if o.AllowWithdrawals != nil {
+		toSerialize["allow_withdrawals"] = o.AllowWithdrawals
 	}
 	return json.Marshal(toSerialize)
 }

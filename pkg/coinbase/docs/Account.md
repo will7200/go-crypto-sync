@@ -8,19 +8,21 @@ Name | Type | Description | Notes
 **Name** | Pointer to **string** |  | 
 **Primary** | Pointer to **bool** |  | 
 **Type** | Pointer to **string** |  | 
-**Currency** | Pointer to **string** |  | 
+**Currency** | Pointer to [**Currency**](Currency.md) |  | 
 **Balance** | Pointer to [**AccountBalance**](Account_balance.md) |  | 
-**CreatedAt** | Pointer to **string** |  | 
-**UpdatedAt** | Pointer to **string** |  | 
+**CreatedAt** | Pointer to [**time.Time**](time.Time.md) |  | 
+**UpdatedAt** | Pointer to [**time.Time**](time.Time.md) |  | 
 **Resource** | Pointer to **string** |  | 
 **ResourcePath** | Pointer to **string** |  | 
 **Ready** | Pointer to **bool** |  | 
+**AllowDeposits** | Pointer to **bool** |  | [optional] 
+**AllowWithdrawals** | Pointer to **bool** |  | [optional] 
 
 ## Methods
 
 ### NewAccount
 
-`func NewAccount(id string, name string, primary bool, type_ string, currency string, balance AccountBalance, createdAt string, updatedAt string, resource string, resourcePath string, ready bool, ) *Account`
+`func NewAccount(id string, name string, primary bool, type_ string, currency Currency, balance AccountBalance, createdAt time.Time, updatedAt time.Time, resource string, resourcePath string, ready bool, ) *Account`
 
 NewAccount instantiates a new Account object
 This constructor will assign default values to properties that have it defined,
@@ -117,20 +119,20 @@ SetType sets Type field to given value.
 
 ### GetCurrency
 
-`func (o *Account) GetCurrency() string`
+`func (o *Account) GetCurrency() Currency`
 
 GetCurrency returns the Currency field if non-nil, zero value otherwise.
 
 ### GetCurrencyOk
 
-`func (o *Account) GetCurrencyOk() (*string, bool)`
+`func (o *Account) GetCurrencyOk() (*Currency, bool)`
 
 GetCurrencyOk returns a tuple with the Currency field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCurrency
 
-`func (o *Account) SetCurrency(v string)`
+`func (o *Account) SetCurrency(v Currency)`
 
 SetCurrency sets Currency field to given value.
 
@@ -157,40 +159,40 @@ SetBalance sets Balance field to given value.
 
 ### GetCreatedAt
 
-`func (o *Account) GetCreatedAt() string`
+`func (o *Account) GetCreatedAt() time.Time`
 
 GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
 
 ### GetCreatedAtOk
 
-`func (o *Account) GetCreatedAtOk() (*string, bool)`
+`func (o *Account) GetCreatedAtOk() (*time.Time, bool)`
 
 GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCreatedAt
 
-`func (o *Account) SetCreatedAt(v string)`
+`func (o *Account) SetCreatedAt(v time.Time)`
 
 SetCreatedAt sets CreatedAt field to given value.
 
 
 ### GetUpdatedAt
 
-`func (o *Account) GetUpdatedAt() string`
+`func (o *Account) GetUpdatedAt() time.Time`
 
 GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
 
 ### GetUpdatedAtOk
 
-`func (o *Account) GetUpdatedAtOk() (*string, bool)`
+`func (o *Account) GetUpdatedAtOk() (*time.Time, bool)`
 
 GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUpdatedAt
 
-`func (o *Account) SetUpdatedAt(v string)`
+`func (o *Account) SetUpdatedAt(v time.Time)`
 
 SetUpdatedAt sets UpdatedAt field to given value.
 
@@ -254,6 +256,56 @@ and a boolean to check if the value has been set.
 
 SetReady sets Ready field to given value.
 
+
+### GetAllowDeposits
+
+`func (o *Account) GetAllowDeposits() bool`
+
+GetAllowDeposits returns the AllowDeposits field if non-nil, zero value otherwise.
+
+### GetAllowDepositsOk
+
+`func (o *Account) GetAllowDepositsOk() (*bool, bool)`
+
+GetAllowDepositsOk returns a tuple with the AllowDeposits field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAllowDeposits
+
+`func (o *Account) SetAllowDeposits(v bool)`
+
+SetAllowDeposits sets AllowDeposits field to given value.
+
+### HasAllowDeposits
+
+`func (o *Account) HasAllowDeposits() bool`
+
+HasAllowDeposits returns a boolean if a field has been set.
+
+### GetAllowWithdrawals
+
+`func (o *Account) GetAllowWithdrawals() bool`
+
+GetAllowWithdrawals returns the AllowWithdrawals field if non-nil, zero value otherwise.
+
+### GetAllowWithdrawalsOk
+
+`func (o *Account) GetAllowWithdrawalsOk() (*bool, bool)`
+
+GetAllowWithdrawalsOk returns a tuple with the AllowWithdrawals field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAllowWithdrawals
+
+`func (o *Account) SetAllowWithdrawals(v bool)`
+
+SetAllowWithdrawals sets AllowWithdrawals field to given value.
+
+### HasAllowWithdrawals
+
+`func (o *Account) HasAllowWithdrawals() bool`
+
+HasAllowWithdrawals returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

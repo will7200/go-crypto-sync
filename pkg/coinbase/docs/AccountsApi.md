@@ -85,7 +85,7 @@ Name | Type | Description  | Notes
 
 ## ListAccounts
 
-> []Account ListAccounts(ctx).CBACCESSSIGN(cBACCESSSIGN).CBACCESSTIMESTAMP(cBACCESSTIMESTAMP).Execute()
+> InlineResponse200 ListAccounts(ctx).CBACCESSSIGN(cBACCESSSIGN).CBACCESSTIMESTAMP(cBACCESSTIMESTAMP).Execute()
 
 List Accounts
 
@@ -114,7 +114,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `AccountsApi.ListAccounts``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `ListAccounts`: []Account
+    // response from `ListAccounts`: InlineResponse200
     fmt.Fprintf(os.Stdout, "Response from `AccountsApi.ListAccounts`: %v\n", resp)
 }
 ```
@@ -135,7 +135,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**[]Account**](Account.md)
+[**InlineResponse200**](inline_response_200.md)
 
 ### Authorization
 

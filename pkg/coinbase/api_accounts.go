@@ -200,16 +200,16 @@ func (a *AccountsApiService) ListAccounts(ctx _context.Context) apiListAccountsR
 
 /*
 Execute executes the request
- @return []Account
+ @return InlineResponse200
 */
-func (r apiListAccountsRequest) Execute() ([]Account, *_nethttp.Response, error) {
+func (r apiListAccountsRequest) Execute() (InlineResponse200, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  []Account
+		localVarReturnValue  InlineResponse200
 	)
 
 	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "AccountsApiService.ListAccounts")

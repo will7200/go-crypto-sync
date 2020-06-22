@@ -48,9 +48,17 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Account'
+                type: object
+                properties:
+                  pagination:
+                    $ref: '#/components/schemas/pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Account'
+                required:
+                  - pagination
+                  - data
   /accounts/{account_id}:
     get:
       security:
@@ -78,6 +86,41 @@ paths:
                 $ref: '#/components/schemas/Account'
         '401':
           $ref: '#/components/responses/ErrorMessage'
+  /prices/{currency_pair_1}-{currency_pair_2}/sell:
+    get:
+      tags:
+        - ExchangeRates
+      summary: Exchanges Rates for currency pair
+      operationId: GetExchangeRateFor
+      description: |
+        Get the total price to buy one bitcoin or ether.
+
+        Note that exchange rates fluctuates so the price is only correct for seconds at the time. This buy price includes standard Coinbase fee (1%) but excludes any other fees including bank fees. If you need more accurate price estimate for a specific payment method or amount, see buy bitcoin endpoint and quote: true option.
+      parameters:
+        - in: path
+          required: true
+          name: currency_pair_1
+          description: |
+            currency 1
+          schema:
+            type: string
+        - in: path
+          required: true
+          description: |
+            currency 2
+          schema:
+            type: string
+          name: currency_pair_2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CurrencyExchange'
 components:
   parameters:
     CB-ACCESS-SIGN:
@@ -136,6 +179,36 @@ components:
           type: string
         next_uri:
           type: string
+    Currency:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        color:
+          type: string
+        sort_index:
+          type: number
+        exponent:
+          type: number
+        type:
+          type: string
+        address_regex:
+          type: string
+        asset_id:
+          type: string
+        slug:
+          type: string
+      required:
+        - code
+        - name
+        - color
+        - sort_index
+        - exponent
+        - type
+        - asset_id
+        - slug
     Account:
       type: object
       properties:
@@ -148,7 +221,7 @@ components:
         type:
           type: string
         currency:
-          type: string
+          $ref: '#/components/schemas/Currency'
         balance:
           type: object
           properties:
@@ -161,13 +234,19 @@ components:
             - currency
         created_at:
           type: string
+          format: date-time
         updated_at:
           type: string
+          format: date-time
         resource:
           type: string
         resource_path:
           type: string
         ready:
+          type: boolean
+        allow_deposits:
+          type: boolean
+        allow_withdrawals:
           type: boolean
       required:
         - id
@@ -220,3 +299,17 @@ components:
           type: string
         resource_path:
           type: string
+    CurrencyExchange:
+      type:
+        object
+      properties:
+        amount:
+          type: string
+        currency:
+          type: string
+        base:
+          type: string
+      required:
+        - amount
+        - currency
+        - base
