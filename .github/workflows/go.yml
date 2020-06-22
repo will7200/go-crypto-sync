@@ -28,3 +28,8 @@ jobs:
 
     - name: Build
       run: go build ./cmd/crypto-sync
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: crypto-sync-linux
+        path: ./crypto-sync
