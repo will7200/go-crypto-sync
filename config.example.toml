@@ -1,0 +1,14 @@
+debug = false
+destination = "personalcapital"
+priceData = "coinbase"
+destinationCurrency = "USD"
+[holdings]
+    [holdings.coinbase]
+    apiKey = "your-key"
+    apiSecret = "your-secret"
+    debug = false
+[destinations]
+    [destinations.personalcapital]
+    email = "example@email.com"
+    password = "password"
+    accountName = "CryptoSync managed automatically"

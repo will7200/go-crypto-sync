@@ -1,2 +1,4 @@
 /config.toml
 /.idea/
+/api/templates/go-experimental/
+/cookies.json
