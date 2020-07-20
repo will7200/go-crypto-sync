@@ -276,6 +276,18 @@ func (h *Holdings) UpdateHoldings(ctx context.Context, holding HoldingsUpdateReq
 	return &update, err
 }
 
+// UpdateCashAmount this is a special Add/Update Holding because this one is built into personal capital for all manual investments accounts.
+func (h *Holdings) UpdateCashAmount(ctx context.Context, cashAmount float64, userAccountId int) (*UpdateHoldingsResponse, error) {
+	return h.UpdateHoldings(ctx, HoldingsUpdateRequest{
+		Quantity:      cashAmount,
+		Description:   "Cash",
+		SourceAssetId: "USER_DESCR_Cash",
+		Price:         1,
+		UserAccountId: userAccountId,
+		PriceSource:   "USER",
+	})
+}
+
 const (
 	AddHoldingEndpoint = `/api/account/addHolding`
 )

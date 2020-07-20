@@ -2,9 +2,10 @@ package pkg
 
 import (
 	"context"
-	"github.com/will7200/go-crypto-sync/pkg/coinbase"
 	"os"
 	"testing"
+
+	"github.com/will7200/go-crypto-sync/pkg/coinbase"
 )
 
 func TestCoinbaseAPI(t *testing.T) {

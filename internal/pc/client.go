@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/shopspring/decimal"
@@ -81,6 +82,20 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 
 	for key, value := range m {
 		log.Println(key, value)
+		// Handle special case if is us dollar
+		if key == "us dollar" {
+			left := holds[value.LPos]
+			quantity, err := decimal.NewFromString(left.TotalSharesString())
+			if err != nil {
+				panic(err)
+			}
+			quantityFloat, _ := quantity.Float64()
+			_, err = apiClient.Holdings.UpdateCashAmount(context.Background(), quantityFloat, account.UserAccountID)
+			if err != nil {
+				panic(err)
+			}
+			continue
+		}
 		if value.Exists {
 			left, right := holds[value.LPos], pcHoldings.Holdings[value.RPos]
 			quantity, err := decimal.NewFromString(left.TotalSharesString())
