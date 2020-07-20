@@ -32,7 +32,8 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 	// Setup a cookie jar so the session can be saved
 	cookieJar, _ := cookiejar.New(nil)
 	client := &http.Client{
-		Jar: cookieJar,
+		Jar:     cookieJar,
+		Timeout: 15 * time.Second,
 	}
 
 	cfg := personalcapital.NewConfiguration()
