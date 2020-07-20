@@ -25,7 +25,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "./openapi"
+    openapiclient "github.com/will7200/go-crypto-sync/pkg/coinbase"
 )
 
 func main() {
