@@ -46,9 +46,6 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		if holding == "coinbase" {
 			pricingData = holdingsProvider.(holdings.Price)
 		}
-		if err != nil {
-			return err
-		}
 		uHolding, err := account.GetHoldings()
 		if err != nil {
 			return err

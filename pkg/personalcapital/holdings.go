@@ -121,7 +121,7 @@ func (h *Holdings) GetHoldings(ctx context.Context, params *GetHoldingsParams) (
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		return nil, errors.New("Non 200 response")
+		return nil, errors.New("non 200 response")
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -132,15 +132,15 @@ func (h *Holdings) GetHoldings(ctx context.Context, params *GetHoldingsParams) (
 	if err != nil {
 		return nil, err
 	}
-	holdings := new(GetHoldingsResponse)
-	holdings.SpData = ghr.SpData
+	lHoldings := new(GetHoldingsResponse)
+	lHoldings.SpData = ghr.SpData
 	if params.FilterUserCreated {
-		holdings.Holdings = FilterHoldsFromUser(holdings.Holdings)
+		lHoldings.Holdings = FilterHoldsFromUser(lHoldings.Holdings)
 	}
 	if params.FilterAccountName != "" {
-		holdings.Holdings = FilterHoldsByAccountName(holdings.Holdings, params.FilterAccountName)
+		lHoldings.Holdings = FilterHoldsByAccountName(lHoldings.Holdings, params.FilterAccountName)
 	}
-	return holdings, nil
+	return lHoldings, nil
 }
 
 func PCHoldingsToIHoldings(h []HoldingsType) []holdings.IHolding {
@@ -261,7 +261,7 @@ func (h *Holdings) UpdateHoldings(ctx context.Context, holding HoldingsUpdateReq
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		return nil, errors.New("Non 200 response")
+		return nil, errors.New("non 200 response")
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -357,7 +357,7 @@ func (h *Holdings) AddHolding(ctx context.Context, holding *HoldingAddRequest) (
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		return nil, errors.New("Non 200 response")
+		return nil, errors.New("non 200 response")
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

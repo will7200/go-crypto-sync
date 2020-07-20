@@ -239,7 +239,7 @@ func SaveSession(inClient *http.Client, baseURL string, fileName string) {
 }
 
 // LoadSession loads the cookies from a previously saved session file.
-func LoadSession(cookies *[]*(http.Cookie), fileName string) {
+func LoadSession(cookies *[]*http.Cookie, fileName string) {
 	cookiesFile, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		log.Println(err)

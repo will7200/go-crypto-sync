@@ -167,7 +167,7 @@ func (a *Accounts) GetAccounts(ctx context.Context, request *GetAccountsRequest)
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		return nil, errors.New("Non 200 response")
+		return nil, errors.New("non 200 response")
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

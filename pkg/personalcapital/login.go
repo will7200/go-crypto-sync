@@ -103,7 +103,7 @@ func (a *Authentication) AuthenticateWithPassword(ctx context.Context, params Au
 	}
 
 	if resp.StatusCode != 200 {
-		return errors.New("Non 200 response")
+		return errors.New("non 200 response")
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
