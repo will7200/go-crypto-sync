@@ -2,3 +2,5 @@
 /.idea/
 /api/templates/go-experimental/
 /cookies.json
+*.gob
+*.exe

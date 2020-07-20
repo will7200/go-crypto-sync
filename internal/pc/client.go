@@ -23,10 +23,12 @@ var (
 	_ = spew.Dump
 )
 
+// Sync source holdings to personal capital account
+// Currently cookies will be saved in the working directory of where this command is run
 func Sync(email, password string, holds holdings.Holdings, pricing holdings.Price) {
 
 	// Get saved cookies if available
-	var cookies []*(http.Cookie)
+	var cookies []*http.Cookie
 	personalcapital.LoadSession(&cookies, "cookies.json")
 
 	// Setup a cookie jar so the session can be saved
@@ -85,6 +87,7 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 		log.Println(key, value)
 		// Handle special case if is us dollar
 		if key == "us dollar" {
+			log.Printf("updating PC cash amount\n")
 			left := holds[value.LPos]
 			quantity, err := decimal.NewFromString(left.TotalSharesString())
 			if err != nil {
@@ -97,7 +100,8 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 			}
 			continue
 		}
-		if value.Exists {
+		if value.FoundBoth() {
+			log.Printf("%s found in pc, updating holding\n", holds[value.LPos].CurrencySymbolName())
 			left, right := holds[value.LPos], pcHoldings.Holdings[value.RPos]
 			quantity, err := decimal.NewFromString(left.TotalSharesString())
 			if err != nil {
@@ -125,7 +129,8 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 			if err != nil {
 				panic(err)
 			}
-		} else {
+		} else if value.LeftOnly() {
+			log.Printf("%s not found in pc, create new holding\n", holds[value.LPos].CurrencySymbolName())
 			quantity, err := decimal.NewFromString(holds[value.LPos].TotalSharesString())
 			if err != nil {
 				panic(err)
@@ -156,6 +161,35 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 				Value:         valueFloat,
 			}
 			_, err = apiClient.Holdings.AddHolding(context.Background(), d)
+			if err != nil {
+				panic(err)
+			}
+		} else if value.RightOnly() {
+			right := pcHoldings.Holdings[value.RPos]
+			currencySymbol := strings.TrimSpace(strings.Split(right.CurrencySymbolName(), "-")[0])
+			log.Printf("%s not found from source, setting quantity to zero\n", currencySymbol)
+			quantity, err := decimal.NewFromString("0.00")
+			if err != nil {
+				panic(err)
+			}
+			quantityFloat, _ := quantity.Float64()
+			p, err := pricing.GetExchange(currencySymbol, "USD")
+			if err != nil {
+				panic(err)
+			}
+			pf, err := decimal.NewFromString(p)
+			if err != nil {
+				panic(err)
+			}
+			priceFloat, _ := pf.Float64()
+			v := pf.Mul(quantity)
+			valueFloat, _ := v.Float64()
+			d := HoldingTypeToHoldingRequest(right)
+			d.PriceSource = "COINBASE"
+			d.Quantity = quantityFloat
+			d.Value = valueFloat
+			d.Price = priceFloat
+			_, err = apiClient.Holdings.UpdateHoldings(context.Background(), d)
 			if err != nil {
 				panic(err)
 			}

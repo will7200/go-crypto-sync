@@ -51,29 +51,45 @@ func (h Holdings) HasCurrencyName(name string) bool {
 }
 
 type HasInfo struct {
-	Exists bool
-	LPos   int
-	RPos   int
+	LPos int
+	RPos int
+}
+
+func (hi HasInfo) FoundBoth() bool {
+	return hi.LPos != -1 && hi.RPos != -1
+}
+
+func (hi HasInfo) LeftOnly() bool {
+	return hi.LPos != -1 && hi.RPos == -1
+}
+
+func (hi HasInfo) RightOnly() bool {
+	return hi.LPos == -1 && hi.RPos != -1
 }
 
 func (h Holdings) HasCurrencyMap(left func(l IHolding) string, right func(r IHolding) string, ih ...IHolding) map[string]HasInfo {
 	mb := make(map[string]HasInfo, len(h))
 	for index, v := range h {
 		mb[strings.ToLower(left(v))] = HasInfo{
-			Exists: false,
-			LPos:   index,
-			RPos:   -1,
+			LPos: index,
+			RPos: -1,
 		}
 	}
 	for index, v := range ih {
 		key := strings.ToLower(right(v))
 		if val, ok := mb[key]; ok {
-			if val.Exists {
+			if val.RPos != -1 {
 				panic("conflicting entries")
 			}
-			val.Exists = true
 			val.RPos = index
 			mb[key] = val
+		} else {
+			if len(key) > 0 {
+				mb[key] = HasInfo{
+					LPos: -1,
+					RPos: index,
+				}
+			}
 		}
 	}
 	return mb
