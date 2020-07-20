@@ -29,6 +29,13 @@ var cli struct {
 	Sync SyncCmd `cmd help:"Sync holdings to another account" default:"1"`
 }
 
+type OnHoldingNotFoundType string
+
+const (
+	zeroQuantity  = "zeroQuantity"
+	deleteHolding = "deleteHolding"
+)
+
 // Config holds details when syncing
 type Config struct {
 	// Debug
@@ -40,6 +47,12 @@ type Config struct {
 	// PriceDataSource will fetch the currency pricing data from this
 	// Supported: coinbase
 	PriceDataSource string `toml:"priceDataSource"`
+	// OnHoldingNotFound will determine the actions performed when a holding
+	// exists in the destination but not in the source
+	// Available values:
+	// zeroQuantity - This will not remove the holding, and instead just set the quantity to zero
+	// deleteHolding - This will remove the holding
+	OnHoldingNotFound OnHoldingNotFoundType `toml:"onHoldingNotFound"`
 	// DestinationCurrencyAs will fetch the converted pricing data of the concurrency in the specified format
 	// Data Matrix:
 	// Coinbase: USD, many others look at their api
@@ -50,6 +63,16 @@ type Config struct {
 	// List of Destinations holding their configuration
 	// Supported: personalcapital
 	Destinations map[string]map[string]interface{} `toml:"destinations"`
+}
+
+// Validate configuration will add an error for each field not complying to its type
+func (conf Config) Validate() (bool, []string) {
+	errors := make([]string, 0)
+	if conf.OnHoldingNotFound != zeroQuantity && conf.OnHoldingNotFound != deleteHolding {
+		errors = append(errors, fmt.Sprintf("invalid configuration for field: OnHoldingNotFound\n"+
+			"Expected Values: %s, %s", zeroQuantity, deleteHolding))
+	}
+	return len(errors) == 0, errors
 }
 
 // TOML returns a Resolver that retrieves values from a TOML source.
@@ -97,6 +120,12 @@ func main() {
 	err := cli.tree.Unmarshal(&conf)
 	if err != nil {
 		panic(err)
+	}
+	if ok, errors := conf.Validate(); !ok {
+		for _, e := range errors {
+			log.Println(e)
+		}
+		os.Exit(1)
 	}
 	err = ctx.Run(&Context{Debug: cli.Debug, Tree: cli.tree, Config: conf})
 	ctx.FatalIfErrorf(err)

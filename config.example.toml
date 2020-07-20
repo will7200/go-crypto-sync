@@ -1,7 +1,8 @@
 debug = false
 destination = "personalcapital"
-priceData = "coinbase"
+priceDataSource = "coinbase"
 destinationCurrencyAs = "USD"
+onHoldingNotFound = "zeroQuantity"
 [holdings]
     [holdings.coinbase]
     apiKey = "your-key"
