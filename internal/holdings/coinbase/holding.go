@@ -92,12 +92,12 @@ func (p *Provider) GetExchange(currency1, currency2 string) (string, error) {
 	})
 	client := p.client
 	ctx := context.Background()
-	price, _, err := client.ExchangeRatesApi.GetExchangeRateFor(ctx, currency1, currency2).Execute()
+	price, _, err := client.ExchangeRatesApi.GetExchangeRateFor(ctx).Currency(currency1).Execute()
 	if err != nil {
 		log.Println(err)
 		return "", err
 	}
-	return price.Data.Amount, nil
+	return price.Data.Rates[currency2], nil
 }
 
 // Params:

@@ -200,13 +200,40 @@ paths:
       summary: Retrieve Account
       tags:
       - accounts
+  /exchange-rates:
+    get:
+      description: |
+        Get current exchange rates. Default base currency is USD but it can be defined as any supported currency. Returned rates will define the exchange rate for one unit of the base currency.
+      operationId: GetExchangeRateFor
+      parameters:
+      - description: |
+          Base currency (default: USD)
+        explode: true
+        in: query
+        name: currency
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+          description: OK
+      summary: Get current exchange rates. Default base currency is USD but it can
+        be defined as any supported currency. Returned rates will define the exchange
+        rate for one unit of the base currency.
+      tags:
+      - ExchangeRates
   /prices/{currency_pair_1}-{currency_pair_2}/sell:
     get:
       description: |
         Get the total price to buy one bitcoin or ether.
 
         Note that exchange rates fluctuates so the price is only correct for seconds at the time. This buy price includes standard Coinbase fee (1%) but excludes any other fees including bank fees. If you need more accurate price estimate for a specific payment method or amount, see buy bitcoin endpoint and quote: true option.
-      operationId: GetExchangeRateFor
+      operationId: GetSellPrice
       parameters:
       - description: |
           currency 1
@@ -231,7 +258,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                $ref: '#/components/schemas/inline_response_200_2'
           description: OK
       summary: Exchanges Rates for currency pair
       tags:
@@ -473,6 +500,22 @@ components:
       - base
       - currency
       type: object
+    ExchangeRates:
+      example:
+        rates:
+          key: rates
+        currency: currency
+      properties:
+        currency:
+          type: string
+        rates:
+          additionalProperties:
+            type: string
+          type: object
+      required:
+      - currency
+      - rates
+      type: object
     inline_response_200:
       example:
         pagination:
@@ -544,6 +587,15 @@ components:
       - data
       - pagination
     inline_response_200_1:
+      example:
+        data:
+          rates:
+            key: rates
+          currency: currency
+      properties:
+        data:
+          $ref: '#/components/schemas/ExchangeRates'
+    inline_response_200_2:
       example:
         data:
           amount: amount

@@ -115,12 +115,38 @@ paths:
                 $ref: '#/components/schemas/Account'
         '401':
           $ref: '#/components/responses/ErrorMessage'
+  /exchange-rates:
+    get:
+      tags:
+      - ExchangeRates
+      summary: Get current exchange rates. Default base currency is USD but it can be defined as any supported currency. Returned rates will define the exchange rate for one unit of the base currency.
+      operationId: GetExchangeRateFor
+      description: |
+        Get current exchange rates. Default base currency is USD but it can be defined as any supported currency. Returned rates will define the exchange rate for one unit of the base currency.
+      parameters:
+      - in: query
+        required: false
+        name: currency
+        description: |
+          Base currency (default: USD)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ExchangeRates'
   /prices/{currency_pair_1}-{currency_pair_2}/sell:
     get:
       tags:
         - ExchangeRates
       summary: Exchanges Rates for currency pair
-      operationId: GetExchangeRateFor
+      operationId: GetSellPrice
       description: |
         Get the total price to buy one bitcoin or ether.
 
@@ -346,3 +372,15 @@ components:
         - amount
         - currency
         - base
+    ExchangeRates:
+      type: object
+      properties:
+        currency:
+          type: string
+        rates:
+          type: object
+          additionalProperties:
+            type: string
+      required:
+      - currency
+      - rates
