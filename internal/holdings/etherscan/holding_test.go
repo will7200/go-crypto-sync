@@ -1,6 +1,7 @@
 package etherscan
 
 import (
+	"fmt"
 	"math"
 	"math/big"
 	"os"
@@ -67,6 +68,11 @@ func getConfig() Config {
 
 func TestEtherScanAPI(t *testing.T) {
 	config := getConfig()
+	val := os.Getenv("API_KEY")
+	if val == "" {
+		fmt.Println("Skipping etherscan api test")
+		return
+	}
 	client := etherscan.New(etherscan.Mainnet, os.Getenv("API_KEY"))
 	client.Verbose = true
 	accounts := config.Holdings["ether"]["account"].([]map[string]interface{})
