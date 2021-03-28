@@ -8,6 +8,8 @@ import (
 	"github.com/pelletier/go-toml/query"
 
 	"github.com/will7200/go-crypto-sync/internal/holdings"
+	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbase"
+	_ "github.com/will7200/go-crypto-sync/internal/holdings/etherscan"
 	"github.com/will7200/go-crypto-sync/internal/pc"
 )
 
@@ -32,7 +34,7 @@ func (s *SyncCmd) Run(ctx *Context) error {
 	var (
 		pricingData holdings.Price
 	)
-	allHoldings := make([]holdings.Holding, 0, 2)
+	allHoldings := make(holdings.Holdings, 0, 2)
 	for _, holding := range s.Holdings {
 		log.Println("Fetching holdings from ", holding)
 		holdingsProvider, err := holdings.GetProvider(holding)
@@ -43,21 +45,25 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		if err != nil {
 			return err
 		}
-		if holding == "coinbase" {
-			pricingData = holdingsProvider.(holdings.Price)
-		}
 		uHolding, err := account.GetHoldings()
 		if err != nil {
 			return err
 		}
 		allHoldings = append(allHoldings, uHolding...)
 	}
+
+	log.Println("setting pricing data provider to coinbase")
+	pdProvider, err := holdings.GetProvider("coinbase")
+	if err != nil {
+		return err
+	}
+	pricingData = pdProvider.(holdings.Price)
 	switch s.Destination {
 	case "personalcapital":
 		raw := personCapitalValues.Execute(ctx.Tree)
 		email := raw.Values()[0].(*toml.Tree).Get("email").(string)
 		password := raw.Values()[0].(*toml.Tree).Get("password").(string)
-		pc.Sync(email, password, allHoldings, pricingData)
+		pc.Sync(email, password, allHoldings.MapReduce(), pricingData)
 	}
 	return nil
 }

@@ -1,6 +1,7 @@
 package holdings
 
 import (
+	"math/big"
 	"regexp"
 	"strings"
 )
@@ -48,6 +49,42 @@ func (h Holdings) HasCurrencyName(name string) bool {
 		}
 	}
 	return false
+}
+
+func (h Holdings) MapReduce() (final Holdings) {
+	rHolds := make(map[string]Holdings)
+	for i, holding := range h {
+		keyHolds, ok := rHolds[holding.SymbolName]
+		if !ok {
+			keyHolds = make(Holdings, 0, 1)
+			rHolds[holding.SymbolName] = keyHolds
+		}
+		keyHolds = append(keyHolds, h[i])
+		rHolds[holding.SymbolName] = keyHolds
+	}
+	final = make(Holdings, len(rHolds))
+	i := 0
+	for _, value := range rHolds {
+		totalShares := value[0].TotalShares
+		if len(value) > 1 {
+			shares := new(big.Float)
+			for _, hc := range value {
+				t, _, err := big.ParseFloat(hc.TotalShares, 10, 18, big.ToNearestEven)
+				if err != nil {
+					panic(err)
+				}
+				shares.Add(shares, t)
+			}
+			totalShares = shares.String()
+		}
+		final[i] = Holding{
+			SymbolName:  value[0].SymbolName,
+			FullName:    value[0].FullName,
+			TotalShares: totalShares,
+		}
+		i += 1
+	}
+	return final
 }
 
 type HasInfo struct {
