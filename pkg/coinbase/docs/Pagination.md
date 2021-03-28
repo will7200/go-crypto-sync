@@ -6,6 +6,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **EndingBefore** | Pointer to **string** |  | [optional] 
 **StartingAfter** | Pointer to **string** |  | [optional] 
+**NextEndingBefore** | Pointer to **string** |  | [optional] 
+**NextStartingAfter** | Pointer to **string** |  | [optional] 
 **Limit** | Pointer to **float32** |  | [optional] [default to 25]
 **Order** | Pointer to **string** |  | [optional] [default to "desc"]
 **PreviousUri** | Pointer to **string** |  | [optional] 
@@ -79,6 +81,56 @@ SetStartingAfter sets StartingAfter field to given value.
 `func (o *Pagination) HasStartingAfter() bool`
 
 HasStartingAfter returns a boolean if a field has been set.
+
+### GetNextEndingBefore
+
+`func (o *Pagination) GetNextEndingBefore() string`
+
+GetNextEndingBefore returns the NextEndingBefore field if non-nil, zero value otherwise.
+
+### GetNextEndingBeforeOk
+
+`func (o *Pagination) GetNextEndingBeforeOk() (*string, bool)`
+
+GetNextEndingBeforeOk returns a tuple with the NextEndingBefore field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetNextEndingBefore
+
+`func (o *Pagination) SetNextEndingBefore(v string)`
+
+SetNextEndingBefore sets NextEndingBefore field to given value.
+
+### HasNextEndingBefore
+
+`func (o *Pagination) HasNextEndingBefore() bool`
+
+HasNextEndingBefore returns a boolean if a field has been set.
+
+### GetNextStartingAfter
+
+`func (o *Pagination) GetNextStartingAfter() string`
+
+GetNextStartingAfter returns the NextStartingAfter field if non-nil, zero value otherwise.
+
+### GetNextStartingAfterOk
+
+`func (o *Pagination) GetNextStartingAfterOk() (*string, bool)`
+
+GetNextStartingAfterOk returns a tuple with the NextStartingAfter field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetNextStartingAfter
+
+`func (o *Pagination) SetNextStartingAfter(v string)`
+
+SetNextStartingAfter sets NextStartingAfter field to given value.
+
+### HasNextStartingAfter
+
+`func (o *Pagination) HasNextStartingAfter() bool`
+
+HasNextStartingAfter returns a boolean if a field has been set.
 
 ### GetLimit
 

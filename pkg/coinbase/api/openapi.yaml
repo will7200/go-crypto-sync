@@ -81,6 +81,55 @@ paths:
         style: simple
         x-go-default-value: auto
         x-go-default: true
+      - explode: true
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 25
+          maximum: 100
+          minimum: 0
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: desc
+          enum:
+          - desc
+          - asc
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: previous_uri
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: next_uri
+        required: false
+        schema:
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -227,19 +276,25 @@ components:
     pagination:
       example:
         ending_before: ending_before
-        limit: 0.0
+        limit: 8.008281904610115
         previous_uri: previous_uri
+        next_starting_after: next_starting_after
         starting_after: starting_after
         next_uri: next_uri
+        next_ending_before: next_ending_before
         order: desc
       properties:
         ending_before:
           type: string
         starting_after:
           type: string
+        next_ending_before:
+          type: string
+        next_starting_after:
+          type: string
         limit:
           default: 25
-          maximum: 0
+          maximum: 100
           minimum: 0
           type: number
         order:
@@ -422,10 +477,12 @@ components:
       example:
         pagination:
           ending_before: ending_before
-          limit: 0.0
+          limit: 8.008281904610115
           previous_uri: previous_uri
+          next_starting_after: next_starting_after
           starting_after: starting_after
           next_uri: next_uri
+          next_ending_before: next_ending_before
           order: desc
         data:
         - allow_deposits: true

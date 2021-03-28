@@ -112,7 +112,7 @@ func main() {
 		}
 		ctx = kong.Parse(&cli, kong.Configuration(TOML, cli.ConfigFileName))
 	}
-	log.SetFlags(log.Lshortfile | log.Ldate)
+	log.SetFlags(log.Llongfile | log.Ldate | log.Ltime)
 	conf := Config{
 		Holdings:     map[string]map[string]interface{}{},
 		Destinations: map[string]map[string]interface{}{},

@@ -323,7 +323,7 @@ func (c *APIClient) prepareRequest(
 		if bodyMessage == "<nil>" {
 			bodyMessage = ""
 		}
-		err := c.cfg.APIKey.Headers(headerParams, method, url1.Path, ts, bodyMessage)
+		err := c.cfg.APIKey.Headers(headerParams, method, url1.RequestURI(), ts, bodyMessage)
 		if err != nil {
 			return nil, err
 		}

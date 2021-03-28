@@ -76,11 +76,11 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 			account = accounts.SpData.Accounts[index]
 		}
 	}
-
+	log.Println("Holdings ", holds)
 	m := holds.HasCurrencyMap(func(l holdings.IHolding) string {
-		return l.CurrencyName()
+		return strings.ToLower(l.CurrencyName())
 	}, func(r holdings.IHolding) string {
-		return strings.TrimSpace(strings.Split(r.CurrencyName(), "-")[0])
+		return strings.ToLower(strings.TrimSpace(strings.Split(r.CurrencyName(), "-")[0]))
 	}, personalcapital.PCHoldingsToIHoldings(pcHoldings.Holdings)...)
 
 	for key, value := range m {

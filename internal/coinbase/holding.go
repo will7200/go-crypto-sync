@@ -45,12 +45,17 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 	})
 	client := p.client
 	ctx := context.Background()
-	coinHoldings, _, err := client.AccountsApi.ListAccounts(ctx).Execute()
+	var nextURI string
+	h := make([]holdings.Holding, 0, 25)
+loop:
+	accountListRequest := client.AccountsApi.ListAccounts(ctx)
+	if nextURI != "" {
+		accountListRequest = accountListRequest.StartingAfter(nextURI)
+	}
+	coinHoldings, _, err := accountListRequest.Execute()
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
-	h := make([]holdings.Holding, 0, len(coinHoldings.Data))
 	for _, coinHolding := range coinHoldings.Data {
 		amount, err := decimal.NewFromString(coinHolding.Balance.Amount)
 		if err != nil {
@@ -64,6 +69,13 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 			FullName:    coinHolding.Currency.Name,
 			TotalShares: coinHolding.Balance.Amount,
 		})
+	}
+	if p, ok := coinHoldings.GetPaginationOk(); ok {
+		if p.NextStartingAfter != nil {
+			log.Println("fetching next set", *p.NextStartingAfter)
+			nextURI = *p.NextStartingAfter
+			goto loop
+		}
 	}
 	return h, nil
 }

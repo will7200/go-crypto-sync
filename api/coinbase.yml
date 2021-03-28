@@ -42,6 +42,35 @@ paths:
       parameters:
         - $ref: '#/components/parameters/CB-ACCESS-SIGN'
         - $ref: '#/components/parameters/CB-ACCESS-TIMESTAMP'
+        - in: query
+          name: ending_before
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: starting_after
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 100
+            default: 25
+        - in: query
+          name: order
+          schema:
+            enum: [ "desc", "asc" ]
+            default: "desc"
+        - in: query
+          name: previous_uri
+          schema:
+            type: string
+        - in: query
+          name: next_uri
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -167,10 +196,14 @@ components:
           type: string
         starting_after:
           type: string
+        next_ending_before:
+          type: string
+        next_starting_after:
+          type: string
         limit:
           type: number
           minimum: 0
-          maximum: 0
+          maximum: 100
           default: 25
         order:
           enum: ["desc", "asc"]

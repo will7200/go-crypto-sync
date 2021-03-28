@@ -15,12 +15,14 @@ import (
 
 // Pagination struct for Pagination
 type Pagination struct {
-	EndingBefore  *string  `json:"ending_before,omitempty"`
-	StartingAfter *string  `json:"starting_after,omitempty"`
-	Limit         *float32 `json:"limit,omitempty"`
-	Order         *string  `json:"order,omitempty"`
-	PreviousUri   *string  `json:"previous_uri,omitempty"`
-	NextUri       *string  `json:"next_uri,omitempty"`
+	EndingBefore      *string  `json:"ending_before,omitempty"`
+	StartingAfter     *string  `json:"starting_after,omitempty"`
+	NextEndingBefore  *string  `json:"next_ending_before,omitempty"`
+	NextStartingAfter *string  `json:"next_starting_after,omitempty"`
+	Limit             *float32 `json:"limit,omitempty"`
+	Order             *string  `json:"order,omitempty"`
+	PreviousUri       *string  `json:"previous_uri,omitempty"`
+	NextUri           *string  `json:"next_uri,omitempty"`
 }
 
 // NewPagination instantiates a new Pagination object
@@ -110,6 +112,70 @@ func (o *Pagination) HasStartingAfter() bool {
 // SetStartingAfter gets a reference to the given string and assigns it to the StartingAfter field.
 func (o *Pagination) SetStartingAfter(v string) {
 	o.StartingAfter = &v
+}
+
+// GetNextEndingBefore returns the NextEndingBefore field value if set, zero value otherwise.
+func (o *Pagination) GetNextEndingBefore() string {
+	if o == nil || o.NextEndingBefore == nil {
+		var ret string
+		return ret
+	}
+	return *o.NextEndingBefore
+}
+
+// GetNextEndingBeforeOk returns a tuple with the NextEndingBefore field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Pagination) GetNextEndingBeforeOk() (*string, bool) {
+	if o == nil || o.NextEndingBefore == nil {
+		return nil, false
+	}
+	return o.NextEndingBefore, true
+}
+
+// HasNextEndingBefore returns a boolean if a field has been set.
+func (o *Pagination) HasNextEndingBefore() bool {
+	if o != nil && o.NextEndingBefore != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNextEndingBefore gets a reference to the given string and assigns it to the NextEndingBefore field.
+func (o *Pagination) SetNextEndingBefore(v string) {
+	o.NextEndingBefore = &v
+}
+
+// GetNextStartingAfter returns the NextStartingAfter field value if set, zero value otherwise.
+func (o *Pagination) GetNextStartingAfter() string {
+	if o == nil || o.NextStartingAfter == nil {
+		var ret string
+		return ret
+	}
+	return *o.NextStartingAfter
+}
+
+// GetNextStartingAfterOk returns a tuple with the NextStartingAfter field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Pagination) GetNextStartingAfterOk() (*string, bool) {
+	if o == nil || o.NextStartingAfter == nil {
+		return nil, false
+	}
+	return o.NextStartingAfter, true
+}
+
+// HasNextStartingAfter returns a boolean if a field has been set.
+func (o *Pagination) HasNextStartingAfter() bool {
+	if o != nil && o.NextStartingAfter != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetNextStartingAfter gets a reference to the given string and assigns it to the NextStartingAfter field.
+func (o *Pagination) SetNextStartingAfter(v string) {
+	o.NextStartingAfter = &v
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
@@ -247,6 +313,12 @@ func (o Pagination) MarshalJSON() ([]byte, error) {
 	}
 	if o.StartingAfter != nil {
 		toSerialize["starting_after"] = o.StartingAfter
+	}
+	if o.NextEndingBefore != nil {
+		toSerialize["next_ending_before"] = o.NextEndingBefore
+	}
+	if o.NextStartingAfter != nil {
+		toSerialize["next_starting_after"] = o.NextStartingAfter
 	}
 	if o.Limit != nil {
 		toSerialize["limit"] = o.Limit

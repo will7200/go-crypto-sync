@@ -1,6 +1,7 @@
 packageVersion: 0.1.0
 isGoSubmodule: true
 packageName: coinbase
+allParams: true
 modulePackageName: pkg/coinbase
 withXml: false
 enumClassPrefix: true

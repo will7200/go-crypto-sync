@@ -10,6 +10,7 @@
 package coinbase
 
 import (
+	"bytes"
 	_context "context"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
@@ -25,27 +26,31 @@ var (
 // ExchangeRatesApiService ExchangeRatesApi service
 type ExchangeRatesApiService service
 
-type apiGetExchangeRateForRequest struct {
+type ApiGetExchangeRateForRequest struct {
 	ctx           _context.Context
-	apiService    *ExchangeRatesApiService
+	ApiService    *ExchangeRatesApiService
 	currencyPair1 string
 	currencyPair2 string
 }
 
+func (r ApiGetExchangeRateForRequest) Execute() (InlineResponse2001, *_nethttp.Response, error) {
+	return r.ApiService.GetExchangeRateForExecute(r)
+}
+
 /*
-GetExchangeRateFor Exchanges Rates for currency pair
-Get the total price to buy one bitcoin or ether.
+ * GetExchangeRateFor Exchanges Rates for currency pair
+ * Get the total price to buy one bitcoin or ether.
 
 Note that exchange rates fluctuates so the price is only correct for seconds at the time. This buy price includes standard Coinbase fee (1%) but excludes any other fees including bank fees. If you need more accurate price estimate for a specific payment method or amount, see buy bitcoin endpoint and quote: true option.
 
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param currencyPair1 currency 1
  * @param currencyPair2 currency 2
-@return apiGetExchangeRateForRequest
+ * @return ApiGetExchangeRateForRequest
 */
-func (a *ExchangeRatesApiService) GetExchangeRateFor(ctx _context.Context, currencyPair1 string, currencyPair2 string) apiGetExchangeRateForRequest {
-	return apiGetExchangeRateForRequest{
-		apiService:    a,
+func (a *ExchangeRatesApiService) GetExchangeRateFor(ctx _context.Context, currencyPair1 string, currencyPair2 string) ApiGetExchangeRateForRequest {
+	return ApiGetExchangeRateForRequest{
+		ApiService:    a,
 		ctx:           ctx,
 		currencyPair1: currencyPair1,
 		currencyPair2: currencyPair2,
@@ -53,10 +58,10 @@ func (a *ExchangeRatesApiService) GetExchangeRateFor(ctx _context.Context, curre
 }
 
 /*
-Execute executes the request
- @return InlineResponse2001
-*/
-func (r apiGetExchangeRateForRequest) Execute() (InlineResponse2001, *_nethttp.Response, error) {
+ * Execute executes the request
+ * @return InlineResponse2001
+ */
+func (a *ExchangeRatesApiService) GetExchangeRateForExecute(r ApiGetExchangeRateForRequest) (InlineResponse2001, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -66,7 +71,7 @@ func (r apiGetExchangeRateForRequest) Execute() (InlineResponse2001, *_nethttp.R
 		localVarReturnValue  InlineResponse2001
 	)
 
-	localBasePath, err := r.apiService.client.cfg.ServerURLWithContext(r.ctx, "ExchangeRatesApiService.GetExchangeRateFor")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ExchangeRatesApiService.GetExchangeRateFor")
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
@@ -96,18 +101,19 @@ func (r apiGetExchangeRateForRequest) Execute() (InlineResponse2001, *_nethttp.R
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := r.apiService.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
 
-	localVarHTTPResponse, err := r.apiService.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = _ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -120,7 +126,7 @@ func (r apiGetExchangeRateForRequest) Execute() (InlineResponse2001, *_nethttp.R
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	err = r.apiService.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
