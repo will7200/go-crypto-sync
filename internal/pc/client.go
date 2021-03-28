@@ -148,7 +148,7 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 			v := pf.Mul(quantity)
 			valueFloat, _ := v.Float64()
 			name := holds[value.LPos].CurrencyName()
-			if len(name) < 4 {
+			if len(name) < 5 {
 				name = name + " - " + "Cryptocurrency"
 			}
 			d := &personalcapital.HoldingAddRequest{
