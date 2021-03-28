@@ -33,6 +33,7 @@ func (h Holding) TotalSharesString() string {
 	return h.TotalShares
 }
 
+// check if holdings account has a currency by symbol name
 func (h Holdings) HasCurrencySymbolName(symbol string) bool {
 	for _, v := range h {
 		if strings.ToLower(symbol) == strings.ToLower(v.SymbolName) {
@@ -42,6 +43,7 @@ func (h Holdings) HasCurrencySymbolName(symbol string) bool {
 	return false
 }
 
+// check if holdings account has a currency by name
 func (h Holdings) HasCurrencyName(name string) bool {
 	for _, v := range h {
 		if strings.ToLower(name) == strings.ToLower(v.FullName) {
@@ -51,6 +53,7 @@ func (h Holdings) HasCurrencyName(name string) bool {
 	return false
 }
 
+// MapReduce will return Holdings that have been summed across the same SymbolName
 func (h Holdings) MapReduce() (final Holdings) {
 	rHolds := make(map[string]Holdings)
 	for i, holding := range h {
@@ -87,23 +90,28 @@ func (h Holdings) MapReduce() (final Holdings) {
 	return final
 }
 
+// HasInfo contains positioning information about holdings in two accounts
 type HasInfo struct {
 	LPos int
 	RPos int
 }
 
+// FoundBoth when both are not -1
 func (hi HasInfo) FoundBoth() bool {
 	return hi.LPos != -1 && hi.RPos != -1
 }
 
+// LeftOnly when holding found in the Left Account
 func (hi HasInfo) LeftOnly() bool {
 	return hi.LPos != -1 && hi.RPos == -1
 }
 
+// RightOnly when holding found in the Right Account
 func (hi HasInfo) RightOnly() bool {
 	return hi.LPos == -1 && hi.RPos != -1
 }
 
+// HasCurrencyMap compares holdings with another Holdings account to check for existence
 func (h Holdings) HasCurrencyMap(left func(l IHolding) string, right func(r IHolding) string, ih ...IHolding) map[string]HasInfo {
 	mb := make(map[string]HasInfo, len(h))
 	for index, v := range h {
@@ -136,10 +144,14 @@ func (h Holdings) SearchByPattern(pattern regexp.Regexp) []int {
 	panic("implement me")
 }
 
+// Interface to providing holding across different third party accounts
 type Account interface {
+	// GetHoldings returns all holdings that is has
 	GetHoldings() (Holdings, error)
 }
 
+// Interface to providing pricing data
 type Price interface {
+	// GetExchange gets the value of currency1 in currency2
 	GetExchange(currency1, currency2 string) (string, error)
 }
