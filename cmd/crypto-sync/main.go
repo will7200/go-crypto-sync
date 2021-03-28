@@ -11,8 +11,8 @@ import (
 	"github.com/pelletier/go-toml"
 	"github.com/pelletier/go-toml/query"
 
-	_ "github.com/will7200/go-crypto-sync/internal/coinbase"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings"
+	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbase"
 )
 
 type Context struct {
