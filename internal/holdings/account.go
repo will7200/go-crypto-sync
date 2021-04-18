@@ -33,6 +33,10 @@ func (h Holding) TotalSharesString() string {
 	return h.TotalShares
 }
 
+func (h *Holdings) AddHolding(hh Holding) {
+	*h = append(*h, hh)
+}
+
 // check if holdings account has a currency by symbol name
 func (h Holdings) HasCurrencySymbolName(symbol string) bool {
 	for _, v := range h {
