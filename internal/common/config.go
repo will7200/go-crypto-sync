@@ -48,15 +48,15 @@ type Config struct {
 }
 
 // Validate configuration will add an error for each field not complying to its type
-func (conf Config) Validate() (bool, []string) {
-	errors := make([]string, 0)
+func (conf Config) Validate() error {
+	errs := new(Errors)
 	conf.OnHoldingNotFound = OnHoldingNotFoundType(strings.Title(string(conf.OnHoldingNotFound)))
 	if !conf.OnHoldingNotFound.IsValid() {
-		errors = append(errors, fmt.Sprintf("invalid configuration for field: OnHoldingNotFound\n"+
+		errs.Add(fmt.Errorf("invalid configuration for field: OnHoldingNotFound\n"+
 			"Expected Values: %s, %s\n"+
 			"Found Value: %s", ZeroQuantity, DeleteHolding, conf.OnHoldingNotFound))
 	}
-	return len(errors) == 0, errors
+	return errs.AsError()
 }
 
 func GetConfigFromTomlFile(vars ...string) Config {

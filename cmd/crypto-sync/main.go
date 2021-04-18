@@ -76,10 +76,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if ok, errors := conf.Validate(); !ok {
-		for _, e := range errors {
-			log.Println(e)
-		}
+	if err := conf.Validate(); err != nil {
+		log.Println(err)
 		os.Exit(1)
 	}
 	err = ctx.Run(&Context{Debug: cli.Debug, Tree: cli.tree, Config: conf})

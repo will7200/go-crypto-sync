@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"log"
+	"strings"
 
 	"github.com/pelletier/go-toml"
 	"github.com/pelletier/go-toml/query"
@@ -37,7 +38,7 @@ func (s *SyncCmd) Run(ctx *Context) error {
 	)
 	allHoldings := make(holdings.Holdings, 0, 2)
 	for _, holding := range s.Holdings {
-		log.Println("Fetching holdings from ", holding)
+		log.Println("Fetching holdings from ", strings.Trim(holding, ""))
 		holdingsProvider, err := holdings.GetProvider(holding)
 		if err != nil {
 			return err
