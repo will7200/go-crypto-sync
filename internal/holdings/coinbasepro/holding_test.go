@@ -17,7 +17,8 @@ func TestCoinbaseProAPI(t *testing.T) {
 	err := mapstructure.Decode(config.Holdings["coinbasepro"], &data)
 	assert.NoError(t, err)
 	p := Provider{}
-	a, _ := p.Open(config.Holdings["coinbasepro"])
+	a, err := p.Open(config.Holdings["coinbasepro"])
+	assert.NoError(t, err)
 	fmt.Println(a.GetHoldings())
 }
 

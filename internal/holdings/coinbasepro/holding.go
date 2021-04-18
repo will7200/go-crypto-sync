@@ -19,33 +19,41 @@ func init() {
 	holdings.Register("coinbasepro", &Provider{})
 }
 
-type account struct {
-	Address         string
-	ContractAddress string `mapstructure:"contractAddress"`
-	Decimals        int
-	FullName        string `mapstructure:"fullName"`
-	SymbolName      string `mapstructure:"symbolName"`
-}
-
-type Data struct {
+type Portfolio struct {
+	Name       string `mapstructure:"name"`
 	ApiKey     string `mapstructure:"key"`
 	Secret     string `mapstructure:"secret"`
 	Passphrase string `mapstructure:"passphrase"`
 	BaseUrl    string `mapstructure:"base_url"`
-	Debug      bool   `mapstructure:"debug"`
+}
+
+type Data struct {
+	Debug      bool        `mapstructure:"debug"`
+	Portfolios []Portfolio `mapstructure:"portfolios"`
 }
 
 func (d *Data) SetDefaults() {
-	if d.BaseUrl == "" {
-		d.BaseUrl = "https://api.pro.coinbase.com"
+	for _, p := range d.Portfolios {
+		if p.BaseUrl == "" {
+			p.BaseUrl = "https://api.pro.coinbase.com"
+		}
 	}
 }
 
-func (d *Data) Validate() (err error) {
-	if d.ApiKey == "" {
-		err = errors.New("Invalid API Key")
+func (d *Data) Validate() error {
+	err := new(common.Errors)
+	for _, p := range d.Portfolios {
+		if p.ApiKey == "" {
+			err.Add(errors.New("Invalid API Key for portfolio " + p.Name))
+		}
+		if p.Secret == "" {
+			err.Add(errors.New("Invalid Secret for portfolio " + p.Name))
+		}
+		if p.Passphrase == "" {
+			err.Add(errors.New("Invalid Passphrase for portfolio " + p.Name))
+		}
 	}
-	return
+	return err.AsError()
 }
 
 // Coinbase Provider
@@ -54,7 +62,7 @@ type Provider struct {
 	data *Data
 
 	//
-	client *coinbasepro.Client
+	clients []*coinbasepro.Client
 }
 
 // ascertain that provider implements the account interface
@@ -68,19 +76,32 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 		if p.data.Debug {
 			httpClient = httpClient.AddInterceptors(common.DumpRequestResponse)
 		}
-		client := &coinbasepro.Client{
-			BaseURL:    p.data.BaseUrl,
-			Key:        p.data.ApiKey,
-			Passphrase: p.data.Passphrase,
-			Secret:     p.data.Secret,
-			HTTPClient: httpClient.Build(),
-			RetryCount: 3,
+		clients := make([]*coinbasepro.Client, len(p.data.Portfolios))
+		for i, portfolio := range p.data.Portfolios {
+			clients[i] = &coinbasepro.Client{
+				BaseURL:    portfolio.BaseUrl,
+				Key:        portfolio.ApiKey,
+				Passphrase: portfolio.Passphrase,
+				Secret:     portfolio.Secret,
+				HTTPClient: httpClient.Build(),
+				RetryCount: 3,
+			}
 		}
 
-		p.client = client
+		p.clients = clients
 	})
-	client := p.client
+	h := make(holdings.Holdings, 0, 10)
+	for _, client := range p.clients {
+		th, err := p.getHoldingsForPortfolio(client)
+		if err != nil {
+			return nil, err
+		}
+		h.AddHoldings(th)
+	}
+	return h, nil
+}
 
+func (p *Provider) getHoldingsForPortfolio(client *coinbasepro.Client) (holdings.Holdings, error) {
 	accounts, err := client.GetAccounts()
 	if err != nil {
 		return nil, err
