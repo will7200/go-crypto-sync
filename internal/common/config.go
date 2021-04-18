@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pelletier/go-toml"
 )
@@ -12,6 +13,10 @@ const (
 	ZeroQuantity  = "ZeroQuantity"
 	DeleteHolding = "DeleteHolding"
 )
+
+func (o OnHoldingNotFoundType) IsValid() bool {
+	return o == ZeroQuantity || o == DeleteHolding
+}
 
 // Config holds details when syncing
 type Config struct {
@@ -45,9 +50,11 @@ type Config struct {
 // Validate configuration will add an error for each field not complying to its type
 func (conf Config) Validate() (bool, []string) {
 	errors := make([]string, 0)
-	if conf.OnHoldingNotFound != ZeroQuantity && conf.OnHoldingNotFound != DeleteHolding {
+	conf.OnHoldingNotFound = OnHoldingNotFoundType(strings.Title(string(conf.OnHoldingNotFound)))
+	if !conf.OnHoldingNotFound.IsValid() {
 		errors = append(errors, fmt.Sprintf("invalid configuration for field: OnHoldingNotFound\n"+
-			"Expected Values: %s, %s", ZeroQuantity, DeleteHolding))
+			"Expected Values: %s, %s\n"+
+			"Found Value: %s", ZeroQuantity, DeleteHolding, conf.OnHoldingNotFound))
 	}
 	return len(errors) == 0, errors
 }

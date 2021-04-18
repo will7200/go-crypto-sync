@@ -9,6 +9,7 @@ import (
 
 	"github.com/will7200/go-crypto-sync/internal/holdings"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbase"
+	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbasepro"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings/etherscan"
 	"github.com/will7200/go-crypto-sync/internal/pc"
 )
