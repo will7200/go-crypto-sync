@@ -12,50 +12,16 @@ import (
 	"github.com/nanmu42/etherscan-api"
 	"github.com/pelletier/go-toml"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/will7200/go-crypto-sync/internal/common"
 )
 
-type OnHoldingNotFoundType string
-
-const (
-	zeroQuantity  = "zeroQuantity"
-	deleteHolding = "deleteHolding"
-)
-
-// Config holds details when syncing
-type Config struct {
-	// Debug
-	// Prints Debug Information
-	Debug bool `toml:"debug"`
-	// Destination will the aggregated information will go
-	// Supported: person capital
-	Destination string `toml:"destination"`
-	// PriceDataSource will fetch the currency pricing data from this
-	// Supported: coinbase
-	PriceDataSource string `toml:"priceDataSource"`
-	// OnHoldingNotFound will determine the actions performed when a holding
-	// exists in the destination but not in the source
-	// Available values:
-	// zeroQuantity - This will not remove the holding, and instead just set the quantity to zero
-	// deleteHolding - This will remove the holding
-	OnHoldingNotFound OnHoldingNotFoundType `toml:"onHoldingNotFound"`
-	// DestinationCurrencyAs will fetch the converted pricing data of the concurrency in the specified format
-	// Data Matrix:
-	// Coinbase: USD, many others look at their api
-	DestinationCurrencyAs string `toml:"destinationCurrencyAs"`
-	// List of crypto currency holdings with their configurations
-	// Supported: coinbase
-	Holdings map[string]map[string]interface{} `toml:"holdings"`
-	// List of Destinations holding their configuration
-	// Supported: personalcapital
-	Destinations map[string]map[string]interface{} `toml:"destinations"`
-}
-
-func getConfig() Config {
+func getConfig() common.Config {
 	config, err := toml.LoadFile("config.toml")
 	if err != nil {
 		panic(err)
 	}
-	conf := Config{
+	conf := common.Config{
 		Holdings:     map[string]map[string]interface{}{},
 		Destinations: map[string]map[string]interface{}{},
 	}
