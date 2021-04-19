@@ -22,6 +22,25 @@ onHoldingNotFound = "zeroQuantity"
         symbolName = "USDC"
         fullName = "USD Coin"
         decimals = 6
+    [holdings.coinbasepro]
+    debug = true
+        [[holdings.coinbasepro.portfolios]]
+        name = "default_portfolio"
+        secret = "some_secret"
+        key = "some_key"
+        passphrase = "some_pass_phrase"
+        # If base_url is left blank with default to the value below
+        base_url = "https://api.pro.coinbase.com"
+    [holdings.bscscan]
+    apiKey = "some-api-key"
+    debug = false
+    # If base_url is defaulted to the below url
+    # base_url = "https://api.bscscan.com/api?"
+        [[holdings.bscscan.account]]
+        address = "0xaddress"
+        symbolName = "BNB"
+        fullName = "Binance Coin"
+        decimals = 18
 [destinations]
     [destinations.personalcapital]
     email = "example@email.com"
