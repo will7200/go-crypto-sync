@@ -38,6 +38,12 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		pricingData holdings.Price
 	)
 	allHoldings := make(holdings.Holdings, 0, 2)
+	if len(s.Holdings) == 1 && s.Holdings[0] == "all" {
+		s.Holdings = []string{}
+		for key, _ := range ctx.Config.Holdings {
+			s.Holdings = append(s.Holdings, key)
+		}
+	}
 	for _, holding := range s.Holdings {
 		log.Println("Fetching holdings from ", strings.Trim(holding, ""))
 		holdingsProvider, err := holdings.GetProvider(holding)
