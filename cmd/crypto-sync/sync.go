@@ -9,6 +9,7 @@ import (
 	"github.com/pelletier/go-toml/query"
 
 	"github.com/will7200/go-crypto-sync/internal/holdings"
+	_ "github.com/will7200/go-crypto-sync/internal/holdings/bscscan"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbase"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbasepro"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings/etherscan"

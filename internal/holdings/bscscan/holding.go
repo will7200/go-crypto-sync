@@ -1,19 +1,21 @@
-package etherscan
+package bscscan
 
 import (
 	"errors"
 	"math"
 	"math/big"
 	"sync"
+	"time"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/nanmu42/etherscan-api"
 
+	"github.com/will7200/go-crypto-sync/internal/common"
 	"github.com/will7200/go-crypto-sync/internal/holdings"
 )
 
 func init() {
-	holdings.Register("etherscan", &Provider{})
+	holdings.Register("bscscan", &Provider{})
 }
 
 type account struct {
@@ -25,26 +27,27 @@ type account struct {
 }
 
 type Data struct {
-	ApiKey   string            `mapstructure:"apiKey"`
-	Network  etherscan.Network `mapstructure:"network"`
-	Accounts []account         `mapstructure:"account"`
-	Debug    bool              `mapstructure:"debug"`
+	ApiKey   string    `mapstructure:"apiKey"`
+	BaseURL  string    `mapstructure:"baseUrl"`
+	Accounts []account `mapstructure:"account"`
+	Debug    bool      `mapstructure:"debug"`
 }
 
 func (d *Data) SetDefaults() {
-	if d.Network == "" {
-		d.Network = etherscan.Mainnet
+	if d.BaseURL == "" {
+		d.BaseURL = "https://api.bscscan.com/api?"
 	}
 }
 
-func (d *Data) Validate() (err error) {
+func (d *Data) Validate() error {
+	errs := new(common.Errors)
 	if d.ApiKey == "" {
-		err = errors.New("Invalid API Key")
+		errs.Add(errors.New("Invalid API Key"))
 	}
-	if d.Network == "" {
-		err = errors.New("Invalid Network")
+	if d.BaseURL == "" {
+		errs.Add(errors.New("Invalid URL"))
 	}
-	return
+	return errs.AsError()
 }
 
 // Coinbase Provider
@@ -60,13 +63,19 @@ type Provider struct {
 var _ holdings.Account = &Provider{}
 
 func (p *Provider) Name() string {
-	return "etherscan"
+	return "bscscan"
 }
 
 func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 	p.once.Do(func() {
-		client := etherscan.New(p.data.Network, p.data.ApiKey)
-		client.Verbose = p.data.Debug
+		client := etherscan.NewCustomized(etherscan.Customization{
+			Timeout:       15 * time.Second,
+			Key:           p.data.ApiKey,
+			BaseURL:       p.data.BaseURL,
+			Verbose:       p.data.Debug,
+			BeforeRequest: nil,
+			AfterRequest:  nil,
+		})
 		p.client = client
 		//client.BeforeRequest = func(module, action string, param map[string]interface{}) error {
 		//	// ...
