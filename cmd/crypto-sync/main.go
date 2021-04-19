@@ -28,6 +28,7 @@ var cli struct {
 	ConfigFileName string `help:"File to read conf from" name:"file-name" default:"config.toml"`
 
 	Sync SyncCmd `cmd help:"Sync holdings to another account" default:"1"`
+	List ListCmd `cmd help:"List specific stuff like available holdings, providers"`
 }
 
 // TOML returns a Resolver that retrieves values from a TOML source.

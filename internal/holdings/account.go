@@ -152,14 +152,22 @@ func (h Holdings) SearchByPattern(pattern regexp.Regexp) []int {
 	panic("implement me")
 }
 
+// Base Provider interface
+type ProviderType interface {
+	// Returns Friendly Name
+	Name() string
+}
+
 // Interface to providing holding across different third party accounts
 type Account interface {
+	ProviderType
 	// GetHoldings returns all holdings that is has
 	GetHoldings() (Holdings, error)
 }
 
 // Interface to providing pricing data
 type Price interface {
+	ProviderType
 	// GetExchange gets the value of currency1 in currency2
 	GetExchange(currency1, currency2 string) (string, error)
 }

@@ -59,6 +59,10 @@ type Provider struct {
 // ascertain that provider implements the account interface
 var _ holdings.Account = &Provider{}
 
+func (p *Provider) Name() string {
+	return "etherscan"
+}
+
 func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 	p.once.Do(func() {
 		client := etherscan.New(p.data.Network, p.data.ApiKey)

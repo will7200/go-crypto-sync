@@ -46,3 +46,40 @@ func GetProvider(name string) (Provider, error) {
 	}
 	return provider, nil
 }
+
+type ProviderIterator struct {
+	currentPosition int
+	keys            []string
+}
+
+func (it *ProviderIterator) Next() Provider {
+	if len(it.keys) > it.currentPosition {
+		defer func() {
+			it.currentPosition += 1
+		}()
+		if v, exists := providerMap[it.keys[it.currentPosition]]; exists {
+			return v
+		}
+	}
+	return nil
+}
+
+func (it *ProviderIterator) HasNext() bool {
+	if len(it.keys) > it.currentPosition {
+		return true
+	}
+	return false
+}
+
+func GetProviderIterator() *ProviderIterator {
+	providerMu.RLock()
+	pi := ProviderIterator{0, make([]string, len(providerMap))}
+	i := 0
+	for k, _ := range providerMap {
+		pi.keys[i] = k
+		i++
+	}
+	providerMu.RUnlock()
+
+	return &pi
+}

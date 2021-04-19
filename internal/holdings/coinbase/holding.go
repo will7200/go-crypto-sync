@@ -32,6 +32,10 @@ type Provider struct {
 var _ holdings.Account = &Provider{}
 var _ holdings.Price = &Provider{}
 
+func (p *Provider) Name() string {
+	return "coinbase"
+}
+
 // GetHoldings
 func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 	p.once.Do(func() {
