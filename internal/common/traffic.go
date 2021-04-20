@@ -18,5 +18,5 @@ func DumpRequestResponse(req *http.Request, handler mediary.Handler) (*http.Resp
 			fmt.Printf("%s\n", bytes)
 		}
 	}
-	return handler(req)
+	return r, err
 }

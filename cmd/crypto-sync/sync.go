@@ -14,6 +14,7 @@ import (
 	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbasepro"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings/etherscan"
 	"github.com/will7200/go-crypto-sync/internal/pc"
+	"github.com/will7200/go-crypto-sync/pkg/personalcapital"
 )
 
 var (
@@ -72,7 +73,9 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		raw := personCapitalValues.Execute(ctx.Tree)
 		email := raw.Values()[0].(*toml.Tree).Get("email").(string)
 		password := raw.Values()[0].(*toml.Tree).Get("password").(string)
-		pc.Sync(email, password, allHoldings.MapReduce(), pricingData)
+		cfg := personalcapital.NewConfiguration()
+		cfg.Debug = ctx.Debug
+		pc.Sync(email, password, cfg, allHoldings.MapReduce(), pricingData)
 	}
 	return nil
 }

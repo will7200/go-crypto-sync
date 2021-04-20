@@ -12,9 +12,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/HereMobilityDevelopers/mediary"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/shopspring/decimal"
 
+	"github.com/will7200/go-crypto-sync/internal/common"
 	"github.com/will7200/go-crypto-sync/internal/holdings"
 	"github.com/will7200/go-crypto-sync/pkg/personalcapital"
 )
@@ -25,7 +27,7 @@ var (
 
 // Sync source holdings to personal capital account
 // Currently cookies will be saved in the working directory of where this command is run
-func Sync(email, password string, holds holdings.Holdings, pricing holdings.Price) {
+func Sync(email, password string, cfg *personalcapital.Configuration, holds holdings.Holdings, pricing holdings.Price) {
 
 	// Get saved cookies if available
 	var cookies []*http.Cookie
@@ -37,15 +39,17 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 		Jar:     cookieJar,
 		Timeout: 30 * time.Second,
 	}
+	httpClient := mediary.Init().WithPreconfiguredClient(client)
 
-	cfg := personalcapital.NewConfiguration()
-
+	if cfg.Debug {
+		httpClient = httpClient.AddInterceptors(common.DumpRequestResponse)
+	}
 	u, err := url.Parse(cfg.Host)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
+	cfg.HTTPClient = httpClient.Build()
 	client.Jar.SetCookies(u, cookies)
-	cfg.HTTPClient = client
 
 	apiClient := personalcapital.NewAPIClient(cfg)
 	resp, err := apiClient.Authentication.Login(context.Background(), personalcapital.LoginParams{
@@ -78,9 +82,9 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 	}
 	log.Println("Holdings ", holds)
 	m := holds.HasCurrencyMap(func(l holdings.IHolding) string {
-		return strings.ToLower(l.CurrencyName())
+		return strings.ToLower(l.CurrencySymbolName())
 	}, func(r holdings.IHolding) string {
-		return strings.ToLower(strings.TrimSpace(strings.Split(r.CurrencyName(), "-")[0]))
+		return strings.ToLower(strings.TrimSpace(strings.Split(r.CurrencySymbolName(), "-")[0]))
 	}, personalcapital.PCHoldingsToIHoldings(pcHoldings.Holdings)...)
 
 	for key, value := range m {
@@ -135,7 +139,6 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 			if err != nil {
 				panic(err)
 			}
-			quantityFloat, _ := quantity.Float64()
 			p, err := pricing.GetExchange(holds[value.LPos].CurrencySymbolName(), "USD")
 			if err != nil {
 				panic(err)
@@ -144,21 +147,19 @@ func Sync(email, password string, holds holdings.Holdings, pricing holdings.Pric
 			if err != nil {
 				panic(err)
 			}
-			priceFloat, _ := pf.Float64()
 			v := pf.Mul(quantity)
-			valueFloat, _ := v.Float64()
 			name := holds[value.LPos].CurrencyName()
 			if len(name) < 5 {
 				name = name + " - " + "Cryptocurrency"
 			}
 			d := &personalcapital.HoldingAddRequest{
 				Ticker:        name,
-				Quantity:      quantityFloat,
+				Quantity:      quantity.StringFixed(2),
 				Description:   holds[value.LPos].CurrencySymbolName(),
 				Source:        "USER",
-				Price:         priceFloat,
+				Price:         pf.StringFixed(14),
 				UserAccountId: account.UserAccountID,
-				Value:         valueFloat,
+				Value:         v.StringFixed(2),
 			}
 			_, err = apiClient.Holdings.AddHolding(context.Background(), d)
 			if err != nil {

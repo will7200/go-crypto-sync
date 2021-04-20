@@ -295,17 +295,17 @@ const (
 type (
 	HoldingAddRequest struct {
 		// userAccountId=80828031&ticker=Stellar+Lumens&cusip=&description=XML&quantity=965.08&price=0.06&value=57.9048&source=USER&costBasis=&lastServerChangeId=152&csrf=3c19636c-175f-447c-9cc7-f56a5be07f0d&apiClient=WEB
-		Ticker             string  `url:"ticker"`
-		Quantity           float64 `url:"quantity"`
-		Description        string  `url:"description"`
-		Source             string  `url:"source"`
-		Price              float64 `url:"price"`
-		UserAccountId      int     `url:"userAccountId"`
-		CostBasis          string  `url:"costBasis"`
-		Value              float64 `url:"value"`
-		LastServerChangeId string  `url:"lastServerChangeId"`
-		Csrf               string  `url:"csrf"`
-		ApiClient          string  `url:"apiClient"`
+		Ticker             string `url:"ticker"`
+		Quantity           string `url:"quantity"`
+		Description        string `url:"description"`
+		Source             string `url:"source"`
+		Price              string `url:"price"`
+		UserAccountId      int    `url:"userAccountId"`
+		CostBasis          string `url:"costBasis"`
+		Value              string `url:"value"`
+		LastServerChangeId string `url:"lastServerChangeId"`
+		Csrf               string `url:"csrf"`
+		ApiClient          string `url:"apiClient"`
 	}
 
 	AddHoldingResponse struct {
