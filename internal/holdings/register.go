@@ -42,7 +42,7 @@ func GetProvider(name string) (Provider, error) {
 	providerMu.RUnlock()
 
 	if !ok {
-		return nil, fmt.Errorf("sql: unknown provider %q (forgotten import?)", name)
+		return nil, fmt.Errorf("provider: unknown provider %q (forgotten import?)", name)
 	}
 	return provider, nil
 }
