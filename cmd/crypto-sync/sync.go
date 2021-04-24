@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/pelletier/go-toml"
@@ -28,6 +27,7 @@ type SyncCmd struct {
 }
 
 func (s *SyncCmd) Run(ctx *Context) error {
+	log := ctx.SugaredLogger.Named("sync")
 	switch s.Destination {
 	case "personalcapital":
 	case "pc":
@@ -46,10 +46,10 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		}
 	}
 	for _, holding := range s.Holdings {
-		log.Println("Fetching holdings from ", strings.Trim(holding, ""))
+		log.Info("Fetching holdings from ", strings.Trim(holding, ""))
 		holdingsProvider, err := holdings.GetProvider(holding)
 		if err != nil {
-			log.Printf("Skipping holding %s since provider doesn't exist", holding)
+			log.Infof("Skipping holding %s since provider doesn't exist", holding)
 			continue
 		}
 		account, err := holdingsProvider.Open(ctx.Config.Holdings[holding])
@@ -63,7 +63,7 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		allHoldings = append(allHoldings, uHolding...)
 	}
 
-	log.Println("setting pricing data provider to coinbase")
+	log.Info("setting pricing data provider to coinbase")
 	pdProvider, err := holdings.GetProvider("coinbase")
 	if err != nil {
 		return err
@@ -76,6 +76,7 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		password := raw.Values()[0].(*toml.Tree).Get("password").(string)
 		cfg := personalcapital.NewConfiguration()
 		cfg.Debug = ctx.Debug
+		cfg.Logger = ctx.Logger
 		pc.Sync(email, password, cfg, allHoldings.MapReduce(), pricingData)
 	}
 	return nil

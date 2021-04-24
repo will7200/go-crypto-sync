@@ -3,32 +3,54 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/alecthomas/kong"
 	"github.com/pelletier/go-toml"
 	"github.com/pelletier/go-toml/query"
+	"go.uber.org/zap/zapcore"
+
+	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/common"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings"
 	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbase"
 )
 
+var (
+	zapConfig *zap.Config = &zap.Config{
+		Level:             zap.NewAtomicLevelAt(zapcore.InfoLevel),
+		Development:       false,
+		DisableCaller:     false,
+		DisableStacktrace: false,
+		Sampling:          nil,
+		Encoding:          "console",
+		EncoderConfig:     zap.NewDevelopmentEncoderConfig(),
+		OutputPaths:       []string{"stdout"},
+		ErrorOutputPaths:  []string{"stderr"},
+		InitialFields:     nil,
+	}
+)
+
 type Context struct {
-	Debug  bool
-	Tree   *toml.Tree
-	Config common.Config
+	Debug         bool
+	Tree          *toml.Tree
+	Config        common.Config
+	Logger        *zap.Logger
+	SugaredLogger *zap.SugaredLogger
 }
 
 var cli struct {
-	tree           *toml.Tree
-	Debug          bool   `help:"Enable debug mode."`
-	ConfigFileName string `help:"File to read conf from" name:"file-name" default:"config.toml"`
+	tree       *toml.Tree
+	Debug      debugFlag  `help:"Enable debug mode."`
+	TimeFormat timeFormat `help:"Specify output time format" name:"time-format" default:""`
+	LogFormat  logFormat  `help:"Specify output log format" name:"log-format" default:"console"`
+	ConfigFile string     `help:"File to read conf from" name:"config-file" default:"config.toml"`
 
-	Sync SyncCmd `cmd help:"Sync holdings to another account" default:"1"`
-	List ListCmd `cmd help:"List specific stuff like available holdings, providers"`
+	Sync     SyncCmd     `cmd help:"Sync holdings to another account" default:"1"`
+	List     ListCmd     `cmd help:"List specific stuff like available holdings, providers"`
+	Holdings HoldingsCmd `cmd help:"List holdings from various accounts"`
 }
 
 // TOML returns a Resolver that retrieves values from a TOML source.
@@ -60,15 +82,14 @@ func TOML(r io.Reader) (kong.Resolver, error) {
 }
 
 func main() {
-	ctx := kong.Parse(&cli, kong.Configuration(TOML, "config.toml"))
-	if cli.ConfigFileName != "config.toml" {
-		if _, err := os.Stat(cli.ConfigFileName); err != nil {
+	ctx := kong.Parse(&cli, kong.Configuration(TOML, "config.toml"), kong.Bind())
+	if cli.ConfigFile != "config.toml" {
+		if _, err := os.Stat(cli.ConfigFile); err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
 		}
-		ctx = kong.Parse(&cli, kong.Configuration(TOML, cli.ConfigFileName))
+		ctx = kong.Parse(&cli, kong.Configuration(TOML, cli.ConfigFile))
 	}
-	log.SetFlags(log.Llongfile | log.Ldate | log.Ltime)
 	conf := common.Config{
 		Holdings:     map[string]map[string]interface{}{},
 		Destinations: map[string]map[string]interface{}{},
@@ -78,9 +99,13 @@ func main() {
 		panic(err)
 	}
 	if err := conf.Validate(); err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		os.Exit(1)
 	}
-	err = ctx.Run(&Context{Debug: cli.Debug, Tree: cli.tree, Config: conf})
+	logger, _ := zapConfig.Build()
+	logger = logger.Named("crypto-sync")
+	defer logger.Sync() // flushes buffer, if any
+	sugar := logger.Sugar()
+	err = ctx.Run(&Context{Debug: bool(cli.Debug), Tree: cli.tree, Config: conf, Logger: logger, SugaredLogger: sugar})
 	ctx.FatalIfErrorf(err)
 }

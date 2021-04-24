@@ -12,6 +12,8 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+
+	"go.uber.org/zap"
 )
 
 type session struct {
@@ -40,6 +42,7 @@ type Configuration struct {
 	UserAgent     string            `json:"userAgent,omitempty"`
 	Debug         bool              `json:"debug,omitempty"`
 	HTTPClient    *http.Client
+	Logger        *zap.Logger
 }
 
 // NewConfiguration returns a new Configuration object

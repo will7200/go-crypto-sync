@@ -10,6 +10,7 @@ import (
 	"github.com/HereMobilityDevelopers/mediary"
 	"github.com/mitchellh/mapstructure"
 	"github.com/preichenberger/go-coinbasepro/v2"
+	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/common"
 	"github.com/will7200/go-crypto-sync/internal/holdings"
@@ -63,6 +64,11 @@ type Provider struct {
 
 	//
 	clients []*coinbasepro.Client
+	logger  *zap.Logger
+}
+
+func (p *Provider) SetLogger(logger *zap.Logger) {
+	p.logger = logger
 }
 
 // ascertain that provider implements the account interface

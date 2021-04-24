@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/gob"
 	"errors"
-	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -28,7 +27,7 @@ var (
 // Sync source holdings to personal capital account
 // Currently cookies will be saved in the working directory of where this command is run
 func Sync(email, password string, cfg *personalcapital.Configuration, holds holdings.Holdings, pricing holdings.Price) {
-
+	log := cfg.Logger.Sugar().Named("personal-capital")
 	// Get saved cookies if available
 	var cookies []*http.Cookie
 	personalcapital.LoadSession(&cookies, "cookies.json")
@@ -80,7 +79,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds hold
 			account = accounts.SpData.Accounts[index]
 		}
 	}
-	log.Println("Holdings ", holds)
+	log.Info("Holdings ", holds)
 	m := holds.HasCurrencyMap(func(l holdings.IHolding) string {
 		return strings.ToLower(l.CurrencySymbolName())
 	}, func(r holdings.IHolding) string {
@@ -88,10 +87,10 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds hold
 	}, personalcapital.PCHoldingsToIHoldings(pcHoldings.Holdings)...)
 
 	for key, value := range m {
-		log.Println(key, value)
+		log.Info(key, value)
 		// Handle special case if is us dollar
 		if key == "us dollar" {
-			log.Printf("updating PC cash amount\n")
+			log.Info("updating PC cash amount\n")
 			left := holds[value.LPos]
 			quantity, err := decimal.NewFromString(left.TotalSharesString())
 			if err != nil {
@@ -105,7 +104,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds hold
 			continue
 		}
 		if value.FoundBoth() {
-			log.Printf("%s found in pc, updating holding\n", holds[value.LPos].CurrencySymbolName())
+			log.Infof("%s found in pc, updating holding\n", holds[value.LPos].CurrencySymbolName())
 			left, right := holds[value.LPos], pcHoldings.Holdings[value.RPos]
 			quantity, err := decimal.NewFromString(left.TotalSharesString())
 			if err != nil {
@@ -134,7 +133,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds hold
 				panic(err)
 			}
 		} else if value.LeftOnly() {
-			log.Printf("%s not found in pc, create new holding\n", holds[value.LPos].CurrencySymbolName())
+			log.Infof("%s not found in pc, create new holding\n", holds[value.LPos].CurrencySymbolName())
 			quantity, err := decimal.NewFromString(holds[value.LPos].TotalSharesString())
 			if err != nil {
 				panic(err)
@@ -168,7 +167,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds hold
 		} else if value.RightOnly() {
 			right := pcHoldings.Holdings[value.RPos]
 			currencySymbol := strings.TrimSpace(strings.Split(right.CurrencySymbolName(), "-")[0])
-			log.Printf("%s not found from source, setting quantity to zero\n", currencySymbol)
+			log.Infof("%s not found from source, setting quantity to zero\n", currencySymbol)
 			quantity, err := decimal.NewFromString("0.00")
 			if err != nil {
 				panic(err)

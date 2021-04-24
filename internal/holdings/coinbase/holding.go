@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/shopspring/decimal"
+	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/holdings"
 	"github.com/will7200/go-crypto-sync/pkg/coinbase"
@@ -26,6 +27,11 @@ type Provider struct {
 
 	//
 	client *coinbase.APIClient
+	logger *zap.SugaredLogger
+}
+
+func (p *Provider) SetLogger(logger *zap.Logger) {
+	p.logger = logger.Sugar().Named("coinbase")
 }
 
 // ascertain that provider implements the account interface
@@ -74,10 +80,10 @@ loop:
 			TotalShares: coinHolding.Balance.Amount,
 		})
 	}
-	if p, ok := coinHoldings.GetPaginationOk(); ok {
-		if p.NextStartingAfter != nil {
-			log.Println("fetching next set", *p.NextStartingAfter)
-			nextURI = *p.NextStartingAfter
+	if page, ok := coinHoldings.GetPaginationOk(); ok {
+		if page.NextStartingAfter != nil {
+			p.logger.Debug("fetching next set", *page.NextStartingAfter)
+			nextURI = *page.NextStartingAfter
 			goto loop
 		}
 	}

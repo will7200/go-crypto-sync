@@ -4,6 +4,8 @@ import (
 	"math/big"
 	"regexp"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
 type (
@@ -156,6 +158,8 @@ func (h Holdings) SearchByPattern(pattern regexp.Regexp) []int {
 type ProviderType interface {
 	// Returns Friendly Name
 	Name() string
+	// Set Logger
+	SetLogger(logger *zap.Logger)
 }
 
 // Interface to providing holding across different third party accounts

@@ -79,7 +79,6 @@ func (a *Authentication) AuthenticateWithPassword(ctx context.Context, params Au
 	var urlBuffer bytes.Buffer
 	urlBuffer.WriteString(baseURL)
 	urlBuffer.WriteString(AuthenticateWithPasswordEndpoint)
-
 	data := url.Values{
 		"bindDevice":      {"true"},
 		"deviceName":      {""},

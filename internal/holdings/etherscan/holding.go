@@ -8,6 +8,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/nanmu42/etherscan-api"
+	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/holdings"
 )
@@ -54,6 +55,11 @@ type Provider struct {
 
 	//
 	client *etherscan.Client
+	logger *zap.Logger
+}
+
+func (p *Provider) SetLogger(logger *zap.Logger) {
+	p.logger = logger
 }
 
 // ascertain that provider implements the account interface
