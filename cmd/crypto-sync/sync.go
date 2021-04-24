@@ -49,7 +49,8 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		log.Println("Fetching holdings from ", strings.Trim(holding, ""))
 		holdingsProvider, err := holdings.GetProvider(holding)
 		if err != nil {
-			return err
+			log.Printf("Skipping holding %s since provider doesn't exist", holding)
+			continue
 		}
 		account, err := holdingsProvider.Open(ctx.Config.Holdings[holding])
 		if err != nil {
