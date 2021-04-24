@@ -1,6 +1,6 @@
 module github.com/will7200/go-crypto-sync
 
-go 1.14
+go 1.16
 
 require (
 	github.com/HereMobilityDevelopers/mediary v1.0.0
