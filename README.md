@@ -29,15 +29,15 @@ onHoldingNotFound = "zeroQuantity"
 apiKey = "your-key"
 apiSecret = "your-secret"
 debug = false
-[holdings.ether]
+[holdings.etherscan]
 apiKey = "your-key"
 debug = false
-[[holdings.ether.account]]
+[[holdings.etherscan.account]]
 address = "your-address"
 symbolName = "ETH"
 fullName = "Ethereum"
 decimals = 18
-[[holdings.ether.account]]
+[[holdings.etherscan.account]]
 address = "your-address"
 contractAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
 symbolName = "USDC"
