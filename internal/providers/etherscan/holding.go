@@ -10,11 +10,11 @@ import (
 	"github.com/nanmu42/etherscan-api"
 	"go.uber.org/zap"
 
-	"github.com/will7200/go-crypto-sync/internal/holdings"
+	"github.com/will7200/go-crypto-sync/internal/providers"
 )
 
 func init() {
-	holdings.Register("etherscan", &Provider{})
+	providers.Register("etherscan", &Provider{})
 }
 
 type account struct {
@@ -63,13 +63,13 @@ func (p *Provider) SetLogger(logger *zap.Logger) {
 }
 
 // ascertain that provider implements the account interface
-var _ holdings.Account = &Provider{}
+var _ providers.Account = &Provider{}
 
 func (p *Provider) Name() string {
 	return "etherscan"
 }
 
-func (p *Provider) GetHoldings() (holdings.Holdings, error) {
+func (p *Provider) GetHoldings() (providers.Holdings, error) {
 	p.once.Do(func() {
 		client := etherscan.New(p.data.Network, p.data.ApiKey)
 		client.Verbose = p.data.Debug
@@ -82,7 +82,7 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 		//}
 	})
 	client := p.client
-	h := make([]holdings.Holding, 0, 25)
+	h := make([]providers.Holding, 0, 25)
 	for _, account := range p.data.Accounts {
 		var (
 			balance *etherscan.BigInt
@@ -96,7 +96,7 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 		if err != nil {
 			return nil, err
 		}
-		h = append(h, holdings.Holding{
+		h = append(h, providers.Holding{
 			SymbolName:  account.SymbolName,
 			FullName:    account.FullName,
 			TotalShares: new(big.Float).Quo(new(big.Float).SetInt(balance.Int()), big.NewFloat(math.Pow10(account.Decimals))).String(),
@@ -106,7 +106,7 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 	return h, nil
 }
 
-func (p *Provider) Open(params ...interface{}) (holdings.Account, error) {
+func (p *Provider) Open(params ...interface{}) (providers.IProvider, error) {
 	if len(params) == 1 {
 		m, ok := params[0].(map[string]interface{})
 		if !ok {

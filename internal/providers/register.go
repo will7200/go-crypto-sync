@@ -1,4 +1,4 @@
-package holdings
+package providers
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ var (
 )
 
 type Provider interface {
-	Open(params ...interface{}) (Account, error)
+	Open(params ...interface{}) (IProvider, error)
 }
 
 func Register(name string, provider Provider) {

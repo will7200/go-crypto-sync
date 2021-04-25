@@ -5,19 +5,19 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/will7200/go-crypto-sync/internal/holdings"
+	"github.com/will7200/go-crypto-sync/internal/providers"
 )
 
 type HoldingsCmd struct {
-	Holdings []string `arg name:"holding-accounts" help:"Holdings to anaylze"`
+	Holdings []string `arg name:"holding-accounts" help:"Holdings to analyze"`
 }
 
 func (s *HoldingsCmd) Run(ctx *Context) error {
 	log := ctx.SugaredLogger.Named("holdings")
 	var (
-		pricingData holdings.Price
+		pricingData providers.Price
 	)
-	allHoldings := make(holdings.Holdings, 0, 2)
+	allHoldings := make(providers.Holdings, 0, 2)
 	if len(s.Holdings) == 1 && s.Holdings[0] == "all" {
 		s.Holdings = []string{}
 		for key, _ := range ctx.Config.Holdings {
@@ -26,7 +26,7 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 	}
 	for _, holding := range s.Holdings {
 		log.Info("Fetching holdings from ", strings.Trim(holding, ""))
-		holdingsProvider, err := holdings.GetProvider(holding)
+		holdingsProvider, err := providers.GetProvider(holding)
 		if err != nil {
 			log.Warnf("Skipping holding %s since provider doesn't exist", holding)
 			continue
@@ -44,11 +44,11 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 	}
 
 	log.Info("setting pricing data provider to coinbase")
-	pdProvider, err := holdings.GetProvider("coinbase")
+	pdProvider, err := providers.GetProvider("coinbase")
 	if err != nil {
 		return err
 	}
-	pricingData = pdProvider.(holdings.Price)
+	pricingData = pdProvider.(providers.Price)
 	for _, holding := range allHoldings.MapReduce() {
 		p, err := pricingData.GetExchange(holding.CurrencySymbolName(), "USD")
 		if err != nil {

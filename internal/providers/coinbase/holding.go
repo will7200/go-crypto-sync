@@ -10,12 +10,12 @@ import (
 	"github.com/shopspring/decimal"
 	"go.uber.org/zap"
 
-	"github.com/will7200/go-crypto-sync/internal/holdings"
+	"github.com/will7200/go-crypto-sync/internal/providers"
 	"github.com/will7200/go-crypto-sync/pkg/coinbase"
 )
 
 func init() {
-	holdings.Register("coinbase", &Provider{})
+	providers.Register("coinbase", &Provider{})
 }
 
 // Coinbase Provider
@@ -35,15 +35,15 @@ func (p *Provider) SetLogger(logger *zap.Logger) {
 }
 
 // ascertain that provider implements the account interface
-var _ holdings.Account = &Provider{}
-var _ holdings.Price = &Provider{}
+var _ providers.Account = &Provider{}
+var _ providers.Price = &Provider{}
 
 func (p *Provider) Name() string {
 	return "coinbase"
 }
 
 // GetHoldings
-func (p *Provider) GetHoldings() (holdings.Holdings, error) {
+func (p *Provider) GetHoldings() (providers.Holdings, error) {
 	p.once.Do(func() {
 		config := coinbase.NewConfiguration()
 		config.Debug = p.debug
@@ -56,7 +56,7 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 	client := p.client
 	ctx := context.Background()
 	var nextURI string
-	h := make([]holdings.Holding, 0, 25)
+	h := make([]providers.Holding, 0, 25)
 loop:
 	accountListRequest := client.AccountsApi.ListAccounts(ctx)
 	if nextURI != "" {
@@ -74,7 +74,7 @@ loop:
 		if amount.Equal(decimal.NewFromInt(0)) {
 			continue
 		}
-		h = append(h, holdings.Holding{
+		h = append(h, providers.Holding{
 			SymbolName:  coinHolding.Currency.Code,
 			FullName:    coinHolding.Currency.Name,
 			TotalShares: coinHolding.Balance.Amount,
@@ -114,7 +114,7 @@ func (p *Provider) GetExchange(currency1, currency2 string) (string, error) {
 // 1. APIKey (string)
 // 2. APISecret (string)
 // Optional Provide a map
-func (p *Provider) Open(params ...interface{}) (holdings.Account, error) {
+func (p *Provider) Open(params ...interface{}) (providers.IProvider, error) {
 	if len(params) == 1 {
 		m, ok := params[0].(map[string]interface{})
 		if !ok {

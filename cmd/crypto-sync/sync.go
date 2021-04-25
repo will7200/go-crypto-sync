@@ -7,12 +7,12 @@ import (
 	"github.com/pelletier/go-toml"
 	"github.com/pelletier/go-toml/query"
 
-	"github.com/will7200/go-crypto-sync/internal/holdings"
-	_ "github.com/will7200/go-crypto-sync/internal/holdings/bscscan"
-	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbase"
-	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbasepro"
-	_ "github.com/will7200/go-crypto-sync/internal/holdings/etherscan"
 	"github.com/will7200/go-crypto-sync/internal/pc"
+	"github.com/will7200/go-crypto-sync/internal/providers"
+	_ "github.com/will7200/go-crypto-sync/internal/providers/bscscan"
+	_ "github.com/will7200/go-crypto-sync/internal/providers/coinbase"
+	_ "github.com/will7200/go-crypto-sync/internal/providers/coinbasepro"
+	_ "github.com/will7200/go-crypto-sync/internal/providers/etherscan"
 	"github.com/will7200/go-crypto-sync/pkg/personalcapital"
 )
 
@@ -36,9 +36,9 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		return errors.New("unknown destination for " + s.Destination)
 	}
 	var (
-		pricingData holdings.Price
+		pricingData providers.Price
 	)
-	allHoldings := make(holdings.Holdings, 0, 2)
+	allHoldings := make(providers.Holdings, 0, 2)
 	if len(s.Holdings) == 1 && s.Holdings[0] == "all" {
 		s.Holdings = []string{}
 		for key, _ := range ctx.Config.Holdings {
@@ -47,7 +47,7 @@ func (s *SyncCmd) Run(ctx *Context) error {
 	}
 	for _, holding := range s.Holdings {
 		log.Info("Fetching holdings from ", strings.Trim(holding, ""))
-		holdingsProvider, err := holdings.GetProvider(holding)
+		holdingsProvider, err := providers.GetProvider(holding)
 		if err != nil {
 			log.Infof("Skipping holding %s since provider doesn't exist", holding)
 			continue
@@ -64,11 +64,11 @@ func (s *SyncCmd) Run(ctx *Context) error {
 	}
 
 	log.Info("setting pricing data provider to coinbase")
-	pdProvider, err := holdings.GetProvider("coinbase")
+	pdProvider, err := providers.GetProvider("coinbase")
 	if err != nil {
 		return err
 	}
-	pricingData = pdProvider.(holdings.Price)
+	pricingData = pdProvider.(providers.Price)
 	switch s.Destination {
 	case "personalcapital":
 		raw := personCapitalValues.Execute(ctx.Tree)

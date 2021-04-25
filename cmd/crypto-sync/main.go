@@ -14,8 +14,8 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/common"
-	_ "github.com/will7200/go-crypto-sync/internal/holdings"
-	_ "github.com/will7200/go-crypto-sync/internal/holdings/coinbase"
+	_ "github.com/will7200/go-crypto-sync/internal/providers"
+	_ "github.com/will7200/go-crypto-sync/internal/providers/coinbase"
 )
 
 var (

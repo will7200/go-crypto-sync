@@ -1,4 +1,4 @@
-package holdings
+package providers
 
 import (
 	"math/big"
@@ -155,7 +155,7 @@ func (h Holdings) SearchByPattern(pattern regexp.Regexp) []int {
 }
 
 // Base Provider interface
-type ProviderType interface {
+type IProvider interface {
 	// Returns Friendly Name
 	Name() string
 	// Set Logger
@@ -164,14 +164,14 @@ type ProviderType interface {
 
 // Interface to providing holding across different third party accounts
 type Account interface {
-	ProviderType
+	IProvider
 	// GetHoldings returns all holdings that is has
 	GetHoldings() (Holdings, error)
 }
 
 // Interface to providing pricing data
 type Price interface {
-	ProviderType
+	IProvider
 	// GetExchange gets the value of currency1 in currency2
 	GetExchange(currency1, currency2 string) (string, error)
 }

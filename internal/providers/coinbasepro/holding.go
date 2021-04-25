@@ -13,11 +13,11 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/common"
-	"github.com/will7200/go-crypto-sync/internal/holdings"
+	"github.com/will7200/go-crypto-sync/internal/providers"
 )
 
 func init() {
-	holdings.Register("coinbasepro", &Provider{})
+	providers.Register("coinbasepro", &Provider{})
 }
 
 type Portfolio struct {
@@ -72,13 +72,13 @@ func (p *Provider) SetLogger(logger *zap.Logger) {
 }
 
 // ascertain that provider implements the account interface
-var _ holdings.Account = &Provider{}
+var _ providers.Account = &Provider{}
 
 func (p *Provider) Name() string {
 	return "coinbase pro"
 }
 
-func (p *Provider) GetHoldings() (holdings.Holdings, error) {
+func (p *Provider) GetHoldings() (providers.Holdings, error) {
 	p.once.Do(func() {
 		httpClient := mediary.Init().WithPreconfiguredClient(&http.Client{
 			Timeout: 15 * time.Second,
@@ -100,7 +100,7 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 
 		p.clients = clients
 	})
-	h := make(holdings.Holdings, 0, 10)
+	h := make(providers.Holdings, 0, 10)
 	for _, client := range p.clients {
 		th, err := p.getHoldingsForPortfolio(client)
 		if err != nil {
@@ -111,19 +111,19 @@ func (p *Provider) GetHoldings() (holdings.Holdings, error) {
 	return h, nil
 }
 
-func (p *Provider) getHoldingsForPortfolio(client *coinbasepro.Client) (holdings.Holdings, error) {
+func (p *Provider) getHoldingsForPortfolio(client *coinbasepro.Client) (providers.Holdings, error) {
 	accounts, err := client.GetAccounts()
 	if err != nil {
 		return nil, err
 	}
-	h := make(holdings.Holdings, 0, len(accounts))
+	h := make(providers.Holdings, 0, len(accounts))
 	for _, account := range accounts {
 		a, _, err := big.ParseFloat(account.Balance, 10, 17, big.ToNearestEven)
 		if err != nil {
 			panic(err)
 		}
 		if a.Cmp(new(big.Float).SetInt64(0)) == 1 {
-			h.AddHolding(holdings.Holding{
+			h.AddHolding(providers.Holding{
 				SymbolName:  account.Currency,
 				FullName:    "",
 				TotalShares: account.Balance,
@@ -133,7 +133,7 @@ func (p *Provider) getHoldingsForPortfolio(client *coinbasepro.Client) (holdings
 	return h, nil
 }
 
-func (p *Provider) Open(params ...interface{}) (holdings.Account, error) {
+func (p *Provider) Open(params ...interface{}) (providers.IProvider, error) {
 	if len(params) == 1 {
 		m, ok := params[0].(map[string]interface{})
 		if !ok {

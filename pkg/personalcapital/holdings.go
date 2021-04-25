@@ -16,7 +16,7 @@ import (
 
 	"github.com/google/go-querystring/query"
 
-	"github.com/will7200/go-crypto-sync/internal/holdings"
+	"github.com/will7200/go-crypto-sync/internal/providers"
 )
 
 type Holdings service
@@ -143,8 +143,8 @@ func (h *Holdings) GetHoldings(ctx context.Context, params *GetHoldingsParams) (
 	return lHoldings, nil
 }
 
-func PCHoldingsToIHoldings(h []HoldingsType) []holdings.IHolding {
-	a := make([]holdings.IHolding, len(h))
+func PCHoldingsToIHoldings(h []HoldingsType) []providers.IHolding {
+	a := make([]providers.IHolding, len(h))
 	for i := 0; i < len(h); i++ {
 		a[i] = h[i]
 	}

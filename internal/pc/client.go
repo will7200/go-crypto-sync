@@ -16,7 +16,7 @@ import (
 	"github.com/shopspring/decimal"
 
 	"github.com/will7200/go-crypto-sync/internal/common"
-	"github.com/will7200/go-crypto-sync/internal/holdings"
+	"github.com/will7200/go-crypto-sync/internal/providers"
 	"github.com/will7200/go-crypto-sync/pkg/personalcapital"
 )
 
@@ -26,7 +26,7 @@ var (
 
 // Sync source holdings to personal capital account
 // Currently cookies will be saved in the working directory of where this command is run
-func Sync(email, password string, cfg *personalcapital.Configuration, holds holdings.Holdings, pricing holdings.Price) {
+func Sync(email, password string, cfg *personalcapital.Configuration, holds providers.Holdings, pricing providers.Price) {
 	log := cfg.Logger.Sugar().Named("personal-capital")
 	// Get saved cookies if available
 	var cookies []*http.Cookie
@@ -80,9 +80,9 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds hold
 		}
 	}
 	log.Info("Holdings ", holds)
-	m := holds.HasCurrencyMap(func(l holdings.IHolding) string {
+	m := holds.HasCurrencyMap(func(l providers.IHolding) string {
 		return strings.ToLower(l.CurrencySymbolName())
-	}, func(r holdings.IHolding) string {
+	}, func(r providers.IHolding) string {
 		return strings.ToLower(strings.TrimSpace(strings.Split(r.CurrencySymbolName(), "-")[0]))
 	}, personalcapital.PCHoldingsToIHoldings(pcHoldings.Holdings)...)
 
