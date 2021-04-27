@@ -26,7 +26,7 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 	}
 	for _, holding := range s.Holdings {
 		log.Info("Fetching holdings from ", strings.Trim(holding, ""))
-		holdingsProvider, err := providers.GetProvider(holding)
+		holdingsProvider, err := providers.GetAccountProvider(holding)
 		if err != nil {
 			log.Warnf("Skipping holding %s since provider doesn't exist", holding)
 			continue
@@ -43,15 +43,24 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 	}
 
 	log.Infof("setting pricing data provider to %s", ctx.Config.PriceDataSource)
-	pdProvider, err := providers.GetProvider(ctx.Config.PriceDataSource)
+	pricingData, err := providers.OpenPricingProvider(ctx.Config.PriceDataSource, providers.Config{Logger: ctx.Logger}, ctx.Config.Holdings[ctx.Config.PriceDataSource])
 	if err != nil {
 		return err
 	}
-	pricingData = pdProvider.(providers.Price)
 	for _, holding := range allHoldings.MapReduce() {
-		p, err := pricingData.GetExchange(holding.CurrencySymbolName(), "USD")
+		log.Debugf("Fetching %s", holding.CurrencySymbolName())
+		name := holding.CurrencyName()
+		if len(name) == 0 {
+			name = holding.CurrencySymbolName()
+		}
+		if holding.CurrencySymbolName() == ctx.Config.DestinationCurrencyAs {
+			log.Infof("Holding=%s, Quantity=%s, TotalValue=%s", name, holding.TotalShares, holding.TotalShares)
+			continue
+		}
+		p, err := pricingData.GetExchange(holding.CurrencySymbolName(), ctx.Config.DestinationCurrencyAs)
 		if err != nil {
-			panic(err)
+			log.Error(err)
+			return err
 		}
 		pf, err := decimal.NewFromString(p)
 		if err != nil {
@@ -62,10 +71,6 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 			panic(err)
 		}
 		v := pf.Mul(quantity)
-		name := holding.CurrencyName()
-		if len(name) == 0 {
-			name = holding.CurrencySymbolName()
-		}
 		log.Infof("Holding=%s, Quantity=%s, TotalValue=%s", name, holding.TotalShares, v.String())
 	}
 	return nil

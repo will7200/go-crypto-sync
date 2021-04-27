@@ -16,6 +16,7 @@ import (
 	"github.com/will7200/go-crypto-sync/internal/common"
 	_ "github.com/will7200/go-crypto-sync/internal/providers"
 	_ "github.com/will7200/go-crypto-sync/internal/providers/coinbase"
+	_ "github.com/will7200/go-crypto-sync/internal/providers/nomics"
 )
 
 var (
