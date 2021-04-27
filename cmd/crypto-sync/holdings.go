@@ -43,8 +43,8 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 		allHoldings = append(allHoldings, uHolding...)
 	}
 
-	log.Info("setting pricing data provider to coinbase")
-	pdProvider, err := providers.GetProvider("coinbase")
+	log.Infof("setting pricing data provider to %s", ctx.Config.PriceDataSource)
+	pdProvider, err := providers.GetProvider(ctx.Config.PriceDataSource)
 	if err != nil {
 		return err
 	}
@@ -63,7 +63,11 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 			panic(err)
 		}
 		v := pf.Mul(quantity)
-		log.Infof("Holding=%s, Quantity=%s, TotalValue=%s", holding.CurrencyName(), holding.TotalShares, v.String())
+		name := holding.CurrencyName()
+		if len(name) == 0 {
+			name = holding.CurrencySymbolName()
+		}
+		log.Infof("Holding=%s, Quantity=%s, TotalValue=%s", name, holding.TotalShares, v.String())
 	}
 	return nil
 }
