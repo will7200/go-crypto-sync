@@ -58,11 +58,7 @@ type Provider struct {
 
 	//
 	client *etherscan.Client
-	logger *zap.Logger
-}
-
-func (p *Provider) SetLogger(logger *zap.Logger) {
-	p.logger = logger
+	logger *zap.SugaredLogger
 }
 
 // ascertain that provider implements the account interface
@@ -116,7 +112,13 @@ func (p *Provider) GetHoldings() (providers.Holdings, error) {
 	return h, nil
 }
 
-func (p *Provider) Open(params ...interface{}) (providers.IProvider, error) {
+func (p *Provider) Open(config providers.Config, params ...interface{}) (providers.IProvider, error) {
+	if config.Logger != nil {
+		p.logger = config.Logger.Sugar()
+	} else {
+		l, _ := zap.NewDevelopmentConfig().Build()
+		p.logger = l.Sugar()
+	}
 	if len(params) == 1 {
 		m, ok := params[0].(map[string]interface{})
 		if !ok {

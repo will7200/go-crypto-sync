@@ -17,12 +17,14 @@ var (
 type IProvider interface {
 	// Returns Friendly Name
 	Name() string
-	// Set Logger
-	SetLogger(logger *zap.Logger)
+}
+
+type Config struct {
+	Logger *zap.Logger
 }
 
 type Provider interface {
-	Open(params ...interface{}) (IProvider, error)
+	Open(config Config, params ...interface{}) (IProvider, error)
 }
 
 func Register(name string, provider Provider) {

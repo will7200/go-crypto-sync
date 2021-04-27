@@ -52,11 +52,10 @@ func (s *SyncCmd) Run(ctx *Context) error {
 			log.Infof("Skipping holding %s since provider doesn't exist", holding)
 			continue
 		}
-		provider, err := holdingsProvider.Open(ctx.Config.Holdings[holding])
+		provider, err := holdingsProvider.Open(providers.Config{Logger: ctx.Logger}, ctx.Config.Holdings[holding])
 		if err != nil {
 			return err
 		}
-		provider.SetLogger(ctx.Logger)
 		account := provider.(providers.Account)
 		uHolding, err := account.GetHoldings()
 		if err != nil {

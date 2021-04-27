@@ -50,11 +50,13 @@ type Provider struct {
 var _ providers.Price = &Provider{}
 var _ providers.Provider = &Provider{}
 
-func (p *Provider) SetLogger(logger *zap.Logger) {
-	p.logger = logger.Sugar().Named("nomics")
-}
-
-func (p *Provider) Open(params ...interface{}) (providers.IProvider, error) {
+func (p *Provider) Open(config providers.Config, params ...interface{}) (providers.IProvider, error) {
+	if config.Logger != nil {
+		p.logger = config.Logger.Sugar()
+	} else {
+		l, _ := zap.NewDevelopmentConfig().Build()
+		p.logger = l.Sugar()
+	}
 	if len(params) == 1 {
 		m, ok := params[0].(map[string]interface{})
 		if !ok {

@@ -31,11 +31,10 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 			log.Warnf("Skipping holding %s since provider doesn't exist", holding)
 			continue
 		}
-		account, err := holdingsProvider.Open(ctx.Config.Holdings[holding])
+		account, err := holdingsProvider.Open(providers.Config{Logger: ctx.Logger}, ctx.Config.Holdings[holding])
 		if err != nil {
 			return err
 		}
-		account.SetLogger(ctx.Logger)
 		uHolding, err := account.(providers.Account).GetHoldings()
 		if err != nil {
 			return err

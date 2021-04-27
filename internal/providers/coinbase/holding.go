@@ -30,10 +30,6 @@ type Provider struct {
 	logger *zap.SugaredLogger
 }
 
-func (p *Provider) SetLogger(logger *zap.Logger) {
-	p.logger = logger.Sugar().Named("coinbase")
-}
-
 // ascertain that provider implements the account interface
 var _ providers.Account = &Provider{}
 var _ providers.Price = &Provider{}
@@ -115,7 +111,13 @@ func (p *Provider) GetExchange(currency1, currency2 string) (string, error) {
 // 1. APIKey (string)
 // 2. APISecret (string)
 // Optional Provide a map
-func (p *Provider) Open(params ...interface{}) (providers.IProvider, error) {
+func (p *Provider) Open(config providers.Config, params ...interface{}) (providers.IProvider, error) {
+	if config.Logger != nil {
+		p.logger = config.Logger.Sugar()
+	} else {
+		l, _ := zap.NewDevelopmentConfig().Build()
+		p.logger = l.Sugar()
+	}
 	if len(params) == 1 {
 		m, ok := params[0].(map[string]interface{})
 		if !ok {
