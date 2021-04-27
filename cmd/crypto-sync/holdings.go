@@ -36,7 +36,7 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 			return err
 		}
 		account.SetLogger(ctx.Logger)
-		uHolding, err := account.GetHoldings()
+		uHolding, err := account.(providers.Account).GetHoldings()
 		if err != nil {
 			return err
 		}

@@ -47,15 +47,17 @@ func (s *SyncCmd) Run(ctx *Context) error {
 	}
 	for _, holding := range s.Holdings {
 		log.Info("Fetching holdings from ", strings.Trim(holding, ""))
-		holdingsProvider, err := providers.GetProvider(holding)
+		holdingsProvider, err := providers.GetAccountProvider(holding)
 		if err != nil {
 			log.Infof("Skipping holding %s since provider doesn't exist", holding)
 			continue
 		}
-		account, err := holdingsProvider.Open(ctx.Config.Holdings[holding])
+		provider, err := holdingsProvider.Open(ctx.Config.Holdings[holding])
 		if err != nil {
 			return err
 		}
+		provider.SetLogger(ctx.Logger)
+		account := provider.(providers.Account)
 		uHolding, err := account.GetHoldings()
 		if err != nil {
 			return err

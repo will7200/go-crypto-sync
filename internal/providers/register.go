@@ -3,6 +3,8 @@ package providers
 import (
 	"fmt"
 	"sync"
+
+	"go.uber.org/zap"
 )
 
 var (
@@ -10,6 +12,14 @@ var (
 
 	providerMap = make(map[string]Provider)
 )
+
+// Base Provider interface
+type IProvider interface {
+	// Returns Friendly Name
+	Name() string
+	// Set Logger
+	SetLogger(logger *zap.Logger)
+}
 
 type Provider interface {
 	Open(params ...interface{}) (IProvider, error)

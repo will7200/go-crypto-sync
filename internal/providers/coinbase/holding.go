@@ -37,6 +37,7 @@ func (p *Provider) SetLogger(logger *zap.Logger) {
 // ascertain that provider implements the account interface
 var _ providers.Account = &Provider{}
 var _ providers.Price = &Provider{}
+var _ providers.Provider = &Provider{}
 
 func (p *Provider) Name() string {
 	return "coinbase"

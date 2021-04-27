@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/will7200/go-crypto-sync/internal/common"
+	"github.com/will7200/go-crypto-sync/internal/providers"
 )
 
 func TestCoinbaseProAPI(t *testing.T) {
@@ -17,7 +18,8 @@ func TestCoinbaseProAPI(t *testing.T) {
 	err := mapstructure.Decode(config.Holdings["bscscan"], &data)
 	assert.NoError(t, err)
 	p := Provider{}
-	a, err := p.Open(config.Holdings["bscscan"])
+	aa, err := p.Open(config.Holdings["bscscan"])
+	a := aa.(providers.Account)
 	assert.NoError(t, err)
 	fmt.Println(a.GetHoldings())
 }

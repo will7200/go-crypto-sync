@@ -1,11 +1,10 @@
 package providers
 
 import (
+	"fmt"
 	"math/big"
 	"regexp"
 	"strings"
-
-	"go.uber.org/zap"
 )
 
 type (
@@ -154,14 +153,6 @@ func (h Holdings) SearchByPattern(pattern regexp.Regexp) []int {
 	panic("implement me")
 }
 
-// Base Provider interface
-type IProvider interface {
-	// Returns Friendly Name
-	Name() string
-	// Set Logger
-	SetLogger(logger *zap.Logger)
-}
-
 // Interface to providing holding across different third party accounts
 type Account interface {
 	IProvider
@@ -169,9 +160,19 @@ type Account interface {
 	GetHoldings() (Holdings, error)
 }
 
-// Interface to providing pricing data
-type Price interface {
-	IProvider
-	// GetExchange gets the value of currency1 in currency2
-	GetExchange(currency1, currency2 string) (string, error)
+func GetAccountProvider(name string) (Provider, error) {
+	providerMu.RLock()
+	provider, ok := providerMap[name]
+	providerMu.RUnlock()
+
+	if !ok {
+		return nil, fmt.Errorf("provider: unknown provider %q (forgotten import?)", name)
+	}
+
+	_, ok = provider.(Account)
+	if !ok {
+		return nil, fmt.Errorf("provider %s: does not implement Account interface", name)
+	}
+
+	return provider, nil
 }
