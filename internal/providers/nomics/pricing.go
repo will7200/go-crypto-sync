@@ -103,9 +103,16 @@ func (p *Provider) Name() string {
 
 func (p *Provider) GetExchange(currency1, currency2 string) (string, error) {
 	p.Once()
+	failureCount := 0
+retry:
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
-	resp, _, err := p.client.CurrenciesApi.GetCurrenciesTicker(ctx).Ids(currency1).QuoteCurrency(currency2).Execute()
+	resp, httpResponse, err := p.client.CurrenciesApi.GetCurrenciesTicker(ctx).Ids(currency1).QuoteCurrency(currency2).Execute()
+	if httpResponse != nil && httpResponse.StatusCode == 429 && failureCount < 3 {
+		failureCount += 1
+		time.Sleep(time.Second)
+		goto retry
+	}
 	if err != nil {
 		return "", err
 	}
