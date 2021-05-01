@@ -18,6 +18,11 @@ func (o OnHoldingNotFoundType) IsValid() bool {
 	return o == ZeroQuantity || o == DeleteHolding
 }
 
+type SymbolConfig struct {
+	Global    map[string]string            `toml:"global"`
+	Overrides map[string]map[string]string `toml:"override"`
+}
+
 // Config holds details when syncing
 type Config struct {
 	// Debug
@@ -42,6 +47,10 @@ type Config struct {
 	// List of crypto currency holdings with their configurations
 	// Supported: coinbase
 	Holdings map[string]map[string]interface{} `toml:"holdings"`
+	// Pricing holds a list of configuration for pricing data
+	Pricing map[string]map[string]interface{} `toml:"pricing"`
+	// Symbols holds a map of overrides for symbols
+	Symbols SymbolConfig `toml:"symbols"`
 	// List of Destinations holding their configuration
 	// Supported: personalcapital
 	Destinations map[string]map[string]interface{} `toml:"destinations"`

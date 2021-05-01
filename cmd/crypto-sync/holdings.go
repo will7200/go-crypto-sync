@@ -43,7 +43,7 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 	}
 
 	log.Infof("setting pricing data provider to %s", ctx.Config.PriceDataSource)
-	pricingData, err := providers.OpenPricingProvider(ctx.Config.PriceDataSource, providers.Config{Logger: ctx.Logger}, ctx.Config.Holdings[ctx.Config.PriceDataSource])
+	pricingData, err := providers.OpenPricingProvider(ctx.Config.PriceDataSource, providers.Config{Logger: ctx.Logger, Config: ctx.Config}, ctx.Config.Pricing[ctx.Config.PriceDataSource])
 	if err != nil {
 		return err
 	}

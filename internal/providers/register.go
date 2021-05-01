@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/will7200/go-crypto-sync/internal/common"
 	"go.uber.org/zap"
 )
 
@@ -21,6 +22,7 @@ type IProvider interface {
 
 type Config struct {
 	Logger *zap.Logger
+	Config *common.Config
 }
 
 type Provider interface {

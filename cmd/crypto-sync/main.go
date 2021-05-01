@@ -38,7 +38,7 @@ var (
 type Context struct {
 	Debug         bool
 	Tree          *toml.Tree
-	Config        common.Config
+	Config        *common.Config
 	Logger        *zap.Logger
 	SugaredLogger *zap.SugaredLogger
 }
@@ -108,6 +108,6 @@ func main() {
 	logger = logger.Named("crypto-sync")
 	defer logger.Sync() // flushes buffer, if any
 	sugar := logger.Sugar()
-	err = ctx.Run(&Context{Debug: cli.LogLevel.IsDebug(), Tree: cli.tree, Config: conf, Logger: logger, SugaredLogger: sugar})
+	err = ctx.Run(&Context{Debug: cli.LogLevel.IsDebug(), Tree: cli.tree, Config: &conf, Logger: logger, SugaredLogger: sugar})
 	ctx.FatalIfErrorf(err)
 }
