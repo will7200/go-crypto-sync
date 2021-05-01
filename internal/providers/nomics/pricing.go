@@ -93,6 +93,7 @@ func (p *Provider) Once() {
 		if p.data.Debug {
 			httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger))
 		}
+		config.HTTPClient = httpClient.Build()
 		p.client = nomics.NewAPIClient(config)
 	})
 }
