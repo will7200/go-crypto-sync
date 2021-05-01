@@ -4,7 +4,7 @@ tasks:
   build-coinbase-api:
     cmds:
     - >
-      env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator generate -i api/coinbase.yml -o pkg/coinbase
+      env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator-cli generate -i api/coinbase.yml -o pkg/coinbase
       -g go-experimental -c api/coinbase.config.yaml --enable-post-process-file -t api/templates/coinbase
       --git-repo-id go-crypto-sync --git-user-id will7200
     # remove the go module files, we don't need those
@@ -13,11 +13,20 @@ tasks:
   build-nomics-api:
     cmds:
     - >
-      env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator generate -i api/nomics.yml -o pkg/nomics
+      env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator-cli generate -i api/nomics.yml -o pkg/nomics
       -g go-experimental -c api/nomics.config.yml --enable-post-process-file -t api/templates/nomics
       --git-repo-id go-crypto-sync --git-user-id will7200
     # remove the go module files, we don't need those
     - rm pkg/nomics/go.mod && rm pkg/nomics/go.sum
+    silent: false
+  build-binance-api:
+    cmds:
+    - >
+      env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator-cli generate -i api/binance.yml -o pkg/binance
+      -g go -c api/binance.config.yml --enable-post-process-file -t api/templates/binance
+      --git-repo-id go-crypto-sync --git-user-id will7200
+    # remove the go module files, we don't need those
+    - rm pkg/binance/go.mod pkg/binance/go.sum pkg/binance/.travis.yml pkg/binance/git_push.sh
     silent: false
   build:
     cmds:
