@@ -270,6 +270,12 @@ func (h *Holdings) UpdateHoldings(ctx context.Context, holding HoldingsUpdateReq
 	}
 	update := UpdateHoldingsResponse{}
 	err = json.Unmarshal(body, &update)
+	if len(update.SpHeader.Errors) > 0 {
+		return nil, errors.New(update.SpHeader.Errors[0].Message)
+	}
+	if err != nil {
+		return nil, err
+	}
 	if err != nil {
 		return nil, err
 	}
