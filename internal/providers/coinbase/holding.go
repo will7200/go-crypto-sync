@@ -38,7 +38,7 @@ func (p *Provider) Name() string {
 	return "coinbase"
 }
 
-// GetHoldings
+// GetHoldings returns all holds for coinbase
 func (p *Provider) GetHoldings() (providers.Holdings, error) {
 	p.once.Do(func() {
 		config := coinbase.NewConfiguration()
@@ -106,6 +106,7 @@ func (p *Provider) GetExchange(currency1, currency2 string) (string, error) {
 	return price.Data.Rates[currency2], nil
 }
 
+// Open the provider
 // Params:
 // 1. APIKey (string)
 // 2. APISecret (string)

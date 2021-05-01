@@ -9,7 +9,7 @@ func (c *Errors) Add(e error) { *c = append(*c, e) }
 func (c *Errors) Error() (err string) {
 	err = "Errors:\n"
 	for i, e := range *c {
-		err += fmt.Sprintf("\tError %d: %s\n", i, e.Error())
+		err += fmt.Sprintf("\t%d: %s\n", i, e.Error())
 	}
 
 	return err
