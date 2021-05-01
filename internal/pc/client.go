@@ -82,7 +82,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			account = accounts.SpData.Accounts[index]
 		}
 	}
-	m := holds.HasCurrencyMap(func(l providers.IHolding) string {
+	mappedResults := holds.HasCurrencyMap(func(l providers.IHolding) string {
 		return strings.ToLower(l.CurrencySymbolName())
 	}, func(r providers.IHolding) string {
 		if r.CurrencySymbolName() == "Cash" {
@@ -91,119 +91,118 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 		return strings.ToLower(strings.TrimSpace(strings.Split(r.CurrencySymbolName(), "-")[0]))
 	}, personalcapital.PCHoldingsToIHoldings(pcHoldings.Holdings)...)
 
-	for key, value := range m {
+	for key, value := range mappedResults {
 		log.Debug(key, value)
-		// Handle special case if is us dollar
-		if key == "usd" {
-			log.Info("updating PC cash amount")
-			left := holds[value.LPos]
-			quantity, err := decimal.NewFromString(left.TotalSharesString())
-			if err != nil {
-				panic(err)
+		// Handle by key
+		{
+			switch strings.ToLower(key) {
+			// Handle special case if is us dollar
+			case "usd", "us dollar", "cash":
+				log.Info("updating PC cash amount")
+				left := holds[value.LPos]
+				quantity, err := decimal.NewFromString(left.TotalSharesString())
+				if err != nil {
+					log.Fatal(err)
+				}
+				_, err = apiClient.Holdings.UpdateCashAmount(context.Background(), quantity.StringFixed(2), account.UserAccountID)
+				if err != nil {
+					log.Fatal(err)
+				}
+				continue
 			}
-			_, err = apiClient.Holdings.UpdateCashAmount(context.Background(), quantity.StringFixed(2), account.UserAccountID)
-			if err != nil {
-				panic(err)
-			}
-			continue
 		}
-		if value.FoundBoth() {
-			log.Infof("%s found in pc, updating holding", holds[value.LPos].CurrencySymbolName())
+
+		var (
+			holdingRequest interface{}
+			target         providers.IHolding
+		)
+		switch value.Result() {
+		case providers.ExistsInBoth:
 			left, right := holds[value.LPos], pcHoldings.Holdings[value.RPos]
-			quantity, err := decimal.NewFromString(left.TotalSharesString())
+			log.Infof("%s found in pc, updating holding", left.CurrencySymbolName())
+			holdingRequest = HoldingTypeToHoldingRequest(right)
+			target = left
+		case providers.ExistsInOriginationOnly:
+			left := holds[value.LPos]
+			log.Infof("%s not found in pc, create new holding\n", left.CurrencySymbolName())
 			if err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
-			p, err := pricing.GetExchange(left.CurrencySymbolName(), "USD")
+			ticker := left.CurrencyName()
+			if len(ticker) < 5 {
+				ticker = ticker + " - " + "Cryptocurrency"
+			}
+			holdingRequest = &personalcapital.HoldingAddRequest{
+				Ticker:        ticker,
+				Description:   left.CurrencySymbolName(),
+				Source:        "USER",
+				UserAccountId: account.UserAccountID,
+			}
+			target = left
+		case providers.ExistsInTargetOnly:
+			right := pcHoldings.Holdings[value.RPos]
+			currencySymbol := strings.TrimSpace(strings.Split(right.CurrencySymbolName(), "-")[0])
+			log.Infof("%s not found from source, setting quantity to zero\n", currencySymbol)
 			if err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
-			pf, err := decimal.NewFromString(p)
-			if err != nil {
-				panic(err)
-			}
-			v := pf.Mul(quantity)
-			d := HoldingTypeToHoldingRequest(right)
-			d.PriceSource = "COINBASE"
+			holdingRequest = HoldingTypeToHoldingRequest(right)
+			target = right
+			right.Quantity = 0
+		default:
+			log.Fatal("Wow never expected to get here")
+			return
+		}
+
+		p, err := pricing.GetExchange(target.CurrencySymbolName(), "USD")
+		if err != nil {
+			log.Fatal(err)
+		}
+		price, err := decimal.NewFromString(p)
+		if err != nil {
+			log.Fatal(err)
+		}
+		quantity, err := decimal.NewFromString(target.TotalSharesString())
+		if err != nil {
+			log.Fatal(err)
+		}
+		v := price.Mul(quantity)
+		log.Infof("Holding=%s, Quantity=%s, TotalValue=%s", target.CurrencyName(), quantity.StringFixed(18), v.String())
+
+		switch value.Result() {
+		case providers.ExistsInBoth, providers.ExistsInTargetOnly:
+			d := holdingRequest.(personalcapital.HoldingsUpdateRequest)
+			d.Value = v.StringFixed(2)
 			if quantity.GreaterThan(decimal.NewFromFloat(1)) {
 				d.Quantity = quantity.StringFixed(2)
 			} else {
 				d.Quantity = quantity.StringFixed(18)
 			}
-			d.Value = v.StringFixed(2)
-			if pf.GreaterThan(decimal.NewFromFloat(1)) {
-				d.Price = pf.StringFixed(2)
+			if price.GreaterThan(decimal.NewFromFloat(1)) {
+				d.Price = price.StringFixed(2)
 			} else {
-				d.Price = pf.StringFixed(18)
+				d.Price = price.StringFixed(18)
 			}
-			d.Description = left.SymbolName + " - " + left.TotalShares + " actual shares"
-			log.Infof("Holding=%s, Quantity=%s, TotalValue=%s", left.CurrencySymbolName(), left.TotalShares, v.StringFixed(2))
 			_, err = apiClient.Holdings.UpdateHoldings(context.Background(), d)
 			if err != nil {
-				log.Panic(err)
+				log.Fatal(err)
 			}
-		} else if value.LeftOnly() {
-			log.Infof("%s not found in pc, create new holding\n", holds[value.LPos].CurrencySymbolName())
-			quantity, err := decimal.NewFromString(holds[value.LPos].TotalSharesString())
-			if err != nil {
-				panic(err)
+		case providers.ExistsInOriginationOnly:
+			d := holdingRequest.(*personalcapital.HoldingAddRequest)
+			d.Value = v.StringFixed(2)
+			if quantity.GreaterThan(decimal.NewFromFloat(1)) {
+				d.Quantity = quantity.StringFixed(2)
+			} else {
+				d.Quantity = quantity.StringFixed(18)
 			}
-			p, err := pricing.GetExchange(holds[value.LPos].CurrencySymbolName(), "USD")
-			if err != nil {
-				panic(err)
-			}
-			pf, err := decimal.NewFromString(p)
-			if err != nil {
-				panic(err)
-			}
-			v := pf.Mul(quantity)
-			name := holds[value.LPos].CurrencyName()
-			if len(name) < 5 {
-				name = name + " - " + "Cryptocurrency"
-			}
-			d := &personalcapital.HoldingAddRequest{
-				Ticker:        name,
-				Quantity:      quantity.StringFixed(2),
-				Description:   holds[value.LPos].CurrencySymbolName(),
-				Source:        "USER",
-				Price:         pf.StringFixed(14),
-				UserAccountId: account.UserAccountID,
-				Value:         v.StringFixed(2),
+			if price.GreaterThan(decimal.NewFromFloat(1)) {
+				d.Price = price.StringFixed(2)
+			} else {
+				d.Price = price.StringFixed(18)
 			}
 			_, err = apiClient.Holdings.AddHolding(context.Background(), d)
 			if err != nil {
-				panic(err)
-			}
-		} else if value.RightOnly() {
-			right := pcHoldings.Holdings[value.RPos]
-			currencySymbol := strings.TrimSpace(strings.Split(right.CurrencySymbolName(), "-")[0])
-			log.Infof("%s not found from source, setting quantity to zero\n", currencySymbol)
-			quantity, err := decimal.NewFromString("0.00")
-			if err != nil {
-				panic(err)
-			}
-			p, err := pricing.GetExchange(currencySymbol, "USD")
-			if err != nil {
-				panic(err)
-			}
-			pf, err := decimal.NewFromString(p)
-			if err != nil {
-				panic(err)
-			}
-			v := pf.Mul(quantity)
-			d := HoldingTypeToHoldingRequest(right)
-			d.PriceSource = "COINBASE"
-			d.Quantity = quantity.StringFixed(2)
-			d.Value = v.StringFixed(2)
-			d.Value = v.StringFixed(2)
-			if pf.GreaterThan(decimal.NewFromFloat(1)) {
-				d.Price = pf.StringFixed(2)
-			} else {
-				d.Price = pf.StringFixed(18)
-			}
-			_, err = apiClient.Holdings.UpdateHoldings(context.Background(), d)
-			if err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
 		}
 	}

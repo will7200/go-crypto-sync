@@ -42,7 +42,7 @@ func (h *Holdings) AddHoldings(hh Holdings) {
 	*h = append(*h, hh...)
 }
 
-// check if holdings account has a currency by symbol name
+// HasCurrencySymbolName check if holdings account has a currency by symbol name
 func (h Holdings) HasCurrencySymbolName(symbol string) bool {
 	for _, v := range h {
 		if strings.ToLower(symbol) == strings.ToLower(v.SymbolName) {
@@ -52,7 +52,7 @@ func (h Holdings) HasCurrencySymbolName(symbol string) bool {
 	return false
 }
 
-// check if holdings account has a currency by name
+// HasCurrencyName check if holdings account has a currency by name
 func (h Holdings) HasCurrencyName(name string) bool {
 	for _, v := range h {
 		if strings.ToLower(name) == strings.ToLower(v.FullName) {
@@ -99,32 +99,54 @@ func (h Holdings) MapReduce() (final Holdings) {
 	return final
 }
 
-// HasInfo contains positioning information about holdings in two accounts
-type HasInfo struct {
+type Existence int
+
+const (
+	ExistenceUnknown Existence = iota
+	ExistsInOriginationOnly
+	ExistsInTargetOnly
+	ExistsInBoth
+)
+
+// CommonElements contains positioning information about holdings in two lists
+type CommonElements struct {
 	LPos int
 	RPos int
 }
 
+// Result returns a enum result of what is the account status across the two lists
+func (hi CommonElements) Result() Existence {
+	if hi.FoundBoth() {
+		return ExistsInBoth
+	} else if hi.LeftOnly() {
+		return ExistsInOriginationOnly
+	} else if hi.RightOnly() {
+		return ExistsInTargetOnly
+	} else {
+		return ExistenceUnknown
+	}
+}
+
 // FoundBoth when both are not -1
-func (hi HasInfo) FoundBoth() bool {
+func (hi CommonElements) FoundBoth() bool {
 	return hi.LPos != -1 && hi.RPos != -1
 }
 
-// LeftOnly when holding found in the Left Account
-func (hi HasInfo) LeftOnly() bool {
+// LeftOnly when holding found in the Left List or the origination list
+func (hi CommonElements) LeftOnly() bool {
 	return hi.LPos != -1 && hi.RPos == -1
 }
 
-// RightOnly when holding found in the Right Account
-func (hi HasInfo) RightOnly() bool {
+// RightOnly when holding found in the Right List or the target list
+func (hi CommonElements) RightOnly() bool {
 	return hi.LPos == -1 && hi.RPos != -1
 }
 
 // HasCurrencyMap compares holdings with another Holdings account to check for existence
-func (h Holdings) HasCurrencyMap(left func(l IHolding) string, right func(r IHolding) string, ih ...IHolding) map[string]HasInfo {
-	mb := make(map[string]HasInfo, len(h))
+func (h Holdings) HasCurrencyMap(left func(l IHolding) string, right func(r IHolding) string, ih ...IHolding) map[string]CommonElements {
+	mb := make(map[string]CommonElements, len(h))
 	for index, v := range h {
-		mb[strings.ToLower(left(v))] = HasInfo{
+		mb[strings.ToLower(left(v))] = CommonElements{
 			LPos: index,
 			RPos: -1,
 		}
@@ -139,7 +161,7 @@ func (h Holdings) HasCurrencyMap(left func(l IHolding) string, right func(r IHol
 			mb[key] = val
 		} else {
 			if len(key) > 0 {
-				mb[key] = HasInfo{
+				mb[key] = CommonElements{
 					LPos: -1,
 					RPos: index,
 				}
@@ -153,13 +175,14 @@ func (h Holdings) SearchByPattern(pattern regexp.Regexp) []int {
 	panic("implement me")
 }
 
-// Interface to providing holding across different third party accounts
+// Account Interface to providing holding across different third party accounts
 type Account interface {
 	IProvider
 	// GetHoldings returns all holdings that is has
 	GetHoldings() (Holdings, error)
 }
 
+// GetAccountProvider gets a provider by name that implements the Account interface
 func GetAccountProvider(name string) (Provider, error) {
 	providerMu.RLock()
 	provider, ok := providerMap[name]
