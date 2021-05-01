@@ -101,8 +101,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			if err != nil {
 				panic(err)
 			}
-			quantityFloat, _ := quantity.Float64()
-			_, err = apiClient.Holdings.UpdateCashAmount(context.Background(), quantityFloat, account.UserAccountID)
+			_, err = apiClient.Holdings.UpdateCashAmount(context.Background(), quantity.StringFixed(2), account.UserAccountID)
 			if err != nil {
 				panic(err)
 			}
@@ -115,7 +114,6 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			if err != nil {
 				panic(err)
 			}
-			quantityFloat, _ := quantity.Float64()
 			p, err := pricing.GetExchange(left.CurrencySymbolName(), "USD")
 			if err != nil {
 				panic(err)
@@ -124,14 +122,20 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			if err != nil {
 				panic(err)
 			}
-			priceFloat, _ := pf.Float64()
 			v := pf.Mul(quantity)
-			valueFloat, _ := v.Float64()
 			d := HoldingTypeToHoldingRequest(right)
 			d.PriceSource = "COINBASE"
-			d.Quantity = quantityFloat
-			d.Value = valueFloat
-			d.Price = priceFloat
+			if quantity.GreaterThan(decimal.NewFromFloat(1)) {
+				d.Quantity = quantity.StringFixed(2)
+			} else {
+				d.Quantity = quantity.StringFixed(18)
+			}
+			d.Value = v.StringFixed(2)
+			if pf.GreaterThan(decimal.NewFromFloat(1)) {
+				d.Price = pf.StringFixed(2)
+			} else {
+				d.Price = pf.StringFixed(18)
+			}
 			d.Description = left.SymbolName + " - " + left.TotalShares + " actual shares"
 			log.Infof("Holding=%s, Quantity=%s, TotalValue=%s", left.CurrencySymbolName(), left.TotalShares, v.StringFixed(2))
 			_, err = apiClient.Holdings.UpdateHoldings(context.Background(), d)
@@ -178,7 +182,6 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			if err != nil {
 				panic(err)
 			}
-			quantityFloat, _ := quantity.Float64()
 			p, err := pricing.GetExchange(currencySymbol, "USD")
 			if err != nil {
 				panic(err)
@@ -187,14 +190,17 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			if err != nil {
 				panic(err)
 			}
-			priceFloat, _ := pf.Float64()
 			v := pf.Mul(quantity)
-			valueFloat, _ := v.Float64()
 			d := HoldingTypeToHoldingRequest(right)
 			d.PriceSource = "COINBASE"
-			d.Quantity = quantityFloat
-			d.Value = valueFloat
-			d.Price = priceFloat
+			d.Quantity = quantity.StringFixed(2)
+			d.Value = v.StringFixed(2)
+			d.Value = v.StringFixed(2)
+			if pf.GreaterThan(decimal.NewFromFloat(1)) {
+				d.Price = pf.StringFixed(2)
+			} else {
+				d.Price = pf.StringFixed(18)
+			}
 			_, err = apiClient.Holdings.UpdateHoldings(context.Background(), d)
 			if err != nil {
 				panic(err)

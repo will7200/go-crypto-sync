@@ -184,7 +184,7 @@ type (
 	// userAccountId=80828031&priceSource=USER&valueSortIndex=1&costBasis=0&value=44.35&oneDayPercentChange=0&lastServerChangeId=21&csrf=7e23adfc-8058-408a-bb39-d7ee428a0dbb&apiClient=WEB
 	HoldingsUpdateRequest struct {
 		Ticker                       string  `url:"ticker"`
-		Quantity                     float64 `url:"quantity"`
+		Quantity                     string  `url:"quantity"`
 		ManualClassification         string  `url:"manualClassification"`
 		IsMarketMover                bool    `url:"isMarketMover"`
 		AccountName                  string  `url:"accountName"`
@@ -199,13 +199,13 @@ type (
 		SourceAssetId                string  `url:"sourceAssetId"`
 		External                     string  `url:"external"`
 		HoldingType                  string  `url:"holdingType"`
-		Price                        float64 `url:"price"`
+		Price                        string  `url:"price"`
 		HoldingPercentage            float64 `url:"holdingPercentage"`
 		UserAccountId                int     `url:"userAccountId"`
 		PriceSource                  string  `url:"priceSource"`
 		ValueSortIndex               int     `url:"valueSortIndex"`
-		CostBasis                    float64 `url:"costBasis"`
-		Value                        float64 `url:"value"`
+		CostBasis                    string  `url:"costBasis"`
+		Value                        string  `url:"value"`
 		OneDayPercentChange          float64 `url:"oneDayPercentChange"`
 		LastServerChangeId           string  `url:"lastServerChangeId"`
 		Csrf                         string  `url:"csrf"`
@@ -283,12 +283,12 @@ func (h *Holdings) UpdateHoldings(ctx context.Context, holding HoldingsUpdateReq
 }
 
 // UpdateCashAmount this is a special Add/Update Holding because this one is built into personal capital for all manual investments accounts.
-func (h *Holdings) UpdateCashAmount(ctx context.Context, cashAmount float64, userAccountId int) (*UpdateHoldingsResponse, error) {
+func (h *Holdings) UpdateCashAmount(ctx context.Context, cashAmount string, userAccountId int) (*UpdateHoldingsResponse, error) {
 	return h.UpdateHoldings(ctx, HoldingsUpdateRequest{
 		Quantity:      cashAmount,
 		Description:   "Cash",
 		SourceAssetId: "USER_DESCR_Cash",
-		Price:         1,
+		Price:         "1.00",
 		UserAccountId: userAccountId,
 		PriceSource:   "USER",
 	})
@@ -321,10 +321,10 @@ type (
 				SourceAssetID string  `json:"sourceAssetId"`
 				Ticker        string  `json:"ticker"`
 				External      string  `json:"external"`
-				Quantity      float64 `json:"quantity"`
+				Quantity      string  `json:"quantity"`
 				AccountName   string  `json:"accountName"`
 				HoldingType   string  `json:"holdingType"`
-				Price         float64 `json:"price"`
+				Price         string  `json:"price"`
 				PriceSource   string  `json:"priceSource"`
 				UserAccountID int     `json:"userAccountId"`
 				Description   string  `json:"description"`
