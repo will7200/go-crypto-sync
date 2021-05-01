@@ -44,9 +44,9 @@ type Context struct {
 
 var cli struct {
 	tree       *toml.Tree
-	Debug      debugFlag  `help:"Enable debug mode."`
 	TimeFormat timeFormat `help:"Specify output time format" name:"time-format" default:""`
 	LogFormat  logFormat  `help:"Specify output log format" name:"log-format" default:"console"`
+	LogLevel   logLevel   `short:"l" help:"Set the logging level (debug|info|warn|error|fatal)" default:"info"`
 	ConfigFile string     `help:"File to read conf from" name:"config-file" default:"config.toml"`
 
 	Sync     SyncCmd     `cmd help:"Sync holdings to another account" default:"1"`
@@ -107,6 +107,6 @@ func main() {
 	logger = logger.Named("crypto-sync")
 	defer logger.Sync() // flushes buffer, if any
 	sugar := logger.Sugar()
-	err = ctx.Run(&Context{Debug: bool(cli.Debug), Tree: cli.tree, Config: conf, Logger: logger, SugaredLogger: sugar})
+	err = ctx.Run(&Context{Debug: cli.LogLevel.IsDebug(), Tree: cli.tree, Config: conf, Logger: logger, SugaredLogger: sugar})
 	ctx.FatalIfErrorf(err)
 }

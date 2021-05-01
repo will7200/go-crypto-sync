@@ -41,7 +41,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 	httpClient := mediary.Init().WithPreconfiguredClient(client)
 
 	if cfg.Debug {
-		httpClient = httpClient.AddInterceptors(common.DumpRequestResponse)
+		httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(cfg.Logger.Sugar().Named("personal-capital-client")))
 	}
 	u, err := url.Parse(cfg.Host)
 	if err != nil {
@@ -68,10 +68,13 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 		log.Fatal(err)
 	}
 	apiClient.CSRF = &resp.CRSF
-	pcHoldings, _ := apiClient.Holdings.GetHoldings(context.Background(), &personalcapital.GetHoldingsParams{FilterUserCreated: true, FilterAccountName: "CryptoSync managed automatically"})
+	pcHoldings, err := apiClient.Holdings.GetHoldings(context.Background(), &personalcapital.GetHoldingsParams{FilterUserCreated: true, FilterAccountName: "CryptoSync managed automatically"})
+	if err != nil {
+		log.Fatal(err)
+	}
 	accounts, err := apiClient.Accounts.GetAccounts(context.Background(), nil)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	var account personalcapital.AccountType
 	for index, account1 := range accounts.SpData.Accounts {
@@ -79,18 +82,20 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			account = accounts.SpData.Accounts[index]
 		}
 	}
-	log.Info("Holdings ", holds)
 	m := holds.HasCurrencyMap(func(l providers.IHolding) string {
 		return strings.ToLower(l.CurrencySymbolName())
 	}, func(r providers.IHolding) string {
+		if r.CurrencySymbolName() == "Cash" {
+			return strings.ToLower(r.(personalcapital.HoldingsType).Currency)
+		}
 		return strings.ToLower(strings.TrimSpace(strings.Split(r.CurrencySymbolName(), "-")[0]))
 	}, personalcapital.PCHoldingsToIHoldings(pcHoldings.Holdings)...)
 
 	for key, value := range m {
-		log.Info(key, value)
+		log.Debug(key, value)
 		// Handle special case if is us dollar
-		if key == "us dollar" {
-			log.Info("updating PC cash amount\n")
+		if key == "usd" {
+			log.Info("updating PC cash amount")
 			left := holds[value.LPos]
 			quantity, err := decimal.NewFromString(left.TotalSharesString())
 			if err != nil {
@@ -104,7 +109,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			continue
 		}
 		if value.FoundBoth() {
-			log.Infof("%s found in pc, updating holding\n", holds[value.LPos].CurrencySymbolName())
+			log.Infof("%s found in pc, updating holding", holds[value.LPos].CurrencySymbolName())
 			left, right := holds[value.LPos], pcHoldings.Holdings[value.RPos]
 			quantity, err := decimal.NewFromString(left.TotalSharesString())
 			if err != nil {
@@ -128,9 +133,10 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			d.Value = valueFloat
 			d.Price = priceFloat
 			d.Description = left.SymbolName + " - " + left.TotalShares + " actual shares"
+			log.Infof("Holding=%s, Quantity=%s, TotalValue=%s", left.CurrencySymbolName(), left.TotalShares, v.StringFixed(2))
 			_, err = apiClient.Holdings.UpdateHoldings(context.Background(), d)
 			if err != nil {
-				panic(err)
+				log.Panic(err)
 			}
 		} else if value.LeftOnly() {
 			log.Infof("%s not found in pc, create new holding\n", holds[value.LPos].CurrencySymbolName())

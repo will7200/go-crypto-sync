@@ -81,7 +81,7 @@ func (p *Provider) GetHoldings() (providers.Holdings, error) {
 			Timeout: 15 * time.Second,
 		})
 		if p.data.Debug {
-			httpClient = httpClient.AddInterceptors(common.DumpRequestResponse)
+			httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger.Named("client")))
 		}
 		clients := make([]*coinbasepro.Client, len(p.data.Portfolios))
 		for i, portfolio := range p.data.Portfolios {
@@ -98,7 +98,8 @@ func (p *Provider) GetHoldings() (providers.Holdings, error) {
 		p.clients = clients
 	})
 	h := make(providers.Holdings, 0, 10)
-	for _, client := range p.clients {
+	for i, client := range p.clients {
+		p.logger.Debugf("Getting Portfolio %s", p.data.Portfolios[i].Name)
 		th, err := p.getHoldingsForPortfolio(client)
 		if err != nil {
 			return nil, err

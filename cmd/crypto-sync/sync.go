@@ -49,10 +49,10 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		log.Info("Fetching holdings from ", strings.Trim(holding, ""))
 		holdingsProvider, err := providers.GetAccountProvider(holding)
 		if err != nil {
-			log.Infof("Skipping holding %s since provider doesn't exist", holding)
+			log.Warnf("Skipping holding %s since provider doesn't exist", holding)
 			continue
 		}
-		provider, err := holdingsProvider.Open(providers.Config{Logger: ctx.Logger}, ctx.Config.Holdings[holding])
+		provider, err := holdingsProvider.Open(providers.Config{Logger: ctx.Logger.Named("provider").Named(holding)}, ctx.Config.Holdings[holding])
 		if err != nil {
 			return err
 		}
@@ -64,12 +64,11 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		allHoldings = append(allHoldings, uHolding...)
 	}
 
-	log.Info("setting pricing data provider to coinbase")
-	pdProvider, err := providers.GetProvider("coinbase")
+	log.Infof("setting pricing data provider to %s", ctx.Config.PriceDataSource)
+	pricingData, err := providers.OpenPricingProvider(ctx.Config.PriceDataSource, providers.Config{Logger: ctx.Logger}, ctx.Config.Holdings[ctx.Config.PriceDataSource])
 	if err != nil {
 		return err
 	}
-	pricingData = pdProvider.(providers.Price)
 	switch s.Destination {
 	case "personalcapital":
 		raw := personCapitalValues.Execute(ctx.Tree)

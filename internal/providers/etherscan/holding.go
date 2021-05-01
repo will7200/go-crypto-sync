@@ -86,6 +86,7 @@ func (p *Provider) GetHoldings() (providers.Holdings, error) {
 			err     error
 		)
 		if account.ContractAddress != "" {
+			p.logger.Debugf("fetching token balance at %s", account.ContractAddress)
 			balance, err = client.TokenBalance(account.ContractAddress, account.Address)
 		} else {
 			balance, err = client.AccountBalance(account.Address)

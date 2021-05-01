@@ -155,13 +155,6 @@ func (a *Authentication) identifyUser(ctx context.Context, username, inCsrf stri
 		return
 	}
 	if resp.StatusCode == http.StatusOK {
-		if a.client.cfg.Debug {
-			requestDump, err := httputil.DumpResponse(resp, true)
-			if err != nil {
-				return "", "", err
-			}
-			log.Println(string(requestDump))
-		}
 		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
@@ -197,9 +190,6 @@ func (a *Authentication) getCsrfFromHomePage(ctx context.Context) (csrf string, 
 	dumpResponse, err := httputil.DumpResponse(resp, true)
 	if err != nil {
 		return "", err
-	}
-	if a.client.cfg.Debug {
-		log.Println(string(dumpResponse))
 	}
 
 	re := regexp.MustCompile("globals.csrf='([a-f0-9-]+)'")

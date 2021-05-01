@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"sync"
 
 	"github.com/shopspring/decimal"
@@ -101,7 +100,7 @@ func (p *Provider) GetExchange(currency1, currency2 string) (string, error) {
 	ctx := context.Background()
 	price, _, err := client.ExchangeRatesApi.GetExchangeRateFor(ctx).Currency(currency1).Execute()
 	if err != nil {
-		log.Println(err)
+		p.logger.Error(err)
 		return "", err
 	}
 	return price.Data.Rates[currency2], nil
