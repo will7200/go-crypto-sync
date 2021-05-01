@@ -3,11 +3,28 @@ destination = "personalcapital"
 priceDataSource = "coinbase"
 destinationCurrencyAs = "USD"
 onHoldingNotFound = "zeroQuantity"
+[pricing]
+    [pricing.nomics]
+    apiKey = "your-key"
+    debug = false
+
+    [pricing.coinbase]
+    apiKey = "your-key"
+    apiSecret = "your-secret"
+    debug = false
+
+[symbols]
+    [symbols.global]
+        [symbols.override]
+            [symbols.override.nomics]
+            IOTA = "IOT"
+
 [holdings]
     [holdings.coinbase]
     apiKey = "your-key"
     apiSecret = "your-secret"
     debug = false
+
     [holdings.etherscan]
     apiKey = "your-key"
     debug = false
@@ -22,6 +39,7 @@ onHoldingNotFound = "zeroQuantity"
         symbolName = "USDC"
         fullName = "USD Coin"
         decimals = 6
+
     [holdings.coinbasepro]
     debug = true
         [[holdings.coinbasepro.portfolios]]
@@ -31,6 +49,7 @@ onHoldingNotFound = "zeroQuantity"
         passphrase = "some_pass_phrase"
         # If base_url is left blank with default to the value below
         base_url = "https://api.pro.coinbase.com"
+
     [holdings.bscscan]
     apiKey = "some-api-key"
     debug = false
@@ -41,6 +60,16 @@ onHoldingNotFound = "zeroQuantity"
         symbolName = "BNB"
         fullName = "Binance Coin"
         decimals = 18
+
+    [holdings.binance-us]
+    debug = false
+    apiKey = "some-api-key"
+    secret = "some-secret"
+
+    [holdings.binance]
+    debug = false
+    apiKey = "some-api-key"
+    secret = "some-secret"
 [destinations]
     [destinations.personalcapital]
     email = "example@email.com"

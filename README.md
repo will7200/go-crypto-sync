@@ -10,6 +10,22 @@ Sync your Cryptocurrency Holdings to a Personal Capital Account
 2. Ethereum and derivatives via etherscan
 3. Coinbase Pro
 4. Binance Coin and derivatives via bscscan
+5. Binance and Binance.us
+
+## Getting Started
+
+1. Download from releases page for your operating system.
+   Current supported os are: Windows, Mac, and Linux
+   
+2. Copy the config.example.toml and rename to config.toml.
+   Remove/comment out any providers that you are not currently using.
+   Get the api keys you need for you use case.
+   
+3. Create a new investment account name `CryptoSync managed automatically` in Personal Capital or anything you would like,
+   just make sure to update the config file to reflect the change.
+   
+4. run `crypto-sync.exe sync --destination pc all` and check your account
+   The first time connecting you will be asked your MFA if setup in Personal Capital
 
 ## Example Commands
 
@@ -24,11 +40,28 @@ destination = "personalcapital"
 priceDataSource = "coinbase"
 destinationCurrencyAs = "USD"
 onHoldingNotFound = "zeroQuantity"
+[pricing]
+[pricing.nomics]
+apiKey = "your-key"
+debug = false
+
+[pricing.coinbase]
+apiKey = "your-key"
+apiSecret = "your-secret"
+debug = false
+
+[symbols]
+[symbols.global]
+[symbols.override]
+[symbols.override.nomics]
+IOTA = "IOT"
+
 [holdings]
 [holdings.coinbase]
 apiKey = "your-key"
 apiSecret = "your-secret"
 debug = false
+
 [holdings.etherscan]
 apiKey = "your-key"
 debug = false
@@ -43,6 +76,7 @@ contractAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
 symbolName = "USDC"
 fullName = "USD Coin"
 decimals = 6
+
 [holdings.coinbasepro]
 debug = true
 [[holdings.coinbasepro.portfolios]]
@@ -52,6 +86,7 @@ key = "some_key"
 passphrase = "some_pass_phrase"
 # If base_url is left blank with default to the value below
 base_url = "https://api.pro.coinbase.com"
+
 [holdings.bscscan]
 apiKey = "some-api-key"
 debug = false
@@ -62,6 +97,16 @@ address = "0xaddress"
 symbolName = "BNB"
 fullName = "Binance Coin"
 decimals = 18
+
+[holdings.binance-us]
+debug = false
+apiKey = "some-api-key"
+secret = "some-secret"
+
+[holdings.binance]
+debug = false
+apiKey = "some-api-key"
+secret = "some-secret"
 [destinations]
 [destinations.personalcapital]
 email = "example@email.com"
