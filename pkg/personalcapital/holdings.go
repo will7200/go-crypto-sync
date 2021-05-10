@@ -321,10 +321,10 @@ type (
 				SourceAssetID string  `json:"sourceAssetId"`
 				Ticker        string  `json:"ticker"`
 				External      string  `json:"external"`
-				Quantity      string  `json:"quantity"`
+				Quantity      float64 `json:"quantity"`
 				AccountName   string  `json:"accountName"`
 				HoldingType   string  `json:"holdingType"`
-				Price         string  `json:"price"`
+				Price         float64 `json:"price"`
 				PriceSource   string  `json:"priceSource"`
 				UserAccountID int     `json:"userAccountId"`
 				Description   string  `json:"description"`
