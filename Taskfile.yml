@@ -5,7 +5,7 @@ tasks:
     cmds:
     - >
       env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator-cli generate -i api/coinbase.yml -o pkg/coinbase
-      -g go-experimental -c api/coinbase.config.yaml --enable-post-process-file -t api/templates/coinbase
+      -g go -c api/coinbase.config.yaml --enable-post-process-file -t api/templates/coinbase
       --git-repo-id go-crypto-sync --git-user-id will7200
     # remove the go module files, we don't need those
     - rm pkg/coinbase/go.mod && rm pkg/coinbase/go.sum
@@ -14,7 +14,7 @@ tasks:
     cmds:
     - >
       env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator-cli generate -i api/nomics.yml -o pkg/nomics
-      -g go-experimental -c api/nomics.config.yml --enable-post-process-file -t api/templates/nomics
+      -g go -c api/nomics.config.yml --enable-post-process-file -t api/templates/nomics
       --git-repo-id go-crypto-sync --git-user-id will7200
     # remove the go module files, we don't need those
     - rm pkg/nomics/go.mod && rm pkg/nomics/go.sum

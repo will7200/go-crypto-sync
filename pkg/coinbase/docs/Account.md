@@ -4,17 +4,17 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | Pointer to **string** |  | 
-**Name** | Pointer to **string** |  | 
-**Primary** | Pointer to **bool** |  | 
-**Type** | Pointer to **string** |  | 
-**Currency** | Pointer to [**Currency**](Currency.md) |  | 
-**Balance** | Pointer to [**AccountBalance**](Account_balance.md) |  | 
-**CreatedAt** | Pointer to [**time.Time**](time.Time.md) |  | 
-**UpdatedAt** | Pointer to [**time.Time**](time.Time.md) |  | 
-**Resource** | Pointer to **string** |  | 
-**ResourcePath** | Pointer to **string** |  | 
-**Ready** | Pointer to **bool** |  | 
+**Id** | **string** |  | 
+**Name** | **string** |  | 
+**Primary** | **bool** |  | 
+**Type** | **string** |  | 
+**Currency** | [**Currency**](Currency.md) |  | 
+**Balance** | [**AccountBalance**](AccountBalance.md) |  | 
+**CreatedAt** | **time.Time** |  | 
+**UpdatedAt** | **time.Time** |  | 
+**Resource** | **string** |  | 
+**ResourcePath** | **string** |  | 
+**Ready** | **bool** |  | 
 **AllowDeposits** | Pointer to **bool** |  | [optional] 
 **AllowWithdrawals** | Pointer to **bool** |  | [optional] 
 

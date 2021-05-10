@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Pagination** | Pointer to [**Pagination**](pagination.md) |  | 
-**Data** | Pointer to [**[]Account**](Account.md) |  | 
+**Pagination** | [**Pagination**](Pagination.md) |  | 
+**Data** | [**[]Account**](Account.md) |  | 
 
 ## Methods
 

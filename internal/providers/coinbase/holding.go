@@ -4,9 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"sync"
+	"time"
 
+	"github.com/HereMobilityDevelopers/mediary"
 	"github.com/shopspring/decimal"
+	"github.com/will7200/go-crypto-sync/internal/common"
 	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/providers"
@@ -47,6 +51,15 @@ func (p *Provider) GetHoldings() (providers.Holdings, error) {
 			Key:    p.apiKey,
 			Secret: p.apiSecret,
 		}
+		client := &http.Client{
+			Timeout: 15 * time.Second,
+		}
+		httpClient := mediary.Init().WithPreconfiguredClient(client)
+
+		if p.debug {
+			httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger))
+		}
+		config.HTTPClient = httpClient.Build()
 		p.client = coinbase.NewAPIClient(config)
 	})
 	client := p.client

@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Currency** | Pointer to **string** |  | 
-**Rates** | Pointer to **map[string]string** |  | 
+**Currency** | **string** |  | 
+**Rates** | **map[string]string** |  | 
 
 ## Methods
 

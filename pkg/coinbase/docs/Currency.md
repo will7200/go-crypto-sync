@@ -4,15 +4,15 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Code** | Pointer to **string** |  | 
-**Name** | Pointer to **string** |  | 
-**Color** | Pointer to **string** |  | 
-**SortIndex** | Pointer to **float32** |  | 
-**Exponent** | Pointer to **float32** |  | 
-**Type** | Pointer to **string** |  | 
+**Code** | **string** |  | 
+**Name** | **string** |  | 
+**Color** | **string** |  | 
+**SortIndex** | **float32** |  | 
+**Exponent** | **float32** |  | 
+**Type** | **string** |  | 
 **AddressRegex** | Pointer to **string** |  | [optional] 
-**AssetId** | Pointer to **string** |  | 
-**Slug** | Pointer to **string** |  | 
+**AssetId** | **string** |  | 
+**Slug** | **string** |  | 
 
 ## Methods
 

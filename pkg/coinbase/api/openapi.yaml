@@ -586,6 +586,7 @@ components:
       required:
       - data
       - pagination
+      type: object
     inline_response_200_1:
       example:
         data:
@@ -595,6 +596,7 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/ExchangeRates'
+      type: object
     inline_response_200_2:
       example:
         data:
@@ -604,6 +606,7 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/CurrencyExchange'
+      type: object
     Account_balance:
       example:
         amount: amount
@@ -616,6 +619,7 @@ components:
       required:
       - amount
       - currency
+      type: object
     ErrorResponse_errors:
       properties:
         id:
@@ -625,6 +629,7 @@ components:
       required:
       - id
       - message
+      type: object
   securitySchemes:
     ApiKeyAuth:
       in: header

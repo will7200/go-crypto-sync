@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Amount** | Pointer to **string** |  | 
-**Currency** | Pointer to **string** |  | 
+**Amount** | **string** |  | 
+**Currency** | **string** |  | 
 
 ## Methods
 

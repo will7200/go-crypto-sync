@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Errors** | Pointer to [**[]ErrorResponseErrors**](ErrorResponse_errors.md) |  | 
+**Errors** | [**[]ErrorResponseErrors**](ErrorResponseErrors.md) |  | 
 
 ## Methods
 
