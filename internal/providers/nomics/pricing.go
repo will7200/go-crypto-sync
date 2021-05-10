@@ -63,7 +63,7 @@ func (p *Provider) Open(config providers.Config, params ...interface{}) (provide
 			return nil, errors.New("invalid parameters")
 		}
 		d := &Data{}
-		err := mapstructure.Decode(m, &d)
+		err := mapstructure.Decode(m, d)
 		if err != nil {
 			return nil, err
 		}
