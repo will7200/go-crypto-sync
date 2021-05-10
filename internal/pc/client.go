@@ -124,7 +124,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			target = left
 		case providers.ExistsInOriginationOnly:
 			left := holds[value.LPos]
-			log.Infof("%s not found in pc, create new holding\n", left.CurrencySymbolName())
+			log.Infof("%s not found in pc, create new holding", left.CurrencySymbolName())
 			if err != nil {
 				log.Fatal(err)
 			}

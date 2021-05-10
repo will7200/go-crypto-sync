@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/HereMobilityDevelopers/mediary"
+	"github.com/mitchellh/mapstructure"
 	"github.com/shopspring/decimal"
 	"github.com/will7200/go-crypto-sync/internal/common"
 	"go.uber.org/zap"
@@ -21,12 +22,31 @@ func init() {
 	providers.Register("coinbase", &Provider{})
 }
 
-// Coinbase Provider
+type Data struct {
+	ApiKey    string `mapstructure:"apiKey"`
+	ApiSecret string `mapstructure:"apiSecret"`
+	Debug     bool   `mapstructure:"debug"`
+}
+
+func (d *Data) SetDefaults() {
+
+}
+
+func (d *Data) Validate() (err error) {
+	errs := new(common.Errors)
+	if d.ApiKey == "" {
+		errs.Add(errors.New("Invalid API Key"))
+	}
+	if d.ApiSecret == "" {
+		errs.Add(errors.New("Invalid API Secret"))
+	}
+	return errs.AsError()
+}
+
+// Provider for Coinbase
 type Provider struct {
-	apiKey    string
-	apiSecret string
-	debug     bool
-	once      sync.Once
+	once sync.Once
+	data *Data
 
 	//
 	client *coinbase.APIClient
@@ -42,26 +62,28 @@ func (p *Provider) Name() string {
 	return "coinbase"
 }
 
+func (p *Provider) Once() {
+	config := coinbase.NewConfiguration()
+	config.Debug = p.data.Debug
+	config.APIKey = coinbase.APIKey{
+		Key:    p.data.ApiKey,
+		Secret: p.data.ApiSecret,
+	}
+	client := &http.Client{
+		Timeout: 15 * time.Second,
+	}
+	httpClient := mediary.Init().WithPreconfiguredClient(client)
+
+	if p.data.Debug {
+		httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger))
+	}
+	config.HTTPClient = httpClient.Build()
+	p.client = coinbase.NewAPIClient(config)
+}
+
 // GetHoldings returns all holds for coinbase
 func (p *Provider) GetHoldings() (providers.Holdings, error) {
-	p.once.Do(func() {
-		config := coinbase.NewConfiguration()
-		config.Debug = p.debug
-		config.APIKey = coinbase.APIKey{
-			Key:    p.apiKey,
-			Secret: p.apiSecret,
-		}
-		client := &http.Client{
-			Timeout: 15 * time.Second,
-		}
-		httpClient := mediary.Init().WithPreconfiguredClient(client)
-
-		if p.debug {
-			httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger))
-		}
-		config.HTTPClient = httpClient.Build()
-		p.client = coinbase.NewAPIClient(config)
-	})
+	p.Once()
 	client := p.client
 	ctx := context.Background()
 	var nextURI string
@@ -100,15 +122,7 @@ loop:
 }
 
 func (p *Provider) GetExchange(currency1, currency2 string) (string, error) {
-	p.once.Do(func() {
-		config := coinbase.NewConfiguration()
-		config.Debug = p.debug
-		config.APIKey = coinbase.APIKey{
-			Key:    p.apiKey,
-			Secret: p.apiSecret,
-		}
-		p.client = coinbase.NewAPIClient(config)
-	})
+	p.Once()
 	client := p.client
 	ctx := context.Background()
 	price, _, err := client.ExchangeRatesApi.GetExchangeRateFor(ctx).Currency(currency1).Execute()
@@ -136,25 +150,29 @@ func (p *Provider) Open(config providers.Config, params ...interface{}) (provide
 		if !ok {
 			return nil, errors.New("invalid parameters")
 		}
-		p.apiKey, ok = m["apiKey"].(string)
-		if !ok {
-			return nil, errors.New("apiKey parameter missing")
+		d := &Data{}
+		err := mapstructure.Decode(m, d)
+		if err != nil {
+			return nil, err
 		}
-		p.apiSecret, ok = m["apiSecret"].(string)
-		if !ok {
-			return nil, errors.New("apiSecret parameter missing")
+		d.SetDefaults()
+		err = d.Validate()
+		if err != nil {
+			return nil, err
 		}
-		p.debug, _ = m["debug"].(bool)
+		p.data = d
 	} else if len(params) == 2 {
 		for i, v := range params {
 			if _, ok := v.(string); !ok {
 				return nil, fmt.Errorf("invalid type(%T) for parameter index %d", v, i)
 			}
 		}
-		p.apiKey = params[0].(string)
-		p.apiSecret = params[1].(string)
+		p.data = &Data{}
+		p.data.ApiKey = params[0].(string)
+		p.data.ApiSecret = params[1].(string)
 	} else {
 		return nil, errors.New("invalid parameters")
 	}
+	p.Once()
 	return p, nil
 }

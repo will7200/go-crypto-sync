@@ -51,7 +51,7 @@ func (d *Data) Validate() error {
 	return errs.AsError()
 }
 
-// Coinbase Provider
+// Provider for bscscan
 type Provider struct {
 	once sync.Once
 	data *Data
@@ -69,24 +69,25 @@ func (p *Provider) Name() string {
 	return "bscscan"
 }
 
-func (p *Provider) GetHoldings() (providers.Holdings, error) {
-	p.once.Do(func() {
-		client := etherscan.NewCustomized(etherscan.Customization{
-			Timeout:       15 * time.Second,
-			Key:           p.data.ApiKey,
-			BaseURL:       p.data.BaseURL,
-			Verbose:       p.data.Debug,
-			BeforeRequest: nil,
-			AfterRequest:  nil,
-		})
-		p.client = client
-		//client.BeforeRequest = func(module, action string, param map[string]interface{}) error {
-		//	// ...
-		//}
-		//client.AfterRequest = func(module, action string, param map[string]interface{}, outcome interface{}, requestErr error) {
-		//	// ...
-		//}
+func (p *Provider) Once() {
+	client := etherscan.NewCustomized(etherscan.Customization{
+		Timeout:       15 * time.Second,
+		Key:           p.data.ApiKey,
+		BaseURL:       p.data.BaseURL,
+		Verbose:       p.data.Debug,
+		BeforeRequest: nil,
+		AfterRequest:  nil,
 	})
+	p.client = client
+	//client.BeforeRequest = func(module, action string, param map[string]interface{}) error {
+	//	// ...
+	//}
+	//client.AfterRequest = func(module, action string, param map[string]interface{}, outcome interface{}, requestErr error) {
+	//	// ...
+	//}
+}
+
+func (p *Provider) GetHoldings() (providers.Holdings, error) {
 	client := p.client
 	h := make([]providers.Holding, 0, 25)
 	for _, account := range p.data.Accounts {
@@ -139,5 +140,6 @@ func (p *Provider) Open(config providers.Config, params ...interface{}) (provide
 	} else {
 		return nil, errors.New("invalid parameters")
 	}
+	p.Once()
 	return p, nil
 }

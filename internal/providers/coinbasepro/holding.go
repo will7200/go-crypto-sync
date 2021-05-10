@@ -57,7 +57,7 @@ func (d *Data) Validate() error {
 	return err.AsError()
 }
 
-// Coinbase Provider
+// Provider for coinbase pro
 type Provider struct {
 	once sync.Once
 	data *Data

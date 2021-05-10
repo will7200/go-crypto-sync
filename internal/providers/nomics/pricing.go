@@ -36,7 +36,7 @@ func (d *Data) Validate() (err error) {
 	return
 }
 
-// Nomics Provider
+// Provider for Nomics
 type Provider struct {
 	data *Data
 	once sync.Once

@@ -48,7 +48,7 @@ func (d *Data) Validate() (err error) {
 	return
 }
 
-// Coinbase Provider
+// Provider for etherscan
 type Provider struct {
 	once sync.Once
 	data *Data
