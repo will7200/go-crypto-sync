@@ -4,15 +4,18 @@ import (
 	"errors"
 	"math"
 	"math/big"
+	"net/http"
 	"sync"
 	"time"
 
+	"github.com/HereMobilityDevelopers/mediary"
 	"github.com/mitchellh/mapstructure"
 	"github.com/nanmu42/etherscan-api"
 	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/common"
 	"github.com/will7200/go-crypto-sync/internal/providers"
+	ietherscan "github.com/will7200/go-crypto-sync/internal/providers/etherscan"
 )
 
 func init() {
@@ -65,26 +68,26 @@ type Provider struct {
 var _ providers.Account = &Provider{}
 var _ providers.Provider = &Provider{}
 
-func (p *Provider) Name() string {
-	return "bscscan"
+func (p *Provider) Once() {
+	httpClientBase := &http.Client{
+		Timeout: 15 * time.Second,
+	}
+	httpClient := mediary.Init().WithPreconfiguredClient(httpClientBase)
+
+	if p.data.Debug {
+		httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger))
+	}
+	httpClient = httpClient.AddInterceptors(ietherscan.AddTurtleForRateLimiter(p.logger, 3))
+	p.client = etherscan.NewCustomized(etherscan.Customization{
+		Key:     p.data.ApiKey,
+		BaseURL: p.data.BaseURL,
+		Client:  httpClient.Build(),
+		Verbose: p.data.Debug,
+	})
 }
 
-func (p *Provider) Once() {
-	client := etherscan.NewCustomized(etherscan.Customization{
-		Timeout:       15 * time.Second,
-		Key:           p.data.ApiKey,
-		BaseURL:       p.data.BaseURL,
-		Verbose:       p.data.Debug,
-		BeforeRequest: nil,
-		AfterRequest:  nil,
-	})
-	p.client = client
-	//client.BeforeRequest = func(module, action string, param map[string]interface{}) error {
-	//	// ...
-	//}
-	//client.AfterRequest = func(module, action string, param map[string]interface{}, outcome interface{}, requestErr error) {
-	//	// ...
-	//}
+func (p *Provider) Name() string {
+	return "bscscan"
 }
 
 func (p *Provider) GetHoldings() (providers.Holdings, error) {

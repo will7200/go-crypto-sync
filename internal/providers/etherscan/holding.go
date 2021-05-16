@@ -1,13 +1,20 @@
 package etherscan
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"math"
 	"math/big"
+	"net/http"
 	"sync"
+	"time"
 
+	"github.com/HereMobilityDevelopers/mediary"
 	"github.com/mitchellh/mapstructure"
 	"github.com/nanmu42/etherscan-api"
+	"github.com/will7200/go-crypto-sync/internal/common"
 	"go.uber.org/zap"
 
 	"github.com/will7200/go-crypto-sync/internal/providers"
@@ -62,22 +69,53 @@ type Provider struct {
 var _ providers.Account = &Provider{}
 var _ providers.Provider = &Provider{}
 
+func AddTurtleForRateLimiter(logger *zap.SugaredLogger, retryAmount int) func(req *http.Request, handler mediary.Handler) (*http.Response, error) {
+	maxLimitMessage := "Max rate limit reached"
+	return func(req *http.Request, handler mediary.Handler) (*http.Response, error) {
+		r, err := handler(req)
+		for ra := retryAmount; ra > 0 && err == nil; ra-- {
+			if r.StatusCode == http.StatusOK {
+				bodyBytes, _ := ioutil.ReadAll(r.Body)
+				r.Body.Close() //  must close
+				r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+				if bytes.Contains(bodyBytes, []byte(maxLimitMessage)) {
+					logger.Warnf("Rate limited for %s. Sleeping for one second", req.Host)
+					time.Sleep(1 * time.Second)
+					r, err = handler(req)
+				} else {
+					break
+				}
+			} else {
+				break
+			}
+		}
+		return r, err
+	}
+}
+
+func (p *Provider) Once() {
+	httpClientBase := &http.Client{
+		Timeout: 15 * time.Second,
+	}
+	httpClient := mediary.Init().WithPreconfiguredClient(httpClientBase)
+
+	if p.data.Debug {
+		httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger))
+	}
+	httpClient = httpClient.AddInterceptors(AddTurtleForRateLimiter(p.logger, 3))
+	p.client = etherscan.NewCustomized(etherscan.Customization{
+		Key:     p.data.ApiKey,
+		BaseURL: fmt.Sprintf(`https://%s.etherscan.io/api?`, p.data.Network.SubDomain()),
+		Client:  httpClient.Build(),
+		//Verbose: p.data.Debug,
+	})
+}
+
 func (p *Provider) Name() string {
 	return "etherscan"
 }
 
 func (p *Provider) GetHoldings() (providers.Holdings, error) {
-	p.once.Do(func() {
-		client := etherscan.New(p.data.Network, p.data.ApiKey)
-		client.Verbose = p.data.Debug
-		p.client = client
-		//client.BeforeRequest = func(module, action string, param map[string]interface{}) error {
-		//	// ...
-		//}
-		//client.AfterRequest = func(module, action string, param map[string]interface{}, outcome interface{}, requestErr error) {
-		//	// ...
-		//}
-	})
 	client := p.client
 	h := make([]providers.Holding, 0, 25)
 	for _, account := range p.data.Accounts {
@@ -130,5 +168,6 @@ func (p *Provider) Open(config providers.Config, params ...interface{}) (provide
 	} else {
 		return nil, errors.New("invalid parameters")
 	}
+	p.Once()
 	return p, nil
 }
