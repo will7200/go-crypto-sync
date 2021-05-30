@@ -1,0 +1,9 @@
+packageVersion: 0.1.0
+isGoSubmodule: true
+packageName: yieldwatch
+allParams: true
+modulePackageName: pkg/yieldwatch
+withXml: false
+enumClassPrefix: true
+topLevelPackageName: github.com/will7200/go-crypto-sync
+hideGenerationTimestamp: false

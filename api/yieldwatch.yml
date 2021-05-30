@@ -1,0 +1,309 @@
+openapi: 3.0.2
+info:
+  title: Yieldwatch API
+  description: |
+    Yieldwatch doesn't have a openapi docs sadville
+  version: '2021-05-29'
+servers:
+- url: https://www.yieldwatch.net/api
+  description: Yieldwatch Production Server
+paths:
+  /all/{wallet_address}:
+    get:
+      tags:
+      - defi
+      summary: Get all providers for the waller address
+      operationId: GetDefiPortfolioAll
+      description: This will return all portfolios with their values
+      parameters:
+      - in: path
+        name: wallet_address
+        description: wallet address to return values for
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: platform
+        description: comma seperated list of platforms to speed up request
+        required: false
+        schema:
+          type: string
+        example: pancake,hyperjump,blizzard
+      responses:
+        '200':
+          description: returns portfolios values
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      watchBalance:
+                        type: object
+                        properties:
+                          USDPrice:
+                            type: number
+                          totalBalance:
+                            type: number
+                          maxMonitorValue:
+                            type: number
+                          walletBalance:
+                            type: number
+                          watchFromLP:
+                            type: number
+                      currencies:
+                        type: object
+                        properties:
+                          EUR:
+                            type: number
+                          RMB:
+                            type: number
+                          JPY:
+                            type: number
+                          GBP:
+                            type: number
+                          BTCB:
+                            type: number
+                          WBNB:
+                            type: number
+                          BRL:
+                            type: number
+                          AUD:
+                            type: number
+                          HKD:
+                            type: number
+                          SGD:
+                            type: number
+                          RUB:
+                            type: number
+                          KRW:
+                            type: number
+                          CAD:
+                            type: number
+                          THB:
+                            type: number
+                          CHF:
+                            type: number
+                          IDR:
+                            type: number
+                          TRY:
+                            type: number
+                          TWD:
+                            type: number
+                      Alpha:
+                        type: object
+                      ApeSwap:
+                        type: object
+                      HyperJump:
+                        type: object
+                      BeefyFinance:
+                        type: object
+                      Blizzard:
+                        type: object
+                      MDex:
+                        type: object
+                      PancakeSwap:
+                        type: object
+                        properties:
+                          vaults:
+                            type: object
+                            properties:
+                              totalUSDValues:
+                                type: object
+                                properties:
+                                  deposit:
+                                    type: number
+                                  yield:
+                                    type: number
+                                  total:
+                                    type: number
+                              vaults:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    name:
+                                      type: string
+                                    type:
+                                      type: string
+                                    contractAddress:
+                                      type: string
+                                    platform:
+                                      type: string
+                                    depositToken:
+                                      type: string
+                                    depositedTokens:
+                                      type: number
+                                    depositTokenAddress:
+                                      type: string
+                                    priceInUSDDepositToken:
+                                      type: number
+                                    apy:
+                                      type: number
+                                    currentTokens:
+                                      type: number
+                                    vaultSessions:
+                                      type: array
+                                      items:
+                                        type: object
+                          LPStaking:
+                            type: object
+                            properties:
+                              totalUSDValues:
+                                type: object
+                                properties:
+                                  deposit:
+                                    type: number
+                                  yield:
+                                    type: number
+                                  total:
+                                    type: number
+                              vaults:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                    name:
+                                      type: string
+                                    platform:
+                                      type: string
+                                    rewardToken:
+                                      type: string
+                                    pendingRewards:
+                                      type: number
+                                    apy:
+                                      type: number
+                                    poolInfo:
+                                      type: object
+                                      properties:
+                                        apr:
+                                          type: number
+                                    harvestedRewards:
+                                      type: number
+                                    totalRewards:
+                                      type: number
+                                    priceInUSDRewardToken:
+                                      type: number
+                                    poolSessions:
+                                      type: array
+                                      items:
+                                        type: array
+                                        items:
+                                          type: object
+                                          properties:
+                                            type:
+                                              type: string
+                                            blockNumber:
+                                              type: string
+                                            hash:
+                                              type: string
+                                            timeStamp:
+                                              type: string
+                                            amountDepositToken:
+                                              type: number
+                                            amountHarvest:
+                                              type: number
+                                            depositTokenInUSD:
+                                              type: number
+                                            rewardTokenInUSD:
+                                              type: string
+                                            timeIndex:
+                                              type: number
+                                    LPInfo:
+                                      type: object
+                                      properties:
+                                        compactSessions:
+                                          type: array
+                                          items:
+                                            type: object
+                                        symbolToken0:
+                                          type: string
+                                        symbolToken1:
+                                          type: string
+                                        depositToken0:
+                                          type: number
+                                        depositToken1:
+                                          type: number
+                                        priceInUSDToken0:
+                                          type: number
+                                        priceInUSDToken1:
+                                          type: number
+                                        changeToken0:
+                                          type: number
+                                        changeToken1:
+                                          type: number
+                                        feesEarnedInToken0:
+                                          type: number
+                                        feesEarnedInToken1:
+                                          type: number
+                                        currentToken0:
+                                          type: number
+                                        currentToken1:
+                                          type: number
+                                        poolToken0:
+                                          type: number
+                                        poolToken1:
+                                          type: number
+                                        actPrice:
+                                          type: number
+                                        hodlInToken1:
+                                          type: number
+                                        actInToken1:
+                                          type: number
+                                        ILInToken1:
+                                          type: number
+                                        faktorIL:
+                                          type: number
+                                        depositPrice:
+                                          type: number
+                                    stakingTx:
+                                      type: array
+                                      items:
+                                        type: object
+                          staking:
+                            type: object
+                            properties:
+                              totalUSDValues:
+                                type: object
+                                properties:
+                                  deposit:
+                                    type: number
+                                  yield:
+                                    type: number
+                                  total:
+                                    type: number
+                              vaults:
+                                type: array
+                                items:
+                                  type: object
+                      Jetfuel:
+                        type: object
+                      bDollar:
+                        type: object
+                      Autofarm:
+                        type: object
+                      Acryptos:
+                        type: object
+                      bunny:
+                        type: object
+                      CreamFinance:
+                        type: object
+                      Venus:
+                        type: object
+                      walletBalance:
+                        type: object
+                        properties:
+                          totalUSDValue:
+                            type: number
+                          balances:
+                            type: array
+                            items:
+                              type: object

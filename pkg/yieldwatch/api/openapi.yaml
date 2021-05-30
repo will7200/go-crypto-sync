@@ -1,0 +1,1069 @@
+openapi: 3.0.2
+info:
+  description: |
+    Yieldwatch doesn't have a openapi docs sadville
+  title: Yieldwatch API
+  version: 2021-05-29
+servers:
+- description: Yieldwatch Production Server
+  url: https://www.yieldwatch.net/api
+paths:
+  /all/{wallet_address}:
+    get:
+      description: This will return all portfolios with their values
+      operationId: GetDefiPortfolioAll
+      parameters:
+      - description: wallet address to return values for
+        explode: false
+        in: path
+        name: wallet_address
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: comma seperated list of platforms to speed up request
+        example: pancake,hyperjump,blizzard
+        explode: true
+        in: query
+        name: platform
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: returns portfolios values
+      summary: Get all providers for the waller address
+      tags:
+      - defi
+components:
+  schemas:
+    inline_response_200_result_PancakeSwap_LPStaking_poolInfo:
+      example:
+        apr: 5.944895607614016
+      properties:
+        apr:
+          type: number
+      type: object
+    inline_response_200_result_PancakeSwap_LPStaking_vaults:
+      example:
+        LPInfo:
+          hodlInToken1: 4.078845849666752
+          priceInUSDToken0: 7.058770351582356
+          poolToken1: 5.533258397034986
+          changeToken1: 4.652396432933246
+          poolToken0: 7.04836565559697
+          symbolToken0: symbolToken0
+          depositToken0: 7.143538047012306
+          depositToken1: 0.8851374739011653
+          ILInToken1: 6.628464275087742
+          faktorIL: 4.258773108174356
+          changeToken0: 0.10263654006109402
+          feesEarnedInToken0: 8.969578798196912
+          feesEarnedInToken1: 7.740351818741173
+          currentToken1: 3.0576100241049344
+          compactSessions:
+          - '{}'
+          - '{}'
+          currentToken0: 3.0205796992916243
+          symbolToken1: symbolToken1
+          actInToken1: 0.2025324113236393
+          depositPrice: 1.041444916118296
+          priceInUSDToken1: 6.519180951018382
+          actPrice: 3.2588565619047607
+        priceInUSDRewardToken: 3.0937452626664474
+        apy: 6.878052220127876
+        poolSessions:
+        - - '{}'
+          - '{}'
+        - - '{}'
+          - '{}'
+        type: type
+        harvestedRewards: 6.704019297950036
+        platform: platform
+        totalRewards: 3.353193347011243
+        stakingTx:
+        - '{}'
+        - '{}'
+        name: name
+        pendingRewards: 6.778324963048013
+        rewardToken: rewardToken
+        poolInfo:
+          apr: 5.944895607614016
+      properties:
+        type:
+          type: string
+        name:
+          type: string
+        platform:
+          type: string
+        rewardToken:
+          type: string
+        pendingRewards:
+          type: number
+        apy:
+          type: number
+        poolInfo:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_LPStaking_poolInfo'
+        harvestedRewards:
+          type: number
+        totalRewards:
+          type: number
+        priceInUSDRewardToken:
+          type: number
+        poolSessions:
+          items:
+            items:
+              properties:
+                type:
+                  type: string
+                blockNumber:
+                  type: string
+                hash:
+                  type: string
+                timeStamp:
+                  type: string
+                amountDepositToken:
+                  type: number
+                amountHarvest:
+                  type: number
+                depositTokenInUSD:
+                  type: number
+                rewardTokenInUSD:
+                  type: string
+                timeIndex:
+                  type: number
+              type: object
+            type: array
+          type: array
+        LPInfo:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_LPStaking_LPInfo'
+        stakingTx:
+          items:
+            type: object
+          type: array
+      type: object
+    inline_response_200_result_PancakeSwap_vaults_totalUSDValues:
+      example:
+        total: 6.438423552598547
+        yield: 9.018348186070783
+        deposit: 8.762042012749001
+      properties:
+        deposit:
+          type: number
+        yield:
+          type: number
+        total:
+          type: number
+      type: object
+    inline_response_200_result_PancakeSwap_LPStaking_LPInfo:
+      example:
+        hodlInToken1: 4.078845849666752
+        priceInUSDToken0: 7.058770351582356
+        poolToken1: 5.533258397034986
+        changeToken1: 4.652396432933246
+        poolToken0: 7.04836565559697
+        symbolToken0: symbolToken0
+        depositToken0: 7.143538047012306
+        depositToken1: 0.8851374739011653
+        ILInToken1: 6.628464275087742
+        faktorIL: 4.258773108174356
+        changeToken0: 0.10263654006109402
+        feesEarnedInToken0: 8.969578798196912
+        feesEarnedInToken1: 7.740351818741173
+        currentToken1: 3.0576100241049344
+        compactSessions:
+        - '{}'
+        - '{}'
+        currentToken0: 3.0205796992916243
+        symbolToken1: symbolToken1
+        actInToken1: 0.2025324113236393
+        depositPrice: 1.041444916118296
+        priceInUSDToken1: 6.519180951018382
+        actPrice: 3.2588565619047607
+      properties:
+        compactSessions:
+          items:
+            type: object
+          type: array
+        symbolToken0:
+          type: string
+        symbolToken1:
+          type: string
+        depositToken0:
+          type: number
+        depositToken1:
+          type: number
+        priceInUSDToken0:
+          type: number
+        priceInUSDToken1:
+          type: number
+        changeToken0:
+          type: number
+        changeToken1:
+          type: number
+        feesEarnedInToken0:
+          type: number
+        feesEarnedInToken1:
+          type: number
+        currentToken0:
+          type: number
+        currentToken1:
+          type: number
+        poolToken0:
+          type: number
+        poolToken1:
+          type: number
+        actPrice:
+          type: number
+        hodlInToken1:
+          type: number
+        actInToken1:
+          type: number
+        ILInToken1:
+          type: number
+        faktorIL:
+          type: number
+        depositPrice:
+          type: number
+      type: object
+    inline_response_200_result:
+      example:
+        CreamFinance: '{}'
+        ApeSwap: '{}'
+        bDollar: '{}'
+        Autofarm: '{}'
+        Acryptos: '{}'
+        MDex: '{}'
+        HyperJump: '{}'
+        walletBalance:
+          balances:
+          - '{}'
+          - '{}'
+          totalUSDValue: 4.678947989005849
+        BeefyFinance: '{}'
+        Jetfuel: '{}'
+        Venus: '{}'
+        watchBalance:
+          watchFromLP: 5.637376656633329
+          walletBalance: 5.962133916683182
+          totalBalance: 6.027456183070403
+          USDPrice: 0.8008281904610115
+          maxMonitorValue: 1.4658129805029452
+        Alpha: '{}'
+        PancakeSwap:
+          staking:
+            vaults:
+            - '{}'
+            - '{}'
+            totalUSDValues:
+              total: 6.438423552598547
+              yield: 9.018348186070783
+              deposit: 8.762042012749001
+          vaults:
+            vaults:
+            - priceInUSDDepositToken: 6.965117697638846
+              depositTokenAddress: depositTokenAddress
+              currentTokens: 2.8841621266687802
+              depositToken: depositToken
+              name: name
+              contractAddress: contractAddress
+              apy: 1.284659006116532
+              type: type
+              vaultSessions:
+              - '{}'
+              - '{}'
+              platform: platform
+              depositedTokens: 3.5571952270680973
+            - priceInUSDDepositToken: 6.965117697638846
+              depositTokenAddress: depositTokenAddress
+              currentTokens: 2.8841621266687802
+              depositToken: depositToken
+              name: name
+              contractAddress: contractAddress
+              apy: 1.284659006116532
+              type: type
+              vaultSessions:
+              - '{}'
+              - '{}'
+              platform: platform
+              depositedTokens: 3.5571952270680973
+            totalUSDValues:
+              total: 6.438423552598547
+              yield: 9.018348186070783
+              deposit: 8.762042012749001
+          LPStaking:
+            vaults:
+            - LPInfo:
+                hodlInToken1: 4.078845849666752
+                priceInUSDToken0: 7.058770351582356
+                poolToken1: 5.533258397034986
+                changeToken1: 4.652396432933246
+                poolToken0: 7.04836565559697
+                symbolToken0: symbolToken0
+                depositToken0: 7.143538047012306
+                depositToken1: 0.8851374739011653
+                ILInToken1: 6.628464275087742
+                faktorIL: 4.258773108174356
+                changeToken0: 0.10263654006109402
+                feesEarnedInToken0: 8.969578798196912
+                feesEarnedInToken1: 7.740351818741173
+                currentToken1: 3.0576100241049344
+                compactSessions:
+                - '{}'
+                - '{}'
+                currentToken0: 3.0205796992916243
+                symbolToken1: symbolToken1
+                actInToken1: 0.2025324113236393
+                depositPrice: 1.041444916118296
+                priceInUSDToken1: 6.519180951018382
+                actPrice: 3.2588565619047607
+              priceInUSDRewardToken: 3.0937452626664474
+              apy: 6.878052220127876
+              poolSessions:
+              - - '{}'
+                - '{}'
+              - - '{}'
+                - '{}'
+              type: type
+              harvestedRewards: 6.704019297950036
+              platform: platform
+              totalRewards: 3.353193347011243
+              stakingTx:
+              - '{}'
+              - '{}'
+              name: name
+              pendingRewards: 6.778324963048013
+              rewardToken: rewardToken
+              poolInfo:
+                apr: 5.944895607614016
+            - LPInfo:
+                hodlInToken1: 4.078845849666752
+                priceInUSDToken0: 7.058770351582356
+                poolToken1: 5.533258397034986
+                changeToken1: 4.652396432933246
+                poolToken0: 7.04836565559697
+                symbolToken0: symbolToken0
+                depositToken0: 7.143538047012306
+                depositToken1: 0.8851374739011653
+                ILInToken1: 6.628464275087742
+                faktorIL: 4.258773108174356
+                changeToken0: 0.10263654006109402
+                feesEarnedInToken0: 8.969578798196912
+                feesEarnedInToken1: 7.740351818741173
+                currentToken1: 3.0576100241049344
+                compactSessions:
+                - '{}'
+                - '{}'
+                currentToken0: 3.0205796992916243
+                symbolToken1: symbolToken1
+                actInToken1: 0.2025324113236393
+                depositPrice: 1.041444916118296
+                priceInUSDToken1: 6.519180951018382
+                actPrice: 3.2588565619047607
+              priceInUSDRewardToken: 3.0937452626664474
+              apy: 6.878052220127876
+              poolSessions:
+              - - '{}'
+                - '{}'
+              - - '{}'
+                - '{}'
+              type: type
+              harvestedRewards: 6.704019297950036
+              platform: platform
+              totalRewards: 3.353193347011243
+              stakingTx:
+              - '{}'
+              - '{}'
+              name: name
+              pendingRewards: 6.778324963048013
+              rewardToken: rewardToken
+              poolInfo:
+                apr: 5.944895607614016
+            totalUSDValues:
+              total: 6.438423552598547
+              yield: 9.018348186070783
+              deposit: 8.762042012749001
+        bunny: '{}'
+        currencies:
+          HKD: 1.0246457001441578
+          CHF: 5.025004791520295
+          TWD: 6.683562403749608
+          EUR: 2.3021358869347655
+          RMB: 7.061401241503109
+          CAD: 1.1730742509559433
+          BTCB: 2.027123023002322
+          THB: 4.965218492984954
+          AUD: 1.2315135367772556
+          SGD: 1.4894159098541704
+          KRW: 7.457744773683766
+          JPY: 9.301444243932576
+          GBP: 3.616076749251911
+          IDR: 9.965781217890562
+          WBNB: 4.145608029883936
+          TRY: 9.369310271410669
+          BRL: 7.386281948385884
+          RUB: 6.84685269835264
+        Blizzard: '{}'
+      properties:
+        watchBalance:
+          $ref: '#/components/schemas/inline_response_200_result_watchBalance'
+        currencies:
+          $ref: '#/components/schemas/inline_response_200_result_currencies'
+        Alpha:
+          type: object
+        ApeSwap:
+          type: object
+        HyperJump:
+          type: object
+        BeefyFinance:
+          type: object
+        Blizzard:
+          type: object
+        MDex:
+          type: object
+        PancakeSwap:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap'
+        Jetfuel:
+          type: object
+        bDollar:
+          type: object
+        Autofarm:
+          type: object
+        Acryptos:
+          type: object
+        bunny:
+          type: object
+        CreamFinance:
+          type: object
+        Venus:
+          type: object
+        walletBalance:
+          $ref: '#/components/schemas/inline_response_200_result_walletBalance'
+      type: object
+    inline_response_200_result_currencies:
+      example:
+        HKD: 1.0246457001441578
+        CHF: 5.025004791520295
+        TWD: 6.683562403749608
+        EUR: 2.3021358869347655
+        RMB: 7.061401241503109
+        CAD: 1.1730742509559433
+        BTCB: 2.027123023002322
+        THB: 4.965218492984954
+        AUD: 1.2315135367772556
+        SGD: 1.4894159098541704
+        KRW: 7.457744773683766
+        JPY: 9.301444243932576
+        GBP: 3.616076749251911
+        IDR: 9.965781217890562
+        WBNB: 4.145608029883936
+        TRY: 9.369310271410669
+        BRL: 7.386281948385884
+        RUB: 6.84685269835264
+      properties:
+        EUR:
+          type: number
+        RMB:
+          type: number
+        JPY:
+          type: number
+        GBP:
+          type: number
+        BTCB:
+          type: number
+        WBNB:
+          type: number
+        BRL:
+          type: number
+        AUD:
+          type: number
+        HKD:
+          type: number
+        SGD:
+          type: number
+        RUB:
+          type: number
+        KRW:
+          type: number
+        CAD:
+          type: number
+        THB:
+          type: number
+        CHF:
+          type: number
+        IDR:
+          type: number
+        TRY:
+          type: number
+        TWD:
+          type: number
+      type: object
+    inline_response_200_result_PancakeSwap_staking:
+      example:
+        vaults:
+        - '{}'
+        - '{}'
+        totalUSDValues:
+          total: 6.438423552598547
+          yield: 9.018348186070783
+          deposit: 8.762042012749001
+      properties:
+        totalUSDValues:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_vaults_totalUSDValues'
+        vaults:
+          items:
+            type: object
+          type: array
+      type: object
+    inline_response_200_result_PancakeSwap_vaults:
+      example:
+        vaults:
+        - priceInUSDDepositToken: 6.965117697638846
+          depositTokenAddress: depositTokenAddress
+          currentTokens: 2.8841621266687802
+          depositToken: depositToken
+          name: name
+          contractAddress: contractAddress
+          apy: 1.284659006116532
+          type: type
+          vaultSessions:
+          - '{}'
+          - '{}'
+          platform: platform
+          depositedTokens: 3.5571952270680973
+        - priceInUSDDepositToken: 6.965117697638846
+          depositTokenAddress: depositTokenAddress
+          currentTokens: 2.8841621266687802
+          depositToken: depositToken
+          name: name
+          contractAddress: contractAddress
+          apy: 1.284659006116532
+          type: type
+          vaultSessions:
+          - '{}'
+          - '{}'
+          platform: platform
+          depositedTokens: 3.5571952270680973
+        totalUSDValues:
+          total: 6.438423552598547
+          yield: 9.018348186070783
+          deposit: 8.762042012749001
+      properties:
+        totalUSDValues:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_vaults_totalUSDValues'
+        vaults:
+          items:
+            $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_vaults_vaults'
+          type: array
+      type: object
+    inline_response_200_result_PancakeSwap_LPStaking:
+      example:
+        vaults:
+        - LPInfo:
+            hodlInToken1: 4.078845849666752
+            priceInUSDToken0: 7.058770351582356
+            poolToken1: 5.533258397034986
+            changeToken1: 4.652396432933246
+            poolToken0: 7.04836565559697
+            symbolToken0: symbolToken0
+            depositToken0: 7.143538047012306
+            depositToken1: 0.8851374739011653
+            ILInToken1: 6.628464275087742
+            faktorIL: 4.258773108174356
+            changeToken0: 0.10263654006109402
+            feesEarnedInToken0: 8.969578798196912
+            feesEarnedInToken1: 7.740351818741173
+            currentToken1: 3.0576100241049344
+            compactSessions:
+            - '{}'
+            - '{}'
+            currentToken0: 3.0205796992916243
+            symbolToken1: symbolToken1
+            actInToken1: 0.2025324113236393
+            depositPrice: 1.041444916118296
+            priceInUSDToken1: 6.519180951018382
+            actPrice: 3.2588565619047607
+          priceInUSDRewardToken: 3.0937452626664474
+          apy: 6.878052220127876
+          poolSessions:
+          - - '{}'
+            - '{}'
+          - - '{}'
+            - '{}'
+          type: type
+          harvestedRewards: 6.704019297950036
+          platform: platform
+          totalRewards: 3.353193347011243
+          stakingTx:
+          - '{}'
+          - '{}'
+          name: name
+          pendingRewards: 6.778324963048013
+          rewardToken: rewardToken
+          poolInfo:
+            apr: 5.944895607614016
+        - LPInfo:
+            hodlInToken1: 4.078845849666752
+            priceInUSDToken0: 7.058770351582356
+            poolToken1: 5.533258397034986
+            changeToken1: 4.652396432933246
+            poolToken0: 7.04836565559697
+            symbolToken0: symbolToken0
+            depositToken0: 7.143538047012306
+            depositToken1: 0.8851374739011653
+            ILInToken1: 6.628464275087742
+            faktorIL: 4.258773108174356
+            changeToken0: 0.10263654006109402
+            feesEarnedInToken0: 8.969578798196912
+            feesEarnedInToken1: 7.740351818741173
+            currentToken1: 3.0576100241049344
+            compactSessions:
+            - '{}'
+            - '{}'
+            currentToken0: 3.0205796992916243
+            symbolToken1: symbolToken1
+            actInToken1: 0.2025324113236393
+            depositPrice: 1.041444916118296
+            priceInUSDToken1: 6.519180951018382
+            actPrice: 3.2588565619047607
+          priceInUSDRewardToken: 3.0937452626664474
+          apy: 6.878052220127876
+          poolSessions:
+          - - '{}'
+            - '{}'
+          - - '{}'
+            - '{}'
+          type: type
+          harvestedRewards: 6.704019297950036
+          platform: platform
+          totalRewards: 3.353193347011243
+          stakingTx:
+          - '{}'
+          - '{}'
+          name: name
+          pendingRewards: 6.778324963048013
+          rewardToken: rewardToken
+          poolInfo:
+            apr: 5.944895607614016
+        totalUSDValues:
+          total: 6.438423552598547
+          yield: 9.018348186070783
+          deposit: 8.762042012749001
+      properties:
+        totalUSDValues:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_vaults_totalUSDValues'
+        vaults:
+          items:
+            $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_LPStaking_vaults'
+          type: array
+      type: object
+    inline_response_200_result_PancakeSwap:
+      example:
+        staking:
+          vaults:
+          - '{}'
+          - '{}'
+          totalUSDValues:
+            total: 6.438423552598547
+            yield: 9.018348186070783
+            deposit: 8.762042012749001
+        vaults:
+          vaults:
+          - priceInUSDDepositToken: 6.965117697638846
+            depositTokenAddress: depositTokenAddress
+            currentTokens: 2.8841621266687802
+            depositToken: depositToken
+            name: name
+            contractAddress: contractAddress
+            apy: 1.284659006116532
+            type: type
+            vaultSessions:
+            - '{}'
+            - '{}'
+            platform: platform
+            depositedTokens: 3.5571952270680973
+          - priceInUSDDepositToken: 6.965117697638846
+            depositTokenAddress: depositTokenAddress
+            currentTokens: 2.8841621266687802
+            depositToken: depositToken
+            name: name
+            contractAddress: contractAddress
+            apy: 1.284659006116532
+            type: type
+            vaultSessions:
+            - '{}'
+            - '{}'
+            platform: platform
+            depositedTokens: 3.5571952270680973
+          totalUSDValues:
+            total: 6.438423552598547
+            yield: 9.018348186070783
+            deposit: 8.762042012749001
+        LPStaking:
+          vaults:
+          - LPInfo:
+              hodlInToken1: 4.078845849666752
+              priceInUSDToken0: 7.058770351582356
+              poolToken1: 5.533258397034986
+              changeToken1: 4.652396432933246
+              poolToken0: 7.04836565559697
+              symbolToken0: symbolToken0
+              depositToken0: 7.143538047012306
+              depositToken1: 0.8851374739011653
+              ILInToken1: 6.628464275087742
+              faktorIL: 4.258773108174356
+              changeToken0: 0.10263654006109402
+              feesEarnedInToken0: 8.969578798196912
+              feesEarnedInToken1: 7.740351818741173
+              currentToken1: 3.0576100241049344
+              compactSessions:
+              - '{}'
+              - '{}'
+              currentToken0: 3.0205796992916243
+              symbolToken1: symbolToken1
+              actInToken1: 0.2025324113236393
+              depositPrice: 1.041444916118296
+              priceInUSDToken1: 6.519180951018382
+              actPrice: 3.2588565619047607
+            priceInUSDRewardToken: 3.0937452626664474
+            apy: 6.878052220127876
+            poolSessions:
+            - - '{}'
+              - '{}'
+            - - '{}'
+              - '{}'
+            type: type
+            harvestedRewards: 6.704019297950036
+            platform: platform
+            totalRewards: 3.353193347011243
+            stakingTx:
+            - '{}'
+            - '{}'
+            name: name
+            pendingRewards: 6.778324963048013
+            rewardToken: rewardToken
+            poolInfo:
+              apr: 5.944895607614016
+          - LPInfo:
+              hodlInToken1: 4.078845849666752
+              priceInUSDToken0: 7.058770351582356
+              poolToken1: 5.533258397034986
+              changeToken1: 4.652396432933246
+              poolToken0: 7.04836565559697
+              symbolToken0: symbolToken0
+              depositToken0: 7.143538047012306
+              depositToken1: 0.8851374739011653
+              ILInToken1: 6.628464275087742
+              faktorIL: 4.258773108174356
+              changeToken0: 0.10263654006109402
+              feesEarnedInToken0: 8.969578798196912
+              feesEarnedInToken1: 7.740351818741173
+              currentToken1: 3.0576100241049344
+              compactSessions:
+              - '{}'
+              - '{}'
+              currentToken0: 3.0205796992916243
+              symbolToken1: symbolToken1
+              actInToken1: 0.2025324113236393
+              depositPrice: 1.041444916118296
+              priceInUSDToken1: 6.519180951018382
+              actPrice: 3.2588565619047607
+            priceInUSDRewardToken: 3.0937452626664474
+            apy: 6.878052220127876
+            poolSessions:
+            - - '{}'
+              - '{}'
+            - - '{}'
+              - '{}'
+            type: type
+            harvestedRewards: 6.704019297950036
+            platform: platform
+            totalRewards: 3.353193347011243
+            stakingTx:
+            - '{}'
+            - '{}'
+            name: name
+            pendingRewards: 6.778324963048013
+            rewardToken: rewardToken
+            poolInfo:
+              apr: 5.944895607614016
+          totalUSDValues:
+            total: 6.438423552598547
+            yield: 9.018348186070783
+            deposit: 8.762042012749001
+      properties:
+        vaults:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_vaults'
+        LPStaking:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_LPStaking'
+        staking:
+          $ref: '#/components/schemas/inline_response_200_result_PancakeSwap_staking'
+      type: object
+    inline_response_200:
+      example:
+        result:
+          CreamFinance: '{}'
+          ApeSwap: '{}'
+          bDollar: '{}'
+          Autofarm: '{}'
+          Acryptos: '{}'
+          MDex: '{}'
+          HyperJump: '{}'
+          walletBalance:
+            balances:
+            - '{}'
+            - '{}'
+            totalUSDValue: 4.678947989005849
+          BeefyFinance: '{}'
+          Jetfuel: '{}'
+          Venus: '{}'
+          watchBalance:
+            watchFromLP: 5.637376656633329
+            walletBalance: 5.962133916683182
+            totalBalance: 6.027456183070403
+            USDPrice: 0.8008281904610115
+            maxMonitorValue: 1.4658129805029452
+          Alpha: '{}'
+          PancakeSwap:
+            staking:
+              vaults:
+              - '{}'
+              - '{}'
+              totalUSDValues:
+                total: 6.438423552598547
+                yield: 9.018348186070783
+                deposit: 8.762042012749001
+            vaults:
+              vaults:
+              - priceInUSDDepositToken: 6.965117697638846
+                depositTokenAddress: depositTokenAddress
+                currentTokens: 2.8841621266687802
+                depositToken: depositToken
+                name: name
+                contractAddress: contractAddress
+                apy: 1.284659006116532
+                type: type
+                vaultSessions:
+                - '{}'
+                - '{}'
+                platform: platform
+                depositedTokens: 3.5571952270680973
+              - priceInUSDDepositToken: 6.965117697638846
+                depositTokenAddress: depositTokenAddress
+                currentTokens: 2.8841621266687802
+                depositToken: depositToken
+                name: name
+                contractAddress: contractAddress
+                apy: 1.284659006116532
+                type: type
+                vaultSessions:
+                - '{}'
+                - '{}'
+                platform: platform
+                depositedTokens: 3.5571952270680973
+              totalUSDValues:
+                total: 6.438423552598547
+                yield: 9.018348186070783
+                deposit: 8.762042012749001
+            LPStaking:
+              vaults:
+              - LPInfo:
+                  hodlInToken1: 4.078845849666752
+                  priceInUSDToken0: 7.058770351582356
+                  poolToken1: 5.533258397034986
+                  changeToken1: 4.652396432933246
+                  poolToken0: 7.04836565559697
+                  symbolToken0: symbolToken0
+                  depositToken0: 7.143538047012306
+                  depositToken1: 0.8851374739011653
+                  ILInToken1: 6.628464275087742
+                  faktorIL: 4.258773108174356
+                  changeToken0: 0.10263654006109402
+                  feesEarnedInToken0: 8.969578798196912
+                  feesEarnedInToken1: 7.740351818741173
+                  currentToken1: 3.0576100241049344
+                  compactSessions:
+                  - '{}'
+                  - '{}'
+                  currentToken0: 3.0205796992916243
+                  symbolToken1: symbolToken1
+                  actInToken1: 0.2025324113236393
+                  depositPrice: 1.041444916118296
+                  priceInUSDToken1: 6.519180951018382
+                  actPrice: 3.2588565619047607
+                priceInUSDRewardToken: 3.0937452626664474
+                apy: 6.878052220127876
+                poolSessions:
+                - - '{}'
+                  - '{}'
+                - - '{}'
+                  - '{}'
+                type: type
+                harvestedRewards: 6.704019297950036
+                platform: platform
+                totalRewards: 3.353193347011243
+                stakingTx:
+                - '{}'
+                - '{}'
+                name: name
+                pendingRewards: 6.778324963048013
+                rewardToken: rewardToken
+                poolInfo:
+                  apr: 5.944895607614016
+              - LPInfo:
+                  hodlInToken1: 4.078845849666752
+                  priceInUSDToken0: 7.058770351582356
+                  poolToken1: 5.533258397034986
+                  changeToken1: 4.652396432933246
+                  poolToken0: 7.04836565559697
+                  symbolToken0: symbolToken0
+                  depositToken0: 7.143538047012306
+                  depositToken1: 0.8851374739011653
+                  ILInToken1: 6.628464275087742
+                  faktorIL: 4.258773108174356
+                  changeToken0: 0.10263654006109402
+                  feesEarnedInToken0: 8.969578798196912
+                  feesEarnedInToken1: 7.740351818741173
+                  currentToken1: 3.0576100241049344
+                  compactSessions:
+                  - '{}'
+                  - '{}'
+                  currentToken0: 3.0205796992916243
+                  symbolToken1: symbolToken1
+                  actInToken1: 0.2025324113236393
+                  depositPrice: 1.041444916118296
+                  priceInUSDToken1: 6.519180951018382
+                  actPrice: 3.2588565619047607
+                priceInUSDRewardToken: 3.0937452626664474
+                apy: 6.878052220127876
+                poolSessions:
+                - - '{}'
+                  - '{}'
+                - - '{}'
+                  - '{}'
+                type: type
+                harvestedRewards: 6.704019297950036
+                platform: platform
+                totalRewards: 3.353193347011243
+                stakingTx:
+                - '{}'
+                - '{}'
+                name: name
+                pendingRewards: 6.778324963048013
+                rewardToken: rewardToken
+                poolInfo:
+                  apr: 5.944895607614016
+              totalUSDValues:
+                total: 6.438423552598547
+                yield: 9.018348186070783
+                deposit: 8.762042012749001
+          bunny: '{}'
+          currencies:
+            HKD: 1.0246457001441578
+            CHF: 5.025004791520295
+            TWD: 6.683562403749608
+            EUR: 2.3021358869347655
+            RMB: 7.061401241503109
+            CAD: 1.1730742509559433
+            BTCB: 2.027123023002322
+            THB: 4.965218492984954
+            AUD: 1.2315135367772556
+            SGD: 1.4894159098541704
+            KRW: 7.457744773683766
+            JPY: 9.301444243932576
+            GBP: 3.616076749251911
+            IDR: 9.965781217890562
+            WBNB: 4.145608029883936
+            TRY: 9.369310271410669
+            BRL: 7.386281948385884
+            RUB: 6.84685269835264
+          Blizzard: '{}'
+        message: message
+        status: status
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        result:
+          $ref: '#/components/schemas/inline_response_200_result'
+      type: object
+    inline_response_200_result_walletBalance:
+      example:
+        balances:
+        - '{}'
+        - '{}'
+        totalUSDValue: 4.678947989005849
+      properties:
+        totalUSDValue:
+          type: number
+        balances:
+          items:
+            type: object
+          type: array
+      type: object
+    inline_response_200_result_watchBalance:
+      example:
+        watchFromLP: 5.637376656633329
+        walletBalance: 5.962133916683182
+        totalBalance: 6.027456183070403
+        USDPrice: 0.8008281904610115
+        maxMonitorValue: 1.4658129805029452
+      properties:
+        USDPrice:
+          type: number
+        totalBalance:
+          type: number
+        maxMonitorValue:
+          type: number
+        walletBalance:
+          type: number
+        watchFromLP:
+          type: number
+      type: object
+    inline_response_200_result_PancakeSwap_vaults_vaults:
+      example:
+        priceInUSDDepositToken: 6.965117697638846
+        depositTokenAddress: depositTokenAddress
+        currentTokens: 2.8841621266687802
+        depositToken: depositToken
+        name: name
+        contractAddress: contractAddress
+        apy: 1.284659006116532
+        type: type
+        vaultSessions:
+        - '{}'
+        - '{}'
+        platform: platform
+        depositedTokens: 3.5571952270680973
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        contractAddress:
+          type: string
+        platform:
+          type: string
+        depositToken:
+          type: string
+        depositedTokens:
+          type: number
+        depositTokenAddress:
+          type: string
+        priceInUSDDepositToken:
+          type: number
+        apy:
+          type: number
+        currentTokens:
+          type: number
+        vaultSessions:
+          items:
+            type: object
+          type: array
+      type: object

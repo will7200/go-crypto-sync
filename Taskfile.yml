@@ -37,6 +37,15 @@ tasks:
     # remove the go module files, we don't need those
     - rm pkg/coinex/go.mod pkg/coinex/go.sum pkg/coinex/.travis.yml pkg/coinex/git_push.sh
     silent: false
+  build-yieldwatch-api:
+    cmds:
+    - >
+      env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator-cli generate -i api/yieldwatch.yml -o pkg/yieldwatch
+      -g go -c api/yieldwatch.config.yml --enable-post-process-file -t api/templates/yieldwatch
+      --git-repo-id go-crypto-sync --git-user-id will7200
+    # remove the go module files, we don't need those
+    - rm pkg/yieldwatch/go.mod pkg/yieldwatch/go.sum pkg/yieldwatch/.travis.yml pkg/yieldwatch/git_push.sh
+    silent: false
   build:
     cmds:
     - go build github.com/will7200/go-crypto-sync/cmd/crypto-sync
