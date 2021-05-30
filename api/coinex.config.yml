@@ -1,0 +1,9 @@
+packageVersion: 0.1.0
+isGoSubmodule: true
+packageName: coinex
+allParams: true
+modulePackageName: pkg/coinex
+withXml: false
+enumClassPrefix: true
+topLevelPackageName: github.com/will7200/go-crypto-sync
+hideGenerationTimestamp: true

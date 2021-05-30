@@ -1,0 +1,4224 @@
+openapi: 3.0.2
+info:
+  description: |
+    Coinex doesn't have a openapi docs sadville
+
+    Open and simple, CoinEx API makes sure that you can build your own trading tools to achieve a more effective trading strategy. CoinEx API is now available for these features:
+  title: CoinEx API
+  version: 2021-05-29
+servers:
+- description: Coinex Production Server
+  url: https://api.coinex.com/v1
+paths:
+  /market/list:
+    get:
+      description: Acquire real-time market data
+      operationId: AcquireMarketList
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: response info
+      summary: Acquire Market List
+      tags:
+      - market
+  /market/ticker/all:
+    get:
+      description: acquire all market data
+      operationId: AcquireAllMarketData
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+          description: response info
+      summary: Acquire All Market Data
+      tags:
+      - market
+  '/market/depth ':
+    get:
+      description: Acquire buy/sell statistics，return up to 50
+      operationId: AcquireMarketDepth
+      parameters:
+      - description: See<API invocation description market>
+        example: bchbtc
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - example: "0"
+        explode: true
+        in: query
+        name: merge
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: response info
+      summary: Acquire Market Depth
+      tags:
+      - market
+  /market/deals:
+    get:
+      description: Acquire latest transaction data，return up to 1000
+      operationId: AcquireLatestTransactionData
+      parameters:
+      - description: See<API invocation description market>
+        example: BCHBTC
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Transaction history id
+        example: "2"
+        explode: true
+        in: query
+        name: last_id
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+          description: response info
+      summary: Acquire Latest Transaction Data
+      tags:
+      - market
+  /market/kline:
+    get:
+      description: Acquire k-line data for specified period, including latest 1000
+        datas
+      operationId: AcquireKLineData
+      parameters:
+      - description: See<API invocation description market>
+        example: bchbtc
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+          description: response info
+      summary: Acquire K-Line Data
+      tags:
+      - market
+  '/market/info ':
+    get:
+      description: Acquire market detail information
+      operationId: AcquireMarketInformation
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+          description: response info
+      summary: Acquire Market Information
+      tags:
+      - market
+  '/market/detail ':
+    get:
+      description: Acquire single market detail information
+      operationId: AcquireSingleMarketInformation
+      parameters:
+      - description: See<API invocation description market>
+        example: BTCUSDT
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+          description: response info
+      summary: Acquire Single Market Information
+      tags:
+      - market
+  /order/mining/difficulty:
+    get:
+      description: Acquire mining difficulty
+      operationId: AcquireMiningDifficulty
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+          description: response info
+      summary: Acquire Mining Difficulty
+      tags:
+      - order
+  /order/deals:
+    get:
+      description: Acquire Executed Order Detail
+      operationId: AcquireExecutedOrderDetail
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Order no.
+        example: "123456"
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: page
+        example: "1"
+        explode: true
+        in: query
+        name: page
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+          description: response info
+      summary: Acquire Executed Order Detail
+      tags:
+      - order
+  /order/limit/batch:
+    post:
+      description: |-
+        place multiple limit orders in the same market, limit up to 100
+        Rate Limit: 100/10s
+      operationId: PlaceMultipleLimitOrders
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceMultipleLimitOrdersRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_9'
+          description: response info
+      summary: Place Multiple Limit Orders
+      tags:
+      - order
+  /order/status/batch:
+    get:
+      description: |-
+        acquire multiple orders status in the same market, limit up to 100
+        Rate Limit: 100/10s
+      operationId: AcquireMultipleOrders
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: multiple order nos string
+        example: 300021,300022,300033
+        explode: true
+        in: query
+        name: batch_ids
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: See <API invocation description market>
+        example: BTCBCH
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_10'
+          description: response info
+      summary: Acquire Multiple Orders
+      tags:
+      - order
+  /order/pending/batch:
+    delete:
+      description: |-
+        cancel multiple orders in the same market, limit up to 100
+        Rate Limit: 100/10s
+      operationId: CancelMultipleOrders
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: BFFA64957AA240F6BBEA26F4E07EC0D9
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Unexecuted multiple order Nos string
+        example: 123,234,345
+        explode: true
+        in: query
+        name: batch_ids
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: See <API invocation description market>
+        example: BTCBCH
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds since Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: 'main account ID: 0'
+        explode: true
+        in: query
+        name: account_id
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_11'
+          description: response info
+      summary: Cancel Multiple Orders
+      tags:
+      - order
+  /order/pending:
+    delete:
+      description: |-
+        Cancel unexecuted order
+        Rate Limit: 100/10s
+      operationId: CancelAllOrder
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: BFFA64957AA240F6BBEA26F4E07EC0D9
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 'main account ID: 0'
+        example: "0"
+        explode: true
+        in: query
+        name: account_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+          description: response info
+      summary: Cancel All Order
+      tags:
+      - order
+    get:
+      description: |-
+        Acquire Unexecuted Order List
+        Rate Limit: 100/10s
+      operationId: AcquireUnexecutedOrderList
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: BFFA64957AA240F6BBEA26F4E07EC0D9
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: See <API invocation description market>
+        example: BTCBCH
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Page
+        example: "1"
+        explode: true
+        in: query
+        name: page
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_12'
+          description: response info
+      summary: Acquire Unexecuted Order List
+      tags:
+      - order
+  /order/limit:
+    post:
+      description: |-
+        place limit order
+        Rate Limit: 100/10s
+      operationId: PlaceLimitOrder
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceLimitOrderRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_14'
+          description: response info
+      summary: Place Limit Order
+      tags:
+      - order
+  /order/market:
+    post:
+      description: place market order
+      operationId: PlaceMarketOrder
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceMarketOrderRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_15'
+          description: response info
+      summary: Place Market Order
+      tags:
+      - order
+  /order/ioc:
+    post:
+      description: place immediate-or-cancel order
+      operationId: PlaceIocOrder
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceIocOrderRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_16'
+          description: response info
+      summary: Place IOC Order
+      tags:
+      - order
+  /order/finished:
+    get:
+      description: Acquire executed order list, including datas in last 2 days
+      operationId: AcquireExecutedOrderList
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: EFF0C4057AA240F6AAE52634E07EC0DC
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: See <API invocation description market>
+        example: BTCBCH
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: page
+        example: "1"
+        explode: true
+        in: query
+        name: page
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_17'
+          description: response info
+      summary: Acquire Executed Order List
+      tags:
+      - order
+  /order/status:
+    get:
+      description: |-
+        Acquire order status
+        Rate Limit: 100/10s
+      operationId: AcquireOrderStatus
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: order no
+        example: "300021"
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: See <API invocation description market>
+        example: btcbch
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_18'
+          description: response info
+      summary: 'Acquire Order Status '
+      tags:
+      - order
+  /order/finished/{id}:
+    get:
+      description: Acquire Finished Order Detail
+      operationId: AcquireFinishedOrderDetail
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: order no.
+        example: "300034"
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: See <API invocation description market>
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: page
+        example: "1"
+        explode: true
+        in: query
+        name: page
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+          description: response info
+      summary: Acquire Finished Order Detail
+      tags:
+      - order
+  /order/user/deals:
+    get:
+      description: Acquire user deals
+      operationId: AcquireUserDeals
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: See <API invocation description market>
+        example: btcbch
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: page
+        example: "1"
+        explode: true
+        in: query
+        name: page
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_19'
+          description: response info
+      summary: Acquire User Deals
+      tags:
+      - order
+  /balance/info:
+    get:
+      description: "Inquire account asset constructure. \n    **When the total assets\
+        \ (available + frozen) of a coin are 0, no coin data return"
+      operationId: InquireAccountInfo
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_20'
+          description: response info
+      summary: Inquire Account Info
+      tags:
+      - account
+  /balance/coin/withdraw:
+    delete:
+      description: Cancel withdrawal
+      operationId: CancelWithdrawal
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: coin withdrawal id
+        example: "206"
+        explode: true
+        in: query
+        name: coin_withdraw_id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+          description: response info
+      summary: Cancel Withdrawal
+      tags:
+      - account
+    get:
+      description: Inquire withdrawal list
+      operationId: InquireWithdrawalList
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: Coin type
+        example: BCH
+        explode: true
+        in: query
+        name: coin_type
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_21'
+          description: response info
+      summary: Inquire Withdrawal List
+      tags:
+      - account
+    post:
+      description: Submit a withdrawal order
+      operationId: SubmitWithdrawalOrder
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: coin_type
+        explode: true
+        in: query
+        name: coin_type
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 'Multi-protocol USDT parameter: ERC20'
+        explode: true
+        in: query
+        name: smart_contract_name
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_22'
+          description: response info
+      summary: Submit Withdrawal Order
+      tags:
+      - account
+  /balance/coin/deposit:
+    get:
+      description: Inquire deposit history
+      operationId: InquireDepositList
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: XXX6FXXXXXXXXXX902XXXXX89
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: Coin type
+        explode: true
+        in: query
+        name: coin_type
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_23'
+          description: response info
+      summary: 'Inquire Deposit List '
+      tags:
+      - account
+  /sub_account/transfer:
+    post:
+      description: transfer between main account and sub account
+      operationId: TransferBetweenMainAccountAndSubAccount
+      parameters:
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: the sub account name
+        explode: true
+        in: query
+        name: transfer_account
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: to post
+        explode: true
+        in: query
+        name: transfer_side
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+          description: response info
+      summary: Transfer between main account and sub account
+      tags:
+      - account
+  /margin/market:
+    get:
+      description: Inquire margin market ID map info
+      operationId: InquireMarginAccountMarketInfo
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+          description: response info
+      summary: Inquire Margin Account Market Info
+      tags:
+      - account
+  /margin/transfer:
+    post:
+      description: transfer between main account and margin account
+      operationId: TransferBetweenMainAccountAndMarginAccount
+      parameters:
+      - description: the remitting account ID
+        explode: true
+        in: query
+        name: from_account
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+          description: response info
+      summary: Transfer between main account and margin account
+      tags:
+      - account
+  /common/currency/rate:
+    get:
+      description: acquire currency rate
+      operationId: AcquireCurrencyRate
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_24'
+          description: response info
+      summary: Acquire Currency Rate
+      tags:
+      - common
+  /common/asset/config:
+    get:
+      description: acquire asset config
+      operationId: AcquireAssetConfig
+      parameters:
+      - description: Coin type
+        explode: true
+        in: query
+        name: coin_type
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_25'
+          description: response info
+      summary: Acquire Asset Config
+      tags:
+      - common
+  /margin/account:
+    get:
+      description: Inquire margin account asset constructure
+      operationId: InquireMarginAccountInfo
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: Market Name
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_26'
+          description: response info
+      summary: Inquire Margin Account Info
+      tags:
+      - margin
+  /margin/config:
+    get:
+      description: Get all information of the margin trading coin, including the general
+        maximum loan amount, interest rate
+      operationId: AcquireMarginAccountSettings
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_27'
+          description: response info
+      summary: Acquire Margin Account Settings
+      tags:
+      - margin
+  /margin/loan/history:
+    get:
+      description: Get loan history of the margin trading account
+      operationId: AcquireLoanList
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: See<API invocation description market>
+        explode: true
+        in: query
+        name: market
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: status
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Page
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_28'
+          description: response info
+      summary: Acquire Loan List
+      tags:
+      - margin
+  /margin/loan:
+    post:
+      description: Borrowing coins in a margin account
+      operationId: PlaceLoan
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: See<API invocation description market>
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Coin type
+        explode: true
+        in: query
+        name: coin_type
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_29'
+          description: response info
+      summary: Place Loan
+      tags:
+      - margin
+  /margin/flat:
+    post:
+      description: Repay coins in a margin account
+      operationId: PlaceFlat
+      parameters:
+      - description: |
+          Signature is required for Account API and trading API related interfaces.
+          The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+          No signature is required for market API related interfaces.
+          Use 32-bit MD5 Algorithm Signature
+          Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+        explode: false
+        in: header
+        name: authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-go-default-value: auto
+        x-go-default: true
+      - description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+        explode: true
+        in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Tonce is a timestamp with a positive Interger that represents
+          the number of milliseconds from Unix epoch to the current time. Error between
+          tonce and server time can not exceed plus or minus 60s
+        example: "1513746038205"
+        explode: true
+        in: query
+        name: tonce
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      - description: See<API invocation description market>
+        explode: true
+        in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Coin type
+        explode: true
+        in: query
+        name: coin_type
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+          description: response info
+      summary: Place Flat
+      tags:
+      - margin
+components:
+  parameters:
+    CX-ACCESS-SIGN:
+      description: |
+        Signature is required for Account API and trading API related interfaces.
+        The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+        No signature is required for market API related interfaces.
+        Use 32-bit MD5 Algorithm Signature
+        Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+      explode: false
+      in: header
+      name: authorization
+      required: true
+      schema:
+        type: string
+      style: simple
+      x-go-default-value: auto
+      x-go-default: true
+  schemas:
+    UnknownResponse:
+      description: Unknown Response
+      type: object
+    AcquireMarketListResponse:
+      items:
+        type: string
+      type: array
+    AcquireAllMarketDataResponse:
+      description: AcquireAllMarketData Response Value
+      example: |-
+        {
+            "code": 0,
+            "data": {
+                "date": 1513865441609,
+                "ticker": {
+                    "BCHBTC": {
+                        "buy": "0.222",
+                        "buy_amount": "0.1",
+                        "open": "0.2322211",
+                        "high": "0.2322211",
+                        "last": "0.2322211",
+                        "low": "0.222",
+                        "sell": "0.3522211",
+                        "sell_amount": "0.11",
+                        "vol": "2.01430624"
+                    },
+                }
+            },
+            "message": "Ok"
+        }
+      properties:
+        date:
+          description: server time when returning
+          type: string
+        buy:
+          description: buy 1
+          type: string
+        buy_amount:
+          description: buy 1 amount
+          type: string
+        high:
+          description: 24H highest price
+          type: string
+        last:
+          description: latest price
+          type: string
+        low:
+          description: 24H lowest price
+          type: string
+        sell:
+          description: sell 1
+          type: string
+        sell_amount:
+          description: sell 1 amount
+          type: string
+        vol:
+          description: 24H volumn
+          type: string
+      type: object
+    AcquireMarketDepthResponse:
+      description: AcquireMarketDepth Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "last": "10.00",
+            "time": 1539764050033,
+            "asks": [      # Sell Depth
+              [
+                "10.00",   # Order price
+                "0.9999"   # Order amount
+              ]
+            ],
+            "bids": [      # Buy Depth
+              [
+                "10.00",   # Order price
+                "1.0000"   # Order amount
+              ]
+            ]
+          },
+          "message": "Ok"
+        }
+      properties:
+        last:
+          description: Last price
+          type: string
+        time:
+          description: Updated time of Depth
+          format: double
+          type: number
+        asks:
+          description: Seller depth
+          items:
+            type: object
+          type: array
+        bids:
+          description: Buyer depth
+          items:
+            type: object
+          type: array
+      type: object
+    AcquireLatestTransactionDataResponse:
+      description: AcquireLatestTransactionData Response Value
+      example: "{\n  \"code\": 0,\n  \"data\": [\n    {\n      \"amount\": \"0.0001\"\
+        ,       # Transaction amount \n      \"date\": 1494214689,       # Transaction\
+        \ time(s) \n      \"date_ms\": 1494214689067, # Transaction time(ms)\n   \
+        \   \"id\": 5,                  # Transaction No\n      \"price\": \"10.00\"\
+        ,       # Transaction price\n      \"type\": \"buy\"             # Transaction\
+        \ type: buy, sell\n    }\n  ],\n  \"message\": \"Ok\"\n}"
+      properties:
+        id:
+          description: Transaction No
+          format: int64
+          type: integer
+        date:
+          description: Transaction time
+          format: int64
+          type: integer
+        date_ms:
+          description: Transaction time\(ms\)
+          format: int64
+          type: integer
+        amount:
+          description: Transaction amount
+          type: string
+        price:
+          description: Transaction price
+          type: string
+        type:
+          description: buy;<br>sell;
+          type: string
+      type: object
+    AcquireKLineDataResponse:
+      description: AcquireKLineData Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": [
+            [
+              1492358400, # Time
+              "10.0",   # Opening
+              "10.0",   # Closing
+              "10.0",   # Highest
+              "10.0",   # Lowest
+              "10",     # Volume
+              "100",    # amount
+              "BCHBTC", # market
+            ]
+          ],
+          "message": "Ok"
+        }
+      properties: {}
+      type: object
+    AcquireMarketInformationResponse:
+      description: AcquireMarketInformation Response Value
+      example:
+        XRPBTC:
+          taker_fee_rate: "0.001"
+          pricing_name: BTC
+          trading_name: XRP
+          min_amount: "0.001"
+          name: XRPBTC
+          trading_decimal: 8
+          maker_fee_rate: "0.001"
+          pricing_decimal: 8
+        CETUSDC:
+          taker_fee_rate: "0.001"
+          pricing_name: USDC
+          trading_name: CET
+          min_amount: "0.001"
+          name: CETUSDC
+          trading_decimal: 8
+          maker_fee_rate: "0.001"
+          pricing_decimal: 8
+      properties:
+        name:
+          description: market name
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        min_amount:
+          description: Min. amount of transaction
+          type: string
+        trading_name:
+          description: tradiing coin type
+          type: string
+        trading_decimal:
+          description: decimal of tradiing coin
+          format: int64
+          type: integer
+        pricing_name:
+          description: pricing coin type
+          type: string
+        pricing_decimal:
+          description: decimal of pricing coin
+          format: int64
+          type: integer
+      type: object
+    AcquireSingleMarketInformationResponse:
+      description: AcquireSingleMarketInformation Response Value
+      example:
+        taker_fee_rate: "0.001"
+        pricing_name: USDT
+        trading_name: BTC
+        min_amount: "0.001"
+        name: BTCUSDT
+        trading_decimal: 8
+        maker_fee_rate: "0.001"
+        pricing_decimal: 8
+      properties:
+        name:
+          description: market name
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        min_amount:
+          description: Min. amount of transaction
+          type: string
+        trading_name:
+          description: tradiing coin type
+          type: string
+        trading_decimal:
+          description: decimal of tradiing coin
+          format: int64
+          type: integer
+        pricing_name:
+          description: pricing coin type
+          type: string
+        pricing_decimal:
+          description: decimal of pricing coin
+          format: int64
+          type: integer
+      type: object
+    AcquireMiningDifficultyResponse:
+      description: AcquireMiningDifficulty Response Value
+      example:
+        difficulty: "50000"
+        prediction: "0"
+        update_time: 1530629026
+      properties:
+        difficulty:
+          description: Mining difficulty (CET/Hour)
+          type: string
+        prediction:
+          description: EST. hourly mining yield to distribute
+          type: string
+        update_time:
+          description: The time for an update on parameter "prediction"
+          format: int64
+          type: integer
+      type: object
+    AcquireExecutedOrderDetailResponse:
+      description: AcquireExecutedOrderDetail Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "count": 1,
+            "curr_page": 1,
+            "data": [
+              {
+                "amount": "0.622",           # executed amount
+                "create_time": 1496799439,   # executed time
+                "deal_money": "7240.6398",   # executed value
+                "fee": "14.4812796",         # transaction fee
+                "id": 1012977,               # order no.
+                "price": "11640.9",          # order price
+                "role": "taker"              # order role
+              }
+            ],
+            "has_next": true
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          description: executed amount
+          type: string
+        create_time:
+          description: executed time
+          format: int64
+          type: integer
+        deal_money:
+          description: executed value
+          type: string
+        fee:
+          description: transaction fee
+          type: string
+        id:
+          description: order no.
+          format: int64
+          type: integer
+        price:
+          description: order price
+          type: string
+        role:
+          description: order role
+          type: string
+      type: object
+    PlaceMultipleLimitOrdersRequest:
+      example: |
+        {
+          "access_id":" BFFA64957AA240F6BBEA26F4E07EC0D9",
+          "tonce": 1513746038205,
+          "market":"BTCBCH",  # market type
+          "account_id":"2",
+          "batch_orders": "[{\"source_id\": \"123\", \"amount\": \"56.5\", \"type\": \"sell\", \"price\": \"10\", \"client_id\": \"xxxx\", \"option\": \"NORMAL\"}, {\"source_id\": \"234\", \"amount\": \"56.6\", \"type\": \"sell\", \"price\": \"10.5\", \"client_id\": \"xxxxx\", \"option\": \"MAKER_ONLY\"}]"
+        }
+      properties:
+        access_id:
+          description: access_id
+          type: string
+        batch_orders:
+          type: string
+      required:
+      - access_id
+      type: object
+    PlaceMultipleLimitOrdersResponse:
+      description: PlaceMultipleLimitOrders Response Value
+      example: "{\n  \"code\": 0,\n  \"data\": [\n            {\n                \"\
+        code\": 0,\n                \"data\": {\n                    \"amount\": \"\
+        56.5\",              # order count       \n                    \"avg_price\"\
+        : \"11641.3\",        # average order price\n                    \"create_time\"\
+        : 1496798479,     # order placing time \n                    \"deal_amount\"\
+        : \"56.5\",         # executed amount\n                    \"deal_fee\": \"\
+        1315.4669122\",    # transaction fee\n                    \"deal_money\":\
+        \ \"657733.4561\",   # executed value\n                    \"id\": 300032,\
+        \                  # order no.\n                    \"left\": \"0\",     \
+        \              # unexecuted amount\n                    \"maker_fee_rate\"\
+        : \"0.001\",     # maker rate\n                    \"market\": \"BTCBCH\"\
+        ,            # market\n                    \"order_type\": \"limit\",    \
+        \     # order type: limit: limit order;market: market order;\n           \
+        \         \"price\": \"10\",                 # order price\n             \
+        \       \"source_id\": \"123\",            # user-defined no.\n          \
+        \          \"status\": \"done\",              # order status: done:executed;part_deal:partly\
+        \ executed;not_deal:unexecuted;\n                    \"taker_fee_rate\": \"\
+        0.002\",     # taker rate\n                    \"type\": \"sell\",       \
+        \         # order type: sell: sell;buy: buy;\n                    \"client_id\"\
+        : \"xxxx\"\n                    },\n                \"message\": \"\",\n \
+        \           },\n            ......\n          ]\n  \"message\": \"Ok\"\n}"
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: amount
+          type: string
+        finished_time:
+          description: complete time
+          format: int64
+          type: integer
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order;<br>market:market order;
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+        client_id:
+          description: 'client_id: return what you give;'
+          type: string
+      type: object
+    AcquireMultipleOrdersResponse:
+      description: AcquireMultipleOrders Response Value
+      example: |-
+        {
+          "code": 0,
+          "data":                           # order data
+          [
+            {
+              "code": 0,
+              "data": {
+                "amount": "1000",                 # order count
+                "avg_price": "11782.28",          # average executed price
+                "create_time": 1496761108,        # order placing time
+                "deal_amount": "1000",            # executed amount
+                "deal_fee": "23564.5798468",      # transaction fee
+                "stock_fee": "111",               # stock transaction fee
+                "money_fee": "222",               # money transaction fee
+                "asset_fee": "222",               # asset transaction fee
+                "deal_money": "11782289.9234",    # executed value
+                "id": 300021,                     # order no.
+                "left": "9.4",                    # unexecuted amount
+                "maker_fee_rate": "0.001",        # maker fee
+                "market": "BTCBCH",               # market
+                "order_type": "limit",            # order type
+                "price": "7000",                  # order price
+                "status": "done",                 # order status
+                "taker_fee_rate": "0.002",        # taker fee
+                "type": "sell"                    # order type
+                },
+              "message": "",
+             },
+            ......
+          ]
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: executed value
+          type: string
+        finished_time:
+          description: complete time
+          format: int64
+          type: integer
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order;<br>market:market order;
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;<br>cancel: cancelled;<br>To guarantee server performance, all
+            cancelled unexecuted orders will be deleted.'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+      type: object
+    CancelMultipleOrdersResponse:
+      description: CancelMultipleOrders Response Value
+      example: "{\n  \"code\": 0,\n  \"data\": [\n      {\n        \"code\": 0,\n\
+        \        \"data\": {\n            \"amount\": \"56.5\",              # order\
+        \ count       \n            \"avg_price\": \"11641.3\",        # average order\
+        \ price\n            \"create_time\": 1496798479,     # order placing time\n\
+        \            \"deal_amount\": \"56.5\",         # executed amount\n      \
+        \      \"deal_fee\": \"1315.4669122\",    # transaction fee\n            \"\
+        deal_money\": \"657733.4561\",   # executed value\n            \"id\": 300032,\
+        \                  # order no.\n            \"left\": \"0\",             \
+        \      # unexecuted amount\n            \"maker_fee_rate\": \"0.001\",   \
+        \  # maker fee\n            \"market\": \"BTCBCH\",            # market\n\
+        \            \"order_type\": \"limit\",         # order type: limit:limit\
+        \ order;market:market order;\n            \"price\": \"10\",             \
+        \    # order price\n            \"source_id\": \"123\",            # user-defined\
+        \ no.\n            \"status\": \"done\",              # order status: done:executed;part_deal:partly\
+        \ executed;not_deal:unexecuted;\n            \"taker_fee_rate\": \"0.002\"\
+        ,     # taker fee\n            \"type\": \"sell\",                # order\
+        \ type: sell:sell;buy:buy; \n            \"client_id\": \"xxxx\",        \
+        \   # order client id\n          },\n        \"message\": \"\",\n      },\n\
+        \  ......\n  ]\n  \"message\": \"Ok\"\n}"
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: executed value
+          type: string
+        finished_time:
+          description: complete time
+          format: int64
+          type: integer
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order;<br>market:market order;
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'cancel: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+        client_id:
+          description: order client id
+          type: string
+      type: object
+    PlaceLimitOrderRequest:
+      example: |
+        {
+          "access_id":" BFFA64957AA240F6BBEA26F4E07EC0D9",
+          "amount": "56.5",  # order count
+          "price": "10",   # order price
+          "type": "sell",    # order type
+          "market":"BTCBCH",  # market type
+          "tonce": 1513746038205,
+          "source_id": "123" # user defines number and return
+        }
+      properties:
+        access_id:
+          description: access_id
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        type:
+          description: 'sell: sell order'
+          type: string
+      required:
+      - access_id
+      - market
+      - type
+      type: object
+    PlaceLimitOrderResponse:
+      description: PlaceLimitOrder Response Value
+      example: "{\n  \"code\": 0,\n  \"data\": {\n    \"amount\": \"56.5\",      \
+        \        # order count       \n    \"avg_price\": \"11641.3\",        # average\
+        \ order price\n    \"create_time\": 1496798479,     # order placing time \n\
+        \    \"deal_amount\": \"56.5\",         # executed amount\n    \"deal_fee\"\
+        : \"1315.4669122\",    # transaction fee\n    \"deal_money\": \"657733.4561\"\
+        ,   # executed value\n    \"id\": 300032,                  # order no.\n \
+        \   \"left\": \"0\",                   # unexecuted amount\n    \"maker_fee_rate\"\
+        : \"0.001\",     # maker rate\n    \"market\": \"BTCBCH\",            # market\n\
+        \    \"order_type\": \"limit\",         # order type: limit: limit order;market:\
+        \ market order;\n    \"price\": \"10\",                 # order price\n  \
+        \  \"source_id\": \"123\",            # user-defined no.\n    \"status\":\
+        \ \"done\",              # order status: done:executed;part_deal:partly executed;not_deal:unexecuted;\n\
+        \    \"taker_fee_rate\": \"0.002\",     # taker rate\n    \"type\": \"sell\"\
+        ,                # order type: sell: sell;buy: buy;\n    \"client_id\": \"\
+        xxx\",            # client_id: return what you give\n  },\n  \"message\":\
+        \ \"Ok\"\n}"
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: amount
+          type: string
+        finished_time:
+          description: complete time
+          format: int64
+          type: integer
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order;<br>market:market order;
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+        client_id:
+          description: 'client_id: what you give'
+          type: string
+      type: object
+    PlaceMarketOrderRequest:
+      example: |
+        {
+          "access_id":" BFFA64957AA240F6BBEA26F4E07EC0D9",
+          "amount": "56.5",  # order count
+          "type": "sell",    # order type
+          "market":"BTCBCH",  # market type
+          "tonce: 1513746038205,
+          "source_id": "123" # user defines number and return
+        }
+      properties:
+        access_id:
+          description: access_id
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        type:
+          description: 'sell: Sell order'
+          type: string
+      required:
+      - access_id
+      - market
+      - type
+      type: object
+    PlaceMarketOrderResponse:
+      description: PlaceMarketOrder Response Value
+      example: "{\n  \"code\": 0,\n  \"data\": {\n    \"amount\": \"56.5\",      \
+        \        # order count       \n    \"avg_price\": \"11641.3\",        # average\
+        \ order price\n    \"create_time\": 1496798479,     # order placing time \n\
+        \    \"deal_amount\": \"56.5\",         # executed amount\n    \"deal_money\"\
+        : \"657733.4561\",   # executed value\n    \"id\": 300032,               \
+        \   # order no.\n    \"left\": \"0\",                   # unexecuted amount\n\
+        \    \"maker_fee_rate\": \"0.001\",     # maker rate\n    \"market\": \"BTCBCH\"\
+        ,            # market\n    \"order_type\": \"market\",        # order type:\
+        \ limit: limit order;market: market order;\n    \"price\": \"7000\",     \
+        \          # order price\n    \"source_id\": \"123\",            # user-defined\
+        \ no.\n    \"status\": \"done\",              # order status: done:executed;part_deal:partly\
+        \ executed;not_deal:unexecuted;\n    \"taker_fee_rate\": \"0.002\",     #\
+        \ taker rate\n    \"type\": \"sell\",                # order type: sell: sell;buy:\
+        \ buy;\n    \"client_id\": \"xxxx\",           # client id: return what you\
+        \ give\n  },\n  \"message\": \"Ok\"\n}"
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: amount
+          type: string
+        finished_time:
+          description: complete time
+          format: int64
+          type: integer
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order;<br>market:market order;
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+        client_id:
+          description: return what you give
+          type: string
+      type: object
+    PlaceIocOrderRequest:
+      example: |
+        {
+          "access_id":" BFFA64957AA240F6BBEA26F4E07EC0D9",
+          "amount": "56.5",  # order count
+          "price": "10",   # order price
+          "type": "sell",    # order type
+          "market":"BTCBCH",  # market type
+          "tonce": 1513746038205,
+          "source_id": "123" # user defines number and return
+        }
+      properties:
+        access_id:
+          description: access_id
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        type:
+          description: 'sell: sell order'
+          type: string
+      required:
+      - access_id
+      - market
+      - type
+      type: object
+    PlaceIocOrderResponse:
+      description: PlaceIocOrder Response Value
+      example: "{\n  \"code\": 0,\n  \"data\": {\n    \"amount\": \"56.5\",      \
+        \        # order count       \n    \"avg_price\": \"11641.3\",        # average\
+        \ order price\n    \"create_time\": 1496798479,     # order placing time \n\
+        \    \"deal_amount\": \"56.5\",         # executed amount\n    \"deal_fee\"\
+        : \"1315.4669122\",    # transaction fee\n    \"deal_money\": \"657733.4561\"\
+        ,   # executed value\n    \"id\": 300032,                  # order no.\n \
+        \   \"left\": \"0\",                   # unexecuted amount\n    \"maker_fee_rate\"\
+        : \"0.001\",     # maker rate\n    \"market\": \"BTCBCH\",            # market\n\
+        \    \"order_type\": \"limit\",         # order type: limit: limit order;market:\
+        \ market order;\n    \"price\": \"10\",                 # order price\n  \
+        \  \"source_id\": \"123\",            # user-defined no.\n    \"status\":\
+        \ \"done\",              # order status: cancel;done;part_deal;\n    \"taker_fee_rate\"\
+        : \"0.002\",     # taker rate\n    \"type\": \"sell\",                # order\
+        \ type: sell: sell;buy: buy;\n    \"client_id\": \"xxxx\"            # return\
+        \ what you give\n  },\n  \"message\": \"Ok\"\n}"
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: amount
+          type: string
+        finished_time:
+          description: complete time
+          format: int64
+          type: integer
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'cancel: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+        client_id:
+          description: return what you give
+          type: string
+      type: object
+    AcquireUnexecutedOrderListResponse:
+      description: AcquireUnexecutedOrderList Response Value
+      example: "{\n  \"code\": 0,\n  \"data\": {\n    \"count\": 1,              \
+        \     # current page rows\n    \"curr_page\": 1,               # current page\n\
+        \    \"data\": [                     # return in reverse of order time with\
+        \ latest order on top\n      {\n        \"amount\": \"1.00\",         # order\
+        \ count \n        \"avg_price\": \"0.00\",      # average order price\n  \
+        \      \"create_time\": 1494320533,# order placing time\n        \"deal_amount\"\
+        : \"0.001\",   # executed amount\n        \"deal_fee\": \"130.3792\",   #\
+        \ transaction fee\n        \"deal_money\": \"65189.6\",  # executed value\n\
+        \        \"id\": 32,                 # order no.\n        \"left\": 32,  \
+        \             # unexecuted amount\n        \"maker_fee_rate\": \"0\",    #\
+        \ maker fee\n        \"market\": \"BTCBCH\",       # market type\n       \
+        \ \"order_type\": \"limit\",    # order type\n        \"price\": \"10.00\"\
+        ,         # order price\n        \"status\": \"not_deal\",     # order status\n\
+        \        \"taker_fee_rate\": \"0.002\",# taker fee\n        \"type\": \"sell\"\
+        ,           # buy/sell type\n        \"client_id\": \"xxxxx\",     # order\
+        \ client id\n      }\n    ],\n    \"has_next\": true              # Is there\
+        \ a next page\n  },\n  \"message\": \"Ok\"\n}"
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: executed value
+          type: string
+        finished_time:
+          description: complete time
+          format: int64
+          type: integer
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order;<br>market:market order;
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;<br>To guarantee server performance, all cancelled unexecuted
+            orders will be deleted.'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+        client_id:
+          description: order client id
+          type: string
+      type: object
+    AcquireExecutedOrderListResponse:
+      description: AcquireExecutedOrderList Response Value
+      example: "{\n  \"code\": 0, \n  \"data\": {\n    \"count\": 1,             \
+        \      # current page rows\n    \"curr_page\": 1,               # current\
+        \ page \n    \"data\": [                     # return in reverse of (executed)\
+        \ order time with latest order on top\n      {\n        \"amount\": \"1.00\"\
+        ,            # order amount\n        \"avg_price\": \"0.00\",         # average\
+        \ executed price\n        \"create_time\": 1494320533,   # order placing time\n\
+        \        \"deal_amount\": \"0.001\",      # executed amount\n        \"deal_fee\"\
+        : \"130.3792\",      # transaction fee\n        \"deal_money\": \"65189.6\"\
+        ,     # executed value\n        \"finished_time\": 1494320533, # order time\n\
+        \        \"id\": 32,                    # order no.\n        \"maker_fee_rate\"\
+        : \"0\",       # maker fee\n        \"market\": \"BTCBCH\",          # market\
+        \ type\n        \"order_type\": \"limit\",       # order type\n        \"\
+        price\": \"10.00\",            # order pricd\n        \"status\": \"not_deal\"\
+        ,        # order status\n        \"taker_fee_rate\": \"0.002\",   # taker\
+        \ fee\n        \"type\": \"sell\",              # buy/sell type\n        \"\
+        client_id\": \"xxxxx\",        # order client id\n      }\n    ], \n    \"\
+        has_next\": true,             # is there a next page\n  }, \n  \"message\"\
+        : \"Ok\"\n}"
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: executed value
+          type: string
+        finished_time:
+          description: complete time
+          format: int64
+          type: integer
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order;<br>market:market order;
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;<br>cancel: cancelled;<br>To guarantee server performance, all
+            cancelled unexecuted orders will be deleted.'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+        client_id:
+          description: order client id
+          type: string
+      type: object
+    AcquireOrderStatusResponse:
+      description: AcquireOrderStatus Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {                           # order data
+            "amount": "1000",                 # order count
+            "avg_price": "11782.28",          # average executed price
+            "create_time": 1496761108,        # order placing time
+            "deal_amount": "1000",            # executed amount
+            "deal_fee": "23564.5798468",      # transaction fee
+            "deal_money": "11782289.9234",    # executed value
+            "id": 300021,                     # order no.
+            "left": "9.4",                    # unexecuted amount
+            "maker_fee_rate": "0.001",        # maker fee
+            "market": "BTCBCH",               # market
+            "order_type": "limit",            # order type
+            "price": "7000",                  # order price
+            "status": "done",                 # order status
+            "taker_fee_rate": "0.002",        # taker fee
+            "type": "sell"                    # order type
+            }
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          description: order count
+          type: string
+        avg_price:
+          description: average price
+          type: string
+        create_time:
+          description: time when placing order
+          format: int64
+          type: integer
+        deal_amount:
+          description: count
+          type: string
+        deal_fee:
+          description: transaction fee
+          type: string
+        deal_money:
+          description: executed value
+          type: string
+        id:
+          description: Order No.
+          format: int64
+          type: integer
+        maker_fee_rate:
+          description: maker fee
+          type: string
+        market:
+          description: See <API invocation description market>
+          type: string
+        order_type:
+          description: limit:limit order;<br>market:market order;
+          type: string
+        price:
+          description: order price
+          type: string
+        status:
+          description: 'not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;<br>cancel: cancelled;<br>To guarantee server performance, all
+            cancelled unexecuted orders will be deleted.'
+          type: string
+        taker_fee_rate:
+          description: taker fee
+          type: string
+        type:
+          description: 'sell: sell order;<br>buy: buy order;'
+          type: string
+      type: object
+    AcquireUserDealsResponse:
+      description: AcquireUserDeals Response Value
+      example: "{\n  \"code\": 0,\n  \"data\": {\n    \"count\": 1,\n    \"curr_page\"\
+        : 1,\n    \"data\": [\n      {\n        \"amount\": \"0.622\",           #\
+        \ executed amount\n        \"create_time\": 1496799439,   # executed time\
+        \ \n        \"deal_money\": \"7240.6398\",   # executed value\n        \"\
+        fee\": \"0.008196\",           # transaction fee \n        \"fee_asset\":\
+        \ \"CET\",          # transaction fee asset\n        \"id\": 1012977,    \
+        \           # executed id\n        \"order_id\": 12977,           # order\
+        \ no.\n        \"price\": \"10.9\",             # order price\n        \"\
+        role\": \"taker\"              # order role\n        \"type\": \"sell\"  \
+        \             # order type\n      }\n    ],\n    \"has_next\": true\n  },\n\
+        \  \"message\": \"Ok\"\n}"
+      properties:
+        amount:
+          description: executed amount
+          type: string
+        create_time:
+          description: executed time
+          format: int64
+          type: integer
+        deal_money:
+          description: executed value
+          type: string
+        fee:
+          description: transaction fee
+          type: string
+        fee_asset:
+          description: transaction fee asset
+          type: string
+        id:
+          description: executed id
+          format: int64
+          type: integer
+        order_id:
+          description: order no.
+          format: int64
+          type: integer
+        price:
+          description: order price
+          type: string
+        role:
+          description: order role
+          type: string
+        type:
+          description: sell:sell;<br>buy:buy
+          type: string
+      type: object
+    InquireAccountInfoResponse:
+      description: InquireAccountInfo Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": {
+           "BCH": {                     # BCH account
+             "available": "13.60109",   # Available BCH
+             "frozen": "0.00000"        # Frozen BCH
+           },
+           "BTC": {                     # BTC account
+             "available": "32590.16",   # Available BTC
+             "frozen": "7000.00"        # Frozen BTC
+           },
+           "ETH": {                     # ETH account
+             "available": "5.06000",    # Available ETH
+             "frozen": "0.00000"        # Frozen ETH
+           }
+         },
+         "message": "Ok"
+        }
+      properties:
+        frozen:
+          description: frozen amount
+          type: object
+        available:
+          description: available amount
+          type: object
+      type: object
+    InquireWithdrawalListResponse:
+      description: InquireWithdrawalList Response Value
+      example:
+      - actual_amount: "1.00000000"
+        amount: "1.00000000"
+        coin_address: 1KAv3pazbTk2JnQ5xTo6fpKK7p1it2RzD4
+        coin_type: BCH
+        coin_withdraw_id: 206
+        confirmations: 0
+        create_time: 1524228297
+        status: audit
+        tx_fee: "0"
+        tx_id: ""
+      - actual_amount: "0.10000000"
+        amount: "0.10000000"
+        coin_address: 15sr1VdyXQ6sVLqeJUJ1uPzLpmQtgUeBSB
+        coin_type: BCH
+        coin_withdraw_id: 203
+        confirmations: 11
+        create_time: 1515806440
+        status: finish
+        tx_fee: "0"
+        tx_id: 896371d0e23d64d1cac65a0b7c9e9093d835affb572fec89dd4547277fbdd2f6
+      - actual_amount: "0.01000000"
+        amount: "0.01000000"
+        coin_address: 1GVVx5UBddLKrckTprNi4VhHSymeQ8tsLF
+        coin_type: BCH
+        coin_withdraw_id: 68
+        confirmations: 6
+        create_time: 1514978728
+        status: finish
+        tx_fee: "0"
+        tx_id: f08802fea6745c07e420b92356cf3bcdaa78a00c4a062ef0b9e2de06a3f4d718
+      - actual_amount: "0.00100000"
+        amount: "0.00100000"
+        coin_address: 1GVVx5UBddLKrckTprNi4VhHSymeQ8tsLF
+        coin_type: BCH
+        coin_withdraw_id: 27
+        confirmations: 0
+        create_time: 1513933541
+        status: cancel
+        tx_fee: "0"
+        tx_id: ""
+      properties:
+        coin_withdraw_id:
+          description: coin withdrawal id
+          type: object
+        create_time:
+          description: create time
+          type: object
+        amount:
+          description: withdrawal amount
+          type: object
+        actual_amount:
+          description: actual withdrawal amount
+          type: object
+        tx_id:
+          description: tx id
+          type: object
+        coin_address:
+          description: withdrawal address
+          type: object
+        tx_fee:
+          description: tx fee
+          type: object
+        confirmations:
+          description: confirmations
+          type: object
+        coin_type:
+          description: coin type
+          type: object
+        status:
+          description: audit;<br>pass;<br>processing;<br>confirming;<br>not\_pass;<br>cancel;<br>finish;<br>fail;
+          type: object
+      type: object
+    SubmitWithdrawalOrderResponse:
+      description: SubmitWithdrawalOrder Response Value
+      example:
+        actual_amount: "1.00000000"
+        amount: "1.00000000"
+        coin_address: 1KAv3pazbTk2JnQ5xTo6fpKK7p1it2RzD4
+        coin_type: BCH
+        coin_withdraw_id: 206
+        confirmations: 0
+        create_time: 1524228297
+        status: audit
+        tx_fee: "0"
+        tx_id: ""
+      properties:
+        coin_withdraw_id:
+          description: coin withdrawal id
+          type: object
+        create_time:
+          description: create time
+          type: object
+        amount:
+          description: withdrawal amount
+          type: object
+        actual_amount:
+          description: actual amount
+          type: object
+        tx_id:
+          description: tx id
+          type: object
+        coin_address:
+          description: coin address
+          type: object
+        tx_fee:
+          description: tx fee
+          type: object
+        confirmations:
+          description: confirmations
+          type: object
+        coin_type:
+          description: coin type
+          type: object
+        status:
+          description: status of withdrawal
+          type: object
+      type: object
+    InquireDepositListResponse:
+      description: InquireDepositList Response Value
+      example:
+        count: 2
+        curr_page: 1
+        data:
+        - actual_amount: "120.00000000"
+          actual_amount_display: "120"
+          add_explorer: XXX
+          amount: "120.00000000"
+          amount_display: "120"
+          coin_address: XXXXXXXX
+          coin_address_display: XXXXXXXX
+          coin_deposit_id: 1866
+          coin_type: USDT
+          confirmations: 0
+          create_time: 1539595701
+          explorer: ""
+          remark: ""
+          status: finish
+          status_display: finish
+          transfer_method: local
+          tx_id: ""
+          tx_id_display: XXXXXXXXXX
+        has_next: false
+        total: 2
+        total_page: 1
+      properties:
+        actual_amount:
+          description: actual deposit amount
+          type: object
+        actual_amount_display:
+          description: display of actual deposit amount
+          type: object
+        add_explorer:
+          description: Depositor
+          type: object
+        amount:
+          description: Amount
+          type: object
+        amount_display:
+          description: Amount displayed
+          type: object
+        coin_address:
+          description: Deposit add
+          type: object
+        coin_address_display:
+          description: Deposit add displayed
+          type: object
+        coin_deposit_id:
+          description: Deposit ID
+          type: object
+        coin_type:
+          description: Coin type
+          type: object
+        confirmations:
+          description: confirmations
+          type: object
+        create_time:
+          description: create time
+          type: object
+        explorer:
+          description: explorer
+          type: object
+        remark:
+          description: remark
+          type: object
+        status:
+          description: processing，confirming，cancel，finish
+          type: object
+        status_display:
+          description: Status displayed
+          type: object
+        transfer_method:
+          description: transfer method
+          type: object
+        tx_id:
+          description: tx id
+          type: object
+        tx_id_display:
+          description: tx id display
+          type: object
+      type: object
+    AcquireCurrencyRateResponse:
+      description: AcquireCurrencyRate Response Value
+      example:
+        BCH_to_USD:
+          rate: "1557.83670906"
+        BTC_to_USD:
+          rate: "9342.2889664"
+        CET_to_USD:
+          rate: "0.08061917"
+        ETH_to_USD:
+          rate: "139.52287566"
+        GUSD_to_USD:
+          rate: "1"
+        PAX_to_USD:
+          rate: "1"
+        TUSD_to_USD:
+          rate: "1"
+        USDC_to_USD:
+          rate: "1"
+        USDT_to_USD:
+          rate: "1.00239152"
+      properties:
+        rate:
+          description: currency rate
+          type: string
+      type: object
+    AcquireAssetConfigResponse:
+      description: AcquireAssetConfig Response Value
+      example: |-
+        {
+            "code": 0,
+            "data": {
+                "ADA": {
+                    "can_deposit": true,
+                    "can_withdraw": true,
+                    "deposit_least_amount": "140",
+                    "withdraw_least_amount": "140",
+                    "withdraw_tx_fee": "73"
+                },
+                "ARN": {
+                    "can_deposit": true,
+                    "can_withdraw": true,
+                    "deposit_least_amount": "140",
+                    "withdraw_least_amount": "140",
+                    "withdraw_tx_fee": "73"
+                },
+                "BCH": {
+                    "can_deposit": true,
+                    "can_withdraw": true,
+                    "deposit_least_amount": "140",
+                    "withdraw_least_amount": "140",
+                    "withdraw_tx_fee": "73"
+                }
+                ...
+            },
+            "message": "Ok"
+        }
+      properties:
+        can_deposit:
+          description: coin type deposit status
+          type: boolean
+        can_withdraw:
+          description: coin type withdraw status
+          type: boolean
+        deposit_least_amount:
+          description: deposit least amount
+          type: string
+        withdraw_least_amount:
+          description: withdraw least amount
+          type: string
+        withdraw_tx_fee:
+          description: withdraw tx fee
+          type: string
+      type: object
+    InquireMarginAccountInfoResponse:
+      description: InquireMarginAccountInfo Response Value
+      example: "{\n \"code\": 0,\n \"data\": {\n       \"account_id\": 1,\n      \
+        \ \"leverage\": 5,\n       \"market_type\": \"BTCUSDT\",\n       \"sell_asset_type\"\
+        : \"BTC\",\n       \"buy_asst_type\": \"USDT\",\n       \"balance\": {   \
+        \              \n         \"sell_type\": \"13.60109\",   \n         \"buy_type\"\
+        : \"2590.16\"\n       },\n       \"frozen\": {                 \n        \
+        \ \"sell_type\": \"0\",   \n         \"buy_type\": \"90.01\"\n       },\n\
+        \       \"loan\": {                    # loaned amount info\n         \"sell_type\"\
+        : \"3.60109\",    # sell coin loaned amount\n         \"buy_type\": \"590.16\"\
+        \       # buy coin loaned amount\n       },\n       \"interest\": {      \
+        \          # interest amount\n         \"sell_type\": \"0.16\",       # sell\
+        \ coin interested amount\n         \"buy_type\": \"0.01\"         # buy coin\
+        \ interested amount\n       },\n       \"can_transfer\": {               \
+        \  \n         \"sell_type\": \"0\",   \n         \"buy_type\": \"0\"\n   \
+        \    },\n       \"warn_rate\": \"1.21\",\n       \"liquidation_price\": \"\
+        7078,831\",\n   }\n },\n \"message\": \"Ok\"\n}"
+      properties:
+        account_id:
+          description: market account ID, See <  Inquire Margin Account Market Info>
+          format: int64
+          type: integer
+        leverage:
+          description: maximum leverage
+          format: int64
+          type: integer
+        market_type:
+          description: <API invocation description market>
+          type: string
+        sell_asset_type:
+          description: sell coin name, equal "sell_type"
+          type: string
+        buy_asset_type:
+          description: buy coin name, equal "buy_type"
+          type: string
+        balance:
+          description: balance
+          type: object
+        frozen:
+          description: amount frozen(not available)
+          type: object
+        loan:
+          description: amount loaned info
+          type: object
+        interest:
+          description: interest info
+          type: object
+        can_transfer:
+          description: available transfer amount
+          type: object
+        warn_rate:
+          description: warn rate
+          type: string
+        liquidation_price:
+          description: burst price
+          type: string
+      type: object
+    AcquireMarginAccountSettingsResponse:
+      description: AcquireMarginAccountSettings Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": [
+           {
+           "market": "BTCUSDT",
+           "BTC": {
+             "amount": "1.0",
+             "day_rate": "0.0001",
+             "leverage": 5,
+           },
+           "USDT": {
+             "amount": "500.0",
+             "day_rate": "0.0001",
+             "leverage": 5,
+           },
+           ...
+         ]
+         "message": "Ok"
+        }
+      properties:
+        amount:
+          description: maximum loan amount
+          type: string
+        day_rate:
+          description: daily interest rate
+          type: string
+        leverage:
+          description: maximum leverage
+          format: int64
+          type: integer
+      type: object
+    AcquireLoanListResponse:
+      description: AcquireLoanList Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": [
+           {
+             "loan_id": 89,
+             "create_time": 1515806440,
+             "market": "BTCUSDT",
+             "coin_type": "BTC",
+             "day_rate": "0.0001",
+             "loan_amount": "1.34216421",
+             "unflat_amount": "1.00321543",
+             "expire_time": 1515896440,
+             "renew": 0,
+             "status": "pass",
+           },
+           ...
+         ],
+         "message": "Ok"
+        }
+      properties:
+        loan_id:
+          description: loan record ID
+          format: int64
+          type: integer
+        create_time:
+          description: create timestamp
+          format: int64
+          type: integer
+        market:
+          description: See<API invocation description market>
+          type: string
+        coin_type:
+          description: coin token name
+          type: string
+        loan_amount:
+          description: borrow amount
+          type: string
+        unflat_amount:
+          description: amount and interest need to repay
+          type: string
+        expire_time:
+          description: expire timestamp
+          format: int64
+          type: integer
+        renew:
+          description: '0: close; <br>1: open;'
+          format: int64
+          type: integer
+        day_rate:
+          description: daily interest rate
+          type: string
+        status:
+          description: 'pass: in loan;<br> burst: bankrupt;<br> arrears: in debt;<br>
+            finish: paid off;'
+          type: string
+      type: object
+    PlaceLoanResponse:
+      description: PlaceLoan Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": {
+           "loan_id": 64,
+         },
+         "message": "Ok"
+        }
+      properties:
+        loan_id:
+          description: loan record ID
+          format: int64
+          type: integer
+      type: object
+    inline_response_200:
+      example:
+        code: 0
+        data:
+        - data
+        - data
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          items:
+            type: string
+          type: array
+      type: object
+    inline_response_200_1:
+      example:
+        code: 0
+        data: |-
+          {
+              "code": 0,
+              "data": {
+                  "date": 1513865441609,
+                  "ticker": {
+                      "BCHBTC": {
+                          "buy": "0.222",
+                          "buy_amount": "0.1",
+                          "open": "0.2322211",
+                          "high": "0.2322211",
+                          "last": "0.2322211",
+                          "low": "0.222",
+                          "sell": "0.3522211",
+                          "sell_amount": "0.11",
+                          "vol": "2.01430624"
+                      },
+                  }
+              },
+              "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireAllMarketDataResponse'
+      type: object
+    inline_response_200_2:
+      example:
+        code: 0
+        data: |-
+          {
+            "code": 0,
+            "data": {
+              "last": "10.00",
+              "time": 1539764050033,
+              "asks": [      # Sell Depth
+                [
+                  "10.00",   # Order price
+                  "0.9999"   # Order amount
+                ]
+              ],
+              "bids": [      # Buy Depth
+                [
+                  "10.00",   # Order price
+                  "1.0000"   # Order amount
+                ]
+              ]
+            },
+            "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireMarketDepthResponse'
+      type: object
+    inline_response_200_3:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0,\n  \"data\": [\n    {\n      \"amount\": \"0.0001\"\
+          ,       # Transaction amount \n      \"date\": 1494214689,       # Transaction\
+          \ time(s) \n      \"date_ms\": 1494214689067, # Transaction time(ms)\n \
+          \     \"id\": 5,                  # Transaction No\n      \"price\": \"\
+          10.00\",       # Transaction price\n      \"type\": \"buy\"            \
+          \ # Transaction type: buy, sell\n    }\n  ],\n  \"message\": \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireLatestTransactionDataResponse'
+      type: object
+    inline_response_200_4:
+      example:
+        code: 0
+        data: |-
+          {
+            "code": 0,
+            "data": [
+              [
+                1492358400, # Time
+                "10.0",   # Opening
+                "10.0",   # Closing
+                "10.0",   # Highest
+                "10.0",   # Lowest
+                "10",     # Volume
+                "100",    # amount
+                "BCHBTC", # market
+              ]
+            ],
+            "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          description: AcquireKLineData Response Value
+          example: |-
+            {
+              "code": 0,
+              "data": [
+                [
+                  1492358400, # Time
+                  "10.0",   # Opening
+                  "10.0",   # Closing
+                  "10.0",   # Highest
+                  "10.0",   # Lowest
+                  "10",     # Volume
+                  "100",    # amount
+                  "BCHBTC", # market
+                ]
+              ],
+              "message": "Ok"
+            }
+          properties: {}
+          type: object
+      type: object
+    inline_response_200_5:
+      example:
+        code: 0
+        data:
+          XRPBTC:
+            taker_fee_rate: "0.001"
+            pricing_name: BTC
+            trading_name: XRP
+            min_amount: "0.001"
+            name: XRPBTC
+            trading_decimal: 8
+            maker_fee_rate: "0.001"
+            pricing_decimal: 8
+          CETUSDC:
+            taker_fee_rate: "0.001"
+            pricing_name: USDC
+            trading_name: CET
+            min_amount: "0.001"
+            name: CETUSDC
+            trading_decimal: 8
+            maker_fee_rate: "0.001"
+            pricing_decimal: 8
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireMarketInformationResponse'
+      type: object
+    inline_response_200_6:
+      example:
+        code: 0
+        data:
+          taker_fee_rate: "0.001"
+          pricing_name: USDT
+          trading_name: BTC
+          min_amount: "0.001"
+          name: BTCUSDT
+          trading_decimal: 8
+          maker_fee_rate: "0.001"
+          pricing_decimal: 8
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireSingleMarketInformationResponse'
+      type: object
+    inline_response_200_7:
+      example:
+        code: 0
+        data:
+          difficulty: "50000"
+          prediction: "0"
+          update_time: 1530629026
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireMiningDifficultyResponse'
+      type: object
+    inline_response_200_8:
+      example:
+        code: 0
+        data: |-
+          {
+            "code": 0,
+            "data": {
+              "count": 1,
+              "curr_page": 1,
+              "data": [
+                {
+                  "amount": "0.622",           # executed amount
+                  "create_time": 1496799439,   # executed time
+                  "deal_money": "7240.6398",   # executed value
+                  "fee": "14.4812796",         # transaction fee
+                  "id": 1012977,               # order no.
+                  "price": "11640.9",          # order price
+                  "role": "taker"              # order role
+                }
+              ],
+              "has_next": true
+            },
+            "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireExecutedOrderDetailResponse'
+      type: object
+    inline_response_200_9:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0,\n  \"data\": [\n            {\n                \"\
+          code\": 0,\n                \"data\": {\n                    \"amount\"\
+          : \"56.5\",              # order count       \n                    \"avg_price\"\
+          : \"11641.3\",        # average order price\n                    \"create_time\"\
+          : 1496798479,     # order placing time \n                    \"deal_amount\"\
+          : \"56.5\",         # executed amount\n                    \"deal_fee\"\
+          : \"1315.4669122\",    # transaction fee\n                    \"deal_money\"\
+          : \"657733.4561\",   # executed value\n                    \"id\": 300032,\
+          \                  # order no.\n                    \"left\": \"0\",   \
+          \                # unexecuted amount\n                    \"maker_fee_rate\"\
+          : \"0.001\",     # maker rate\n                    \"market\": \"BTCBCH\"\
+          ,            # market\n                    \"order_type\": \"limit\",  \
+          \       # order type: limit: limit order;market: market order;\n       \
+          \             \"price\": \"10\",                 # order price\n       \
+          \             \"source_id\": \"123\",            # user-defined no.\n  \
+          \                  \"status\": \"done\",              # order status: done:executed;part_deal:partly\
+          \ executed;not_deal:unexecuted;\n                    \"taker_fee_rate\"\
+          : \"0.002\",     # taker rate\n                    \"type\": \"sell\", \
+          \               # order type: sell: sell;buy: buy;\n                   \
+          \ \"client_id\": \"xxxx\"\n                    },\n                \"message\"\
+          : \"\",\n            },\n            ......\n          ]\n  \"message\"\
+          : \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/PlaceMultipleLimitOrdersResponse'
+      type: object
+    inline_response_200_10:
+      example:
+        code: 0
+        data: |-
+          {
+            "code": 0,
+            "data":                           # order data
+            [
+              {
+                "code": 0,
+                "data": {
+                  "amount": "1000",                 # order count
+                  "avg_price": "11782.28",          # average executed price
+                  "create_time": 1496761108,        # order placing time
+                  "deal_amount": "1000",            # executed amount
+                  "deal_fee": "23564.5798468",      # transaction fee
+                  "stock_fee": "111",               # stock transaction fee
+                  "money_fee": "222",               # money transaction fee
+                  "asset_fee": "222",               # asset transaction fee
+                  "deal_money": "11782289.9234",    # executed value
+                  "id": 300021,                     # order no.
+                  "left": "9.4",                    # unexecuted amount
+                  "maker_fee_rate": "0.001",        # maker fee
+                  "market": "BTCBCH",               # market
+                  "order_type": "limit",            # order type
+                  "price": "7000",                  # order price
+                  "status": "done",                 # order status
+                  "taker_fee_rate": "0.002",        # taker fee
+                  "type": "sell"                    # order type
+                  },
+                "message": "",
+               },
+              ......
+            ]
+            "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireMultipleOrdersResponse'
+      type: object
+    inline_response_200_11:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0,\n  \"data\": [\n      {\n        \"code\": 0,\n \
+          \       \"data\": {\n            \"amount\": \"56.5\",              # order\
+          \ count       \n            \"avg_price\": \"11641.3\",        # average\
+          \ order price\n            \"create_time\": 1496798479,     # order placing\
+          \ time\n            \"deal_amount\": \"56.5\",         # executed amount\n\
+          \            \"deal_fee\": \"1315.4669122\",    # transaction fee\n    \
+          \        \"deal_money\": \"657733.4561\",   # executed value\n         \
+          \   \"id\": 300032,                  # order no.\n            \"left\":\
+          \ \"0\",                   # unexecuted amount\n            \"maker_fee_rate\"\
+          : \"0.001\",     # maker fee\n            \"market\": \"BTCBCH\",      \
+          \      # market\n            \"order_type\": \"limit\",         # order\
+          \ type: limit:limit order;market:market order;\n            \"price\": \"\
+          10\",                 # order price\n            \"source_id\": \"123\"\
+          ,            # user-defined no.\n            \"status\": \"done\",     \
+          \         # order status: done:executed;part_deal:partly executed;not_deal:unexecuted;\n\
+          \            \"taker_fee_rate\": \"0.002\",     # taker fee\n          \
+          \  \"type\": \"sell\",                # order type: sell:sell;buy:buy; \n\
+          \            \"client_id\": \"xxxx\",           # order client id\n    \
+          \      },\n        \"message\": \"\",\n      },\n  ......\n  ]\n  \"message\"\
+          : \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CancelMultipleOrdersResponse'
+      type: object
+    inline_response_200_12:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0,\n  \"data\": {\n    \"count\": 1,               \
+          \    # current page rows\n    \"curr_page\": 1,               # current\
+          \ page\n    \"data\": [                     # return in reverse of order\
+          \ time with latest order on top\n      {\n        \"amount\": \"1.00\",\
+          \         # order count \n        \"avg_price\": \"0.00\",      # average\
+          \ order price\n        \"create_time\": 1494320533,# order placing time\n\
+          \        \"deal_amount\": \"0.001\",   # executed amount\n        \"deal_fee\"\
+          : \"130.3792\",   # transaction fee\n        \"deal_money\": \"65189.6\"\
+          ,  # executed value\n        \"id\": 32,                 # order no.\n \
+          \       \"left\": 32,               # unexecuted amount\n        \"maker_fee_rate\"\
+          : \"0\",    # maker fee\n        \"market\": \"BTCBCH\",       # market\
+          \ type\n        \"order_type\": \"limit\",    # order type\n        \"price\"\
+          : \"10.00\",         # order price\n        \"status\": \"not_deal\",  \
+          \   # order status\n        \"taker_fee_rate\": \"0.002\",# taker fee\n\
+          \        \"type\": \"sell\",           # buy/sell type\n        \"client_id\"\
+          : \"xxxxx\",     # order client id\n      }\n    ],\n    \"has_next\": true\
+          \              # Is there a next page\n  },\n  \"message\": \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireUnexecutedOrderListResponse'
+      type: object
+    inline_response_200_13:
+      example:
+        code: 0
+        data: '{}'
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          description: Unknown Response
+          type: object
+      type: object
+    inline_response_200_14:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0,\n  \"data\": {\n    \"amount\": \"56.5\",       \
+          \       # order count       \n    \"avg_price\": \"11641.3\",        # average\
+          \ order price\n    \"create_time\": 1496798479,     # order placing time\
+          \ \n    \"deal_amount\": \"56.5\",         # executed amount\n    \"deal_fee\"\
+          : \"1315.4669122\",    # transaction fee\n    \"deal_money\": \"657733.4561\"\
+          ,   # executed value\n    \"id\": 300032,                  # order no.\n\
+          \    \"left\": \"0\",                   # unexecuted amount\n    \"maker_fee_rate\"\
+          : \"0.001\",     # maker rate\n    \"market\": \"BTCBCH\",            #\
+          \ market\n    \"order_type\": \"limit\",         # order type: limit: limit\
+          \ order;market: market order;\n    \"price\": \"10\",                 #\
+          \ order price\n    \"source_id\": \"123\",            # user-defined no.\n\
+          \    \"status\": \"done\",              # order status: done:executed;part_deal:partly\
+          \ executed;not_deal:unexecuted;\n    \"taker_fee_rate\": \"0.002\",    \
+          \ # taker rate\n    \"type\": \"sell\",                # order type: sell:\
+          \ sell;buy: buy;\n    \"client_id\": \"xxx\",            # client_id: return\
+          \ what you give\n  },\n  \"message\": \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/PlaceLimitOrderResponse'
+      type: object
+    inline_response_200_15:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0,\n  \"data\": {\n    \"amount\": \"56.5\",       \
+          \       # order count       \n    \"avg_price\": \"11641.3\",        # average\
+          \ order price\n    \"create_time\": 1496798479,     # order placing time\
+          \ \n    \"deal_amount\": \"56.5\",         # executed amount\n    \"deal_money\"\
+          : \"657733.4561\",   # executed value\n    \"id\": 300032,             \
+          \     # order no.\n    \"left\": \"0\",                   # unexecuted amount\n\
+          \    \"maker_fee_rate\": \"0.001\",     # maker rate\n    \"market\": \"\
+          BTCBCH\",            # market\n    \"order_type\": \"market\",        #\
+          \ order type: limit: limit order;market: market order;\n    \"price\": \"\
+          7000\",               # order price\n    \"source_id\": \"123\",       \
+          \     # user-defined no.\n    \"status\": \"done\",              # order\
+          \ status: done:executed;part_deal:partly executed;not_deal:unexecuted;\n\
+          \    \"taker_fee_rate\": \"0.002\",     # taker rate\n    \"type\": \"sell\"\
+          ,                # order type: sell: sell;buy: buy;\n    \"client_id\":\
+          \ \"xxxx\",           # client id: return what you give\n  },\n  \"message\"\
+          : \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/PlaceMarketOrderResponse'
+      type: object
+    inline_response_200_16:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0,\n  \"data\": {\n    \"amount\": \"56.5\",       \
+          \       # order count       \n    \"avg_price\": \"11641.3\",        # average\
+          \ order price\n    \"create_time\": 1496798479,     # order placing time\
+          \ \n    \"deal_amount\": \"56.5\",         # executed amount\n    \"deal_fee\"\
+          : \"1315.4669122\",    # transaction fee\n    \"deal_money\": \"657733.4561\"\
+          ,   # executed value\n    \"id\": 300032,                  # order no.\n\
+          \    \"left\": \"0\",                   # unexecuted amount\n    \"maker_fee_rate\"\
+          : \"0.001\",     # maker rate\n    \"market\": \"BTCBCH\",            #\
+          \ market\n    \"order_type\": \"limit\",         # order type: limit: limit\
+          \ order;market: market order;\n    \"price\": \"10\",                 #\
+          \ order price\n    \"source_id\": \"123\",            # user-defined no.\n\
+          \    \"status\": \"done\",              # order status: cancel;done;part_deal;\n\
+          \    \"taker_fee_rate\": \"0.002\",     # taker rate\n    \"type\": \"sell\"\
+          ,                # order type: sell: sell;buy: buy;\n    \"client_id\":\
+          \ \"xxxx\"            # return what you give\n  },\n  \"message\": \"Ok\"\
+          \n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/PlaceIocOrderResponse'
+      type: object
+    inline_response_200_17:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0, \n  \"data\": {\n    \"count\": 1,              \
+          \     # current page rows\n    \"curr_page\": 1,               # current\
+          \ page \n    \"data\": [                     # return in reverse of (executed)\
+          \ order time with latest order on top\n      {\n        \"amount\": \"1.00\"\
+          ,            # order amount\n        \"avg_price\": \"0.00\",         #\
+          \ average executed price\n        \"create_time\": 1494320533,   # order\
+          \ placing time\n        \"deal_amount\": \"0.001\",      # executed amount\n\
+          \        \"deal_fee\": \"130.3792\",      # transaction fee\n        \"\
+          deal_money\": \"65189.6\",     # executed value\n        \"finished_time\"\
+          : 1494320533, # order time\n        \"id\": 32,                    # order\
+          \ no.\n        \"maker_fee_rate\": \"0\",       # maker fee\n        \"\
+          market\": \"BTCBCH\",          # market type\n        \"order_type\": \"\
+          limit\",       # order type\n        \"price\": \"10.00\",            #\
+          \ order pricd\n        \"status\": \"not_deal\",        # order status\n\
+          \        \"taker_fee_rate\": \"0.002\",   # taker fee\n        \"type\"\
+          : \"sell\",              # buy/sell type\n        \"client_id\": \"xxxxx\"\
+          ,        # order client id\n      }\n    ], \n    \"has_next\": true,  \
+          \           # is there a next page\n  }, \n  \"message\": \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireExecutedOrderListResponse'
+      type: object
+    inline_response_200_18:
+      example:
+        code: 0
+        data: |-
+          {
+            "code": 0,
+            "data": {                           # order data
+              "amount": "1000",                 # order count
+              "avg_price": "11782.28",          # average executed price
+              "create_time": 1496761108,        # order placing time
+              "deal_amount": "1000",            # executed amount
+              "deal_fee": "23564.5798468",      # transaction fee
+              "deal_money": "11782289.9234",    # executed value
+              "id": 300021,                     # order no.
+              "left": "9.4",                    # unexecuted amount
+              "maker_fee_rate": "0.001",        # maker fee
+              "market": "BTCBCH",               # market
+              "order_type": "limit",            # order type
+              "price": "7000",                  # order price
+              "status": "done",                 # order status
+              "taker_fee_rate": "0.002",        # taker fee
+              "type": "sell"                    # order type
+              }
+            },
+            "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireOrderStatusResponse'
+      type: object
+    inline_response_200_19:
+      example:
+        code: 0
+        data: "{\n  \"code\": 0,\n  \"data\": {\n    \"count\": 1,\n    \"curr_page\"\
+          : 1,\n    \"data\": [\n      {\n        \"amount\": \"0.622\",         \
+          \  # executed amount\n        \"create_time\": 1496799439,   # executed\
+          \ time \n        \"deal_money\": \"7240.6398\",   # executed value\n   \
+          \     \"fee\": \"0.008196\",           # transaction fee \n        \"fee_asset\"\
+          : \"CET\",          # transaction fee asset\n        \"id\": 1012977,  \
+          \             # executed id\n        \"order_id\": 12977,           # order\
+          \ no.\n        \"price\": \"10.9\",             # order price\n        \"\
+          role\": \"taker\"              # order role\n        \"type\": \"sell\"\
+          \               # order type\n      }\n    ],\n    \"has_next\": true\n\
+          \  },\n  \"message\": \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireUserDealsResponse'
+      type: object
+    inline_response_200_20:
+      example:
+        code: 0
+        data: |-
+          {
+           "code": 0,
+           "data": {
+             "BCH": {                     # BCH account
+               "available": "13.60109",   # Available BCH
+               "frozen": "0.00000"        # Frozen BCH
+             },
+             "BTC": {                     # BTC account
+               "available": "32590.16",   # Available BTC
+               "frozen": "7000.00"        # Frozen BTC
+             },
+             "ETH": {                     # ETH account
+               "available": "5.06000",    # Available ETH
+               "frozen": "0.00000"        # Frozen ETH
+             }
+           },
+           "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/InquireAccountInfoResponse'
+      type: object
+    inline_response_200_21:
+      example:
+        code: 0
+        data:
+        - actual_amount: "1.00000000"
+          amount: "1.00000000"
+          coin_address: 1KAv3pazbTk2JnQ5xTo6fpKK7p1it2RzD4
+          coin_type: BCH
+          coin_withdraw_id: 206
+          confirmations: 0
+          create_time: 1524228297
+          status: audit
+          tx_fee: "0"
+          tx_id: ""
+        - actual_amount: "0.10000000"
+          amount: "0.10000000"
+          coin_address: 15sr1VdyXQ6sVLqeJUJ1uPzLpmQtgUeBSB
+          coin_type: BCH
+          coin_withdraw_id: 203
+          confirmations: 11
+          create_time: 1515806440
+          status: finish
+          tx_fee: "0"
+          tx_id: 896371d0e23d64d1cac65a0b7c9e9093d835affb572fec89dd4547277fbdd2f6
+        - actual_amount: "0.01000000"
+          amount: "0.01000000"
+          coin_address: 1GVVx5UBddLKrckTprNi4VhHSymeQ8tsLF
+          coin_type: BCH
+          coin_withdraw_id: 68
+          confirmations: 6
+          create_time: 1514978728
+          status: finish
+          tx_fee: "0"
+          tx_id: f08802fea6745c07e420b92356cf3bcdaa78a00c4a062ef0b9e2de06a3f4d718
+        - actual_amount: "0.00100000"
+          amount: "0.00100000"
+          coin_address: 1GVVx5UBddLKrckTprNi4VhHSymeQ8tsLF
+          coin_type: BCH
+          coin_withdraw_id: 27
+          confirmations: 0
+          create_time: 1513933541
+          status: cancel
+          tx_fee: "0"
+          tx_id: ""
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/InquireWithdrawalListResponse'
+      type: object
+    inline_response_200_22:
+      example:
+        code: 0
+        data:
+          actual_amount: "1.00000000"
+          amount: "1.00000000"
+          coin_address: 1KAv3pazbTk2JnQ5xTo6fpKK7p1it2RzD4
+          coin_type: BCH
+          coin_withdraw_id: 206
+          confirmations: 0
+          create_time: 1524228297
+          status: audit
+          tx_fee: "0"
+          tx_id: ""
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/SubmitWithdrawalOrderResponse'
+      type: object
+    inline_response_200_23:
+      example:
+        code: 0
+        data:
+          count: 2
+          curr_page: 1
+          data:
+          - actual_amount: "120.00000000"
+            actual_amount_display: "120"
+            add_explorer: XXX
+            amount: "120.00000000"
+            amount_display: "120"
+            coin_address: XXXXXXXX
+            coin_address_display: XXXXXXXX
+            coin_deposit_id: 1866
+            coin_type: USDT
+            confirmations: 0
+            create_time: 1539595701
+            explorer: ""
+            remark: ""
+            status: finish
+            status_display: finish
+            transfer_method: local
+            tx_id: ""
+            tx_id_display: XXXXXXXXXX
+          has_next: false
+          total: 2
+          total_page: 1
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/InquireDepositListResponse'
+      type: object
+    inline_response_200_24:
+      example:
+        code: 0
+        data:
+          BCH_to_USD:
+            rate: "1557.83670906"
+          BTC_to_USD:
+            rate: "9342.2889664"
+          CET_to_USD:
+            rate: "0.08061917"
+          ETH_to_USD:
+            rate: "139.52287566"
+          GUSD_to_USD:
+            rate: "1"
+          PAX_to_USD:
+            rate: "1"
+          TUSD_to_USD:
+            rate: "1"
+          USDC_to_USD:
+            rate: "1"
+          USDT_to_USD:
+            rate: "1.00239152"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireCurrencyRateResponse'
+      type: object
+    inline_response_200_25:
+      example:
+        code: 0
+        data: |-
+          {
+              "code": 0,
+              "data": {
+                  "ADA": {
+                      "can_deposit": true,
+                      "can_withdraw": true,
+                      "deposit_least_amount": "140",
+                      "withdraw_least_amount": "140",
+                      "withdraw_tx_fee": "73"
+                  },
+                  "ARN": {
+                      "can_deposit": true,
+                      "can_withdraw": true,
+                      "deposit_least_amount": "140",
+                      "withdraw_least_amount": "140",
+                      "withdraw_tx_fee": "73"
+                  },
+                  "BCH": {
+                      "can_deposit": true,
+                      "can_withdraw": true,
+                      "deposit_least_amount": "140",
+                      "withdraw_least_amount": "140",
+                      "withdraw_tx_fee": "73"
+                  }
+                  ...
+              },
+              "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireAssetConfigResponse'
+      type: object
+    inline_response_200_26:
+      example:
+        code: 0
+        data: "{\n \"code\": 0,\n \"data\": {\n       \"account_id\": 1,\n       \"\
+          leverage\": 5,\n       \"market_type\": \"BTCUSDT\",\n       \"sell_asset_type\"\
+          : \"BTC\",\n       \"buy_asst_type\": \"USDT\",\n       \"balance\": { \
+          \                \n         \"sell_type\": \"13.60109\",   \n         \"\
+          buy_type\": \"2590.16\"\n       },\n       \"frozen\": {               \
+          \  \n         \"sell_type\": \"0\",   \n         \"buy_type\": \"90.01\"\
+          \n       },\n       \"loan\": {                    # loaned amount info\n\
+          \         \"sell_type\": \"3.60109\",    # sell coin loaned amount\n   \
+          \      \"buy_type\": \"590.16\"       # buy coin loaned amount\n       },\n\
+          \       \"interest\": {                # interest amount\n         \"sell_type\"\
+          : \"0.16\",       # sell coin interested amount\n         \"buy_type\":\
+          \ \"0.01\"         # buy coin interested amount\n       },\n       \"can_transfer\"\
+          : {                 \n         \"sell_type\": \"0\",   \n         \"buy_type\"\
+          : \"0\"\n       },\n       \"warn_rate\": \"1.21\",\n       \"liquidation_price\"\
+          : \"7078,831\",\n   }\n },\n \"message\": \"Ok\"\n}"
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/InquireMarginAccountInfoResponse'
+      type: object
+    inline_response_200_27:
+      example:
+        code: 0
+        data: |-
+          {
+           "code": 0,
+           "data": [
+             {
+             "market": "BTCUSDT",
+             "BTC": {
+               "amount": "1.0",
+               "day_rate": "0.0001",
+               "leverage": 5,
+             },
+             "USDT": {
+               "amount": "500.0",
+               "day_rate": "0.0001",
+               "leverage": 5,
+             },
+             ...
+           ]
+           "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireMarginAccountSettingsResponse'
+      type: object
+    inline_response_200_28:
+      example:
+        code: 0
+        data: |-
+          {
+           "code": 0,
+           "data": [
+             {
+               "loan_id": 89,
+               "create_time": 1515806440,
+               "market": "BTCUSDT",
+               "coin_type": "BTC",
+               "day_rate": "0.0001",
+               "loan_amount": "1.34216421",
+               "unflat_amount": "1.00321543",
+               "expire_time": 1515896440,
+               "renew": 0,
+               "status": "pass",
+             },
+             ...
+           ],
+           "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AcquireLoanListResponse'
+      type: object
+    inline_response_200_29:
+      example:
+        code: 0
+        data: |-
+          {
+           "code": 0,
+           "data": {
+             "loan_id": 64,
+           },
+           "message": "Ok"
+          }
+        message: message
+      properties:
+        code:
+          format: int64
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/PlaceLoanResponse'
+      type: object

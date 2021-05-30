@@ -1,0 +1,3177 @@
+openapi: 3.0.2
+info:
+  title: CoinEx API
+  description: |
+    Coinex doesn't have a openapi docs sadville
+
+    Open and simple, CoinEx API makes sure that you can build your own trading tools to achieve a more effective trading strategy. CoinEx API is now available for these features:
+  version: '2021-05-29'
+servers:
+- url: https://api.coinex.com/v1
+  description: Coinex Production Server
+paths:
+  /market/list:
+    get:
+      summary: Acquire Market List
+      description: Acquire real-time market data
+      tags:
+      - market
+      operationId: AcquireMarketList
+      parameters: []
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireMarketListResponse'
+  /market/ticker/all:
+    get:
+      summary: Acquire All Market Data
+      description: acquire all market data
+      tags:
+      - market
+      operationId: AcquireAllMarketData
+      parameters: []
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireAllMarketDataResponse'
+  '/market/depth ':
+    get:
+      summary: Acquire Market Depth
+      description: Acquire buy/sell statistics，return up to 50
+      tags:
+      - market
+      operationId: AcquireMarketDepth
+      parameters:
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See<API invocation description market>
+        example: bchbtc
+      - in: query
+        name: merge
+        required: true
+        schema:
+          type: string
+        example: '0'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireMarketDepthResponse'
+  /market/deals:
+    get:
+      summary: Acquire Latest Transaction Data
+      description: Acquire latest transaction data，return up to 1000
+      tags:
+      - market
+      operationId: AcquireLatestTransactionData
+      parameters:
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See<API invocation description market>
+        example: BCHBTC
+      - in: query
+        name: last_id
+        required: false
+        schema:
+          type: integer
+          format: int64
+        description: Transaction history id
+        example: '2'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireLatestTransactionDataResponse'
+  /market/kline:
+    get:
+      summary: Acquire K-Line Data
+      description: Acquire k-line data for specified period, including latest 1000
+        datas
+      tags:
+      - market
+      operationId: AcquireKLineData
+      parameters:
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See<API invocation description market>
+        example: bchbtc
+      - in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireKLineDataResponse'
+  '/market/info ':
+    get:
+      summary: Acquire Market Information
+      description: Acquire market detail information
+      tags:
+      - market
+      operationId: AcquireMarketInformation
+      parameters: []
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireMarketInformationResponse'
+  '/market/detail ':
+    get:
+      summary: Acquire Single Market Information
+      description: Acquire single market detail information
+      tags:
+      - market
+      operationId: AcquireSingleMarketInformation
+      parameters:
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See<API invocation description market>
+        example: BTCUSDT
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireSingleMarketInformationResponse'
+  /order/mining/difficulty:
+    get:
+      summary: Acquire Mining Difficulty
+      description: Acquire mining difficulty
+      tags:
+      - order
+      operationId: AcquireMiningDifficulty
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireMiningDifficultyResponse'
+  /order/deals:
+    get:
+      summary: Acquire Executed Order Detail
+      description: Acquire Executed Order Detail
+      tags:
+      - order
+      operationId: AcquireExecutedOrderDetail
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+      - in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: Order no.
+        example: '123456'
+      - in: query
+        name: page
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: page
+        example: '1'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireExecutedOrderDetailResponse'
+  /order/limit/batch:
+    post:
+      summary: Place Multiple Limit Orders
+      description: |-
+        place multiple limit orders in the same market, limit up to 100
+        Rate Limit: 100/10s
+      tags:
+      - order
+      operationId: PlaceMultipleLimitOrders
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceMultipleLimitOrdersRequest'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/PlaceMultipleLimitOrdersResponse'
+  /order/status/batch:
+    get:
+      summary: Acquire Multiple Orders
+      description: |-
+        acquire multiple orders status in the same market, limit up to 100
+        Rate Limit: 100/10s
+      tags:
+      - order
+      operationId: AcquireMultipleOrders
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+      - in: query
+        name: batch_ids
+        required: true
+        schema:
+          type: string
+        description: multiple order nos string
+        example: 300021,300022,300033
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See <API invocation description market>
+        example: BTCBCH
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireMultipleOrdersResponse'
+  /order/pending/batch:
+    delete:
+      summary: Cancel Multiple Orders
+      description: |-
+        cancel multiple orders in the same market, limit up to 100
+        Rate Limit: 100/10s
+      tags:
+      - order
+      operationId: CancelMultipleOrders
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: BFFA64957AA240F6BBEA26F4E07EC0D9
+      - in: query
+        name: batch_ids
+        required: true
+        schema:
+          type: string
+        description: Unexecuted multiple order Nos string
+        example: 123,234,345
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See <API invocation description market>
+        example: BTCBCH
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds since Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: account_id
+        required: false
+        schema:
+          type: integer
+          format: int64
+        description: 'main account ID: 0'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/CancelMultipleOrdersResponse'
+  /order/pending:
+    delete:
+      summary: Cancel All Order
+      description: "Cancel unexecuted order\nRate Limit: 100/10s"
+      tags:
+      - order
+      operationId: CancelAllOrder
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: BFFA64957AA240F6BBEA26F4E07EC0D9
+      - in: query
+        name: account_id
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: 'main account ID: 0'
+        example: '0'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UnknownResponse'
+    get:
+      summary: Acquire Unexecuted Order List
+      description: "Acquire Unexecuted Order List\nRate Limit: 100/10s"
+      tags:
+      - order
+      operationId: AcquireUnexecutedOrderList
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: BFFA64957AA240F6BBEA26F4E07EC0D9
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See <API invocation description market>
+        example: BTCBCH
+      - in: query
+        name: page
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: Page
+        example: '1'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireUnexecutedOrderListResponse'
+  /order/limit:
+    post:
+      summary: Place Limit Order
+      description: "place limit order\nRate Limit: 100/10s"
+      tags:
+      - order
+      operationId: PlaceLimitOrder
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceLimitOrderRequest'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/PlaceLimitOrderResponse'
+  /order/market:
+    post:
+      summary: Place Market Order
+      description: place market order
+      tags:
+      - order
+      operationId: PlaceMarketOrder
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceMarketOrderRequest'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/PlaceMarketOrderResponse'
+  /order/ioc:
+    post:
+      summary: Place IOC Order
+      description: place immediate-or-cancel order
+      tags:
+      - order
+      operationId: PlaceIocOrder
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceIocOrderRequest'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/PlaceIocOrderResponse'
+  /order/finished:
+    get:
+      summary: Acquire Executed Order List
+      description: Acquire executed order list, including datas in last 2 days
+      tags:
+      - order
+      operationId: AcquireExecutedOrderList
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: EFF0C4057AA240F6AAE52634E07EC0DC
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See <API invocation description market>
+        example: BTCBCH
+      - in: query
+        name: page
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: page
+        example: '1'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireExecutedOrderListResponse'
+  /order/status:
+    get:
+      summary: 'Acquire Order Status '
+      description: "Acquire order status\nRate Limit: 100/10s"
+      tags:
+      - order
+      operationId: AcquireOrderStatus
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+      - in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: order no
+        example: '300021'
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See <API invocation description market>
+        example: btcbch
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireOrderStatusResponse'
+  /order/finished/{id}:
+    get:
+      summary: Acquire Finished Order Detail
+      description: Acquire Finished Order Detail
+      tags:
+      - order
+      operationId: AcquireFinishedOrderDetail
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: order no.
+        example: '300034'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See <API invocation description market>
+      - in: query
+        name: page
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: page
+        example: '1'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireExecutedOrderDetailResponse'
+  /order/user/deals:
+    get:
+      summary: Acquire User Deals
+      description: Acquire user deals
+      tags:
+      - order
+      operationId: AcquireUserDeals
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: F0160AD40BAE4519A3836BFB057BD682
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See <API invocation description market>
+        example: btcbch
+      - in: query
+        name: page
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: page
+        example: '1'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireUserDealsResponse'
+  /balance/info:
+    get:
+      summary: Inquire Account Info
+      description: |-
+        Inquire account asset constructure. 
+            **When the total assets (available + frozen) of a coin are 0, no coin data return
+      tags:
+      - account
+      operationId: InquireAccountInfo
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/InquireAccountInfoResponse'
+  /balance/coin/withdraw:
+    get:
+      summary: Inquire Withdrawal List
+      description: Inquire withdrawal list
+      tags:
+      - account
+      operationId: InquireWithdrawalList
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: coin_type
+        required: false
+        schema:
+          type: string
+        description: Coin type
+        example: BCH
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/InquireWithdrawalListResponse'
+    post:
+      summary: Submit Withdrawal Order
+      description: Submit a withdrawal order
+      tags:
+      - account
+      operationId: SubmitWithdrawalOrder
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: coin_type
+        required: true
+        schema:
+          type: string
+        description: coin_type
+      - in: query
+        name: smart_contract_name
+        required: false
+        schema:
+          type: string
+        description: 'Multi-protocol USDT parameter: ERC20'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/SubmitWithdrawalOrderResponse'
+    delete:
+      summary: Cancel Withdrawal
+      description: Cancel withdrawal
+      tags:
+      - account
+      operationId: CancelWithdrawal
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: coin_withdraw_id
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: coin withdrawal id
+        example: '206'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UnknownResponse'
+  /balance/coin/deposit:
+    get:
+      summary: 'Inquire Deposit List '
+      description: Inquire deposit history
+      tags:
+      - account
+      operationId: InquireDepositList
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: XXX6FXXXXXXXXXX902XXXXX89
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: coin_type
+        required: false
+        schema:
+          type: string
+        description: Coin type
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/InquireDepositListResponse'
+  /sub_account/transfer:
+    post:
+      summary: Transfer between main account and sub account
+      description: transfer between main account and sub account
+      tags:
+      - account
+      operationId: TransferBetweenMainAccountAndSubAccount
+      parameters:
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: transfer_account
+        required: false
+        schema:
+          type: string
+        description: the sub account name
+      - in: query
+        name: transfer_side
+        required: false
+        schema:
+          type: string
+        description: to post
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UnknownResponse'
+  /margin/market:
+    get:
+      summary: Inquire Margin Account Market Info
+      description: Inquire margin market ID map info
+      tags:
+      - account
+      operationId: InquireMarginAccountMarketInfo
+      parameters: []
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UnknownResponse'
+  /margin/transfer:
+    post:
+      summary: Transfer between main account and margin account
+      description: transfer between main account and margin account
+      tags:
+      - account
+      operationId: TransferBetweenMainAccountAndMarginAccount
+      parameters:
+      - in: query
+        name: from_account
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: the remitting account ID
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UnknownResponse'
+  /common/currency/rate:
+    get:
+      summary: Acquire Currency Rate
+      description: acquire currency rate
+      tags:
+      - common
+      operationId: AcquireCurrencyRate
+      parameters: []
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireCurrencyRateResponse'
+  /common/asset/config:
+    get:
+      summary: Acquire Asset Config
+      description: acquire asset config
+      tags:
+      - common
+      operationId: AcquireAssetConfig
+      parameters:
+      - in: query
+        name: coin_type
+        required: false
+        schema:
+          type: string
+        description: Coin type
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireAssetConfigResponse'
+  /margin/account:
+    get:
+      summary: Inquire Margin Account Info
+      description: Inquire margin account asset constructure
+      tags:
+      - margin
+      operationId: InquireMarginAccountInfo
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: Market Name
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/InquireMarginAccountInfoResponse'
+  /margin/config:
+    get:
+      summary: Acquire Margin Account Settings
+      description: |-
+        Get all information of the margin trading coin, including the general maximum loan amount, interest rate
+      tags:
+      - margin
+      operationId: AcquireMarginAccountSettings
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireMarginAccountSettingsResponse'
+  /margin/loan/history:
+    get:
+      summary: Acquire Loan List
+      description: Get loan history of the margin trading account
+      tags:
+      - margin
+      operationId: AcquireLoanList
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: market
+        required: false
+        schema:
+          type: string
+        description: See<API invocation description market>
+      - in: query
+        name: status
+        required: false
+        schema:
+          type: string
+        description: status
+      - in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+          format: int64
+        description: Page
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AcquireLoanListResponse'
+  /margin/loan:
+    post:
+      summary: Place Loan
+      description: Borrowing coins in a margin account
+      tags:
+      - margin
+      operationId: PlaceLoan
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See<API invocation description market>
+      - in: query
+        name: coin_type
+        required: true
+        schema:
+          type: string
+        description: Coin type
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/PlaceLoanResponse'
+  /margin/flat:
+    post:
+      summary: Place Flat
+      description: Repay coins in a margin account
+      tags:
+      - margin
+      operationId: PlaceFlat
+      parameters:
+      - $ref: '#/components/parameters/CX-ACCESS-SIGN'
+      - in: query
+        name: access_id
+        required: true
+        schema:
+          type: string
+        description: access_id
+        example: 4DA36FFC61334695A66F8D29020EB589
+      - in: query
+        name: tonce
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: |-
+          Tonce is a timestamp with a positive Interger that represents the number of milliseconds from Unix epoch to the current time. Error between tonce and server time can not exceed plus or minus 60s
+        example: '1513746038205'
+      - in: query
+        name: market
+        required: true
+        schema:
+          type: string
+        description: See<API invocation description market>
+      - in: query
+        name: coin_type
+        required: true
+        schema:
+          type: string
+        description: Coin type
+      responses:
+        '200':
+          description: response info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UnknownResponse'
+components:
+  parameters:
+    CX-ACCESS-SIGN:
+      in: header
+      name: authorization
+      required: true
+      description: |
+        Signature is required for Account API and trading API related interfaces.
+        The signature data is placed in the authorization header of the HTTP header and authorization is the signature result string.
+        No signature is required for market API related interfaces.
+        Use 32-bit MD5 Algorithm Signature
+        Use MD5 algorithm to encrypt the signature string, convert encrypted result to uppercase, get signature data and put signature data in HTTP Header - authorization.
+      schema:
+        type: string
+      x-go-default-value: auto
+      x-go-default: true
+  schemas:
+    UnknownResponse:
+      type: object
+      description: Unknown Response
+    AcquireMarketListResponse:
+      type: array
+      items:
+        type: string
+    AcquireAllMarketDataResponse:
+      type: object
+      description: AcquireAllMarketData Response Value
+      example: |-
+        {
+            "code": 0,
+            "data": {
+                "date": 1513865441609,
+                "ticker": {
+                    "BCHBTC": {
+                        "buy": "0.222",
+                        "buy_amount": "0.1",
+                        "open": "0.2322211",
+                        "high": "0.2322211",
+                        "last": "0.2322211",
+                        "low": "0.222",
+                        "sell": "0.3522211",
+                        "sell_amount": "0.11",
+                        "vol": "2.01430624"
+                    },
+                }
+            },
+            "message": "Ok"
+        }
+      properties:
+        date:
+          type: string
+          description: server time when returning
+        buy:
+          type: string
+          description: buy 1
+        buy_amount:
+          type: string
+          description: buy 1 amount
+        high:
+          type: string
+          description: 24H highest price
+        last:
+          type: string
+          description: latest price
+        low:
+          type: string
+          description: 24H lowest price
+        sell:
+          type: string
+          description: sell 1
+        sell_amount:
+          type: string
+          description: sell 1 amount
+        vol:
+          type: string
+          description: 24H volumn
+    AcquireMarketDepthResponse:
+      type: object
+      description: AcquireMarketDepth Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "last": "10.00",
+            "time": 1539764050033,
+            "asks": [      # Sell Depth
+              [
+                "10.00",   # Order price
+                "0.9999"   # Order amount
+              ]
+            ],
+            "bids": [      # Buy Depth
+              [
+                "10.00",   # Order price
+                "1.0000"   # Order amount
+              ]
+            ]
+          },
+          "message": "Ok"
+        }
+      properties:
+        last:
+          type: string
+          description: Last price
+        time:
+          type: number
+          format: double
+          description: Updated time of Depth
+        asks:
+          type: array
+          items:
+            type: object
+          description: Seller depth
+        bids:
+          type: array
+          items:
+            type: object
+          description: Buyer depth
+    AcquireLatestTransactionDataResponse:
+      type: object
+      description: AcquireLatestTransactionData Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": [
+            {
+              "amount": "0.0001",       # Transaction amount 
+              "date": 1494214689,       # Transaction time(s) 
+              "date_ms": 1494214689067, # Transaction time(ms)
+              "id": 5,                  # Transaction No
+              "price": "10.00",       # Transaction price
+              "type": "buy"             # Transaction type: buy, sell
+            }
+          ],
+          "message": "Ok"
+        }
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Transaction No
+        date:
+          type: integer
+          format: int64
+          description: Transaction time
+        date_ms:
+          type: integer
+          format: int64
+          description: Transaction time\(ms\)
+        amount:
+          type: string
+          description: Transaction amount
+        price:
+          type: string
+          description: Transaction price
+        type:
+          type: string
+          description: buy;<br>sell;
+    AcquireKLineDataResponse:
+      type: object
+      description: AcquireKLineData Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": [
+            [
+              1492358400, # Time
+              "10.0",   # Opening
+              "10.0",   # Closing
+              "10.0",   # Highest
+              "10.0",   # Lowest
+              "10",     # Volume
+              "100",    # amount
+              "BCHBTC", # market
+            ]
+          ],
+          "message": "Ok"
+        }
+      properties: {}
+    AcquireMarketInformationResponse:
+      type: object
+      description: AcquireMarketInformation Response Value
+      example:
+        XRPBTC:
+          taker_fee_rate: '0.001'
+          pricing_name: BTC
+          trading_name: XRP
+          min_amount: '0.001'
+          name: XRPBTC
+          trading_decimal: 8
+          maker_fee_rate: '0.001'
+          pricing_decimal: 8
+        CETUSDC:
+          taker_fee_rate: '0.001'
+          pricing_name: USDC
+          trading_name: CET
+          min_amount: '0.001'
+          name: CETUSDC
+          trading_decimal: 8
+          maker_fee_rate: '0.001'
+          pricing_decimal: 8
+      properties:
+        name:
+          type: string
+          description: market name
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        min_amount:
+          type: string
+          description: Min. amount of transaction
+        trading_name:
+          type: string
+          description: tradiing coin type
+        trading_decimal:
+          type: integer
+          format: int64
+          description: decimal of tradiing coin
+        pricing_name:
+          type: string
+          description: pricing coin type
+        pricing_decimal:
+          type: integer
+          format: int64
+          description: decimal of pricing coin
+    AcquireSingleMarketInformationResponse:
+      type: object
+      description: AcquireSingleMarketInformation Response Value
+      example:
+        taker_fee_rate: '0.001'
+        pricing_name: USDT
+        trading_name: BTC
+        min_amount: '0.001'
+        name: BTCUSDT
+        trading_decimal: 8
+        maker_fee_rate: '0.001'
+        pricing_decimal: 8
+      properties:
+        name:
+          type: string
+          description: market name
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        min_amount:
+          type: string
+          description: Min. amount of transaction
+        trading_name:
+          type: string
+          description: tradiing coin type
+        trading_decimal:
+          type: integer
+          format: int64
+          description: decimal of tradiing coin
+        pricing_name:
+          type: string
+          description: pricing coin type
+        pricing_decimal:
+          type: integer
+          format: int64
+          description: decimal of pricing coin
+    AcquireMiningDifficultyResponse:
+      type: object
+      description: AcquireMiningDifficulty Response Value
+      example:
+        difficulty: '50000'
+        prediction: '0'
+        update_time: 1530629026
+      properties:
+        difficulty:
+          type: string
+          description: Mining difficulty (CET/Hour)
+        prediction:
+          type: string
+          description: EST. hourly mining yield to distribute
+        update_time:
+          type: integer
+          format: int64
+          description: The time for an update on parameter "prediction"
+    AcquireExecutedOrderDetailResponse:
+      type: object
+      description: AcquireExecutedOrderDetail Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "count": 1,
+            "curr_page": 1,
+            "data": [
+              {
+                "amount": "0.622",           # executed amount
+                "create_time": 1496799439,   # executed time
+                "deal_money": "7240.6398",   # executed value
+                "fee": "14.4812796",         # transaction fee
+                "id": 1012977,               # order no.
+                "price": "11640.9",          # order price
+                "role": "taker"              # order role
+              }
+            ],
+            "has_next": true
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: executed amount
+        create_time:
+          type: integer
+          format: int64
+          description: executed time
+        deal_money:
+          type: string
+          description: executed value
+        fee:
+          type: string
+          description: transaction fee
+        id:
+          type: integer
+          format: int64
+          description: order no.
+        price:
+          type: string
+          description: order price
+        role:
+          type: string
+          description: order role
+    PlaceMultipleLimitOrdersRequest:
+      type: object
+      example: |
+        {
+          "access_id":" BFFA64957AA240F6BBEA26F4E07EC0D9",
+          "tonce": 1513746038205,
+          "market":"BTCBCH",  # market type
+          "account_id":"2",
+          "batch_orders": "[{\"source_id\": \"123\", \"amount\": \"56.5\", \"type\": \"sell\", \"price\": \"10\", \"client_id\": \"xxxx\", \"option\": \"NORMAL\"}, {\"source_id\": \"234\", \"amount\": \"56.6\", \"type\": \"sell\", \"price\": \"10.5\", \"client_id\": \"xxxxx\", \"option\": \"MAKER_ONLY\"}]"
+        }
+      properties:
+        access_id:
+          type: string
+          description: access_id
+        batch_orders:
+          type: string
+      required:
+      - access_id
+    PlaceMultipleLimitOrdersResponse:
+      type: object
+      description: PlaceMultipleLimitOrders Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": [
+                    {
+                        "code": 0,
+                        "data": {
+                            "amount": "56.5",              # order count       
+                            "avg_price": "11641.3",        # average order price
+                            "create_time": 1496798479,     # order placing time 
+                            "deal_amount": "56.5",         # executed amount
+                            "deal_fee": "1315.4669122",    # transaction fee
+                            "deal_money": "657733.4561",   # executed value
+                            "id": 300032,                  # order no.
+                            "left": "0",                   # unexecuted amount
+                            "maker_fee_rate": "0.001",     # maker rate
+                            "market": "BTCBCH",            # market
+                            "order_type": "limit",         # order type: limit: limit order;market: market order;
+                            "price": "10",                 # order price
+                            "source_id": "123",            # user-defined no.
+                            "status": "done",              # order status: done:executed;part_deal:partly executed;not_deal:unexecuted;
+                            "taker_fee_rate": "0.002",     # taker rate
+                            "type": "sell",                # order type: sell: sell;buy: buy;
+                            "client_id": "xxxx"
+                            },
+                        "message": "",
+                    },
+                    ......
+                  ]
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: amount
+        finished_time:
+          type: integer
+          format: int64
+          description: complete time
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order;<br>market:market order;
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: |-
+            not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done: executed;
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+        client_id:
+          type: string
+          description: 'client_id: return what you give;'
+    AcquireMultipleOrdersResponse:
+      type: object
+      description: AcquireMultipleOrders Response Value
+      example: |-
+        {
+          "code": 0,
+          "data":                           # order data
+          [
+            {
+              "code": 0,
+              "data": {
+                "amount": "1000",                 # order count
+                "avg_price": "11782.28",          # average executed price
+                "create_time": 1496761108,        # order placing time
+                "deal_amount": "1000",            # executed amount
+                "deal_fee": "23564.5798468",      # transaction fee
+                "stock_fee": "111",               # stock transaction fee
+                "money_fee": "222",               # money transaction fee
+                "asset_fee": "222",               # asset transaction fee
+                "deal_money": "11782289.9234",    # executed value
+                "id": 300021,                     # order no.
+                "left": "9.4",                    # unexecuted amount
+                "maker_fee_rate": "0.001",        # maker fee
+                "market": "BTCBCH",               # market
+                "order_type": "limit",            # order type
+                "price": "7000",                  # order price
+                "status": "done",                 # order status
+                "taker_fee_rate": "0.002",        # taker fee
+                "type": "sell"                    # order type
+                },
+              "message": "",
+             },
+            ......
+          ]
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: executed value
+        finished_time:
+          type: integer
+          format: int64
+          description: complete time
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order;<br>market:market order;
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: |-
+            not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done: executed;<br>cancel: cancelled;<br>To guarantee server performance, all cancelled unexecuted orders will be deleted.
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+    CancelMultipleOrdersResponse:
+      type: object
+      description: CancelMultipleOrders Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": [
+              {
+                "code": 0,
+                "data": {
+                    "amount": "56.5",              # order count       
+                    "avg_price": "11641.3",        # average order price
+                    "create_time": 1496798479,     # order placing time
+                    "deal_amount": "56.5",         # executed amount
+                    "deal_fee": "1315.4669122",    # transaction fee
+                    "deal_money": "657733.4561",   # executed value
+                    "id": 300032,                  # order no.
+                    "left": "0",                   # unexecuted amount
+                    "maker_fee_rate": "0.001",     # maker fee
+                    "market": "BTCBCH",            # market
+                    "order_type": "limit",         # order type: limit:limit order;market:market order;
+                    "price": "10",                 # order price
+                    "source_id": "123",            # user-defined no.
+                    "status": "done",              # order status: done:executed;part_deal:partly executed;not_deal:unexecuted;
+                    "taker_fee_rate": "0.002",     # taker fee
+                    "type": "sell",                # order type: sell:sell;buy:buy; 
+                    "client_id": "xxxx",           # order client id
+                  },
+                "message": "",
+              },
+          ......
+          ]
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: executed value
+        finished_time:
+          type: integer
+          format: int64
+          description: complete time
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order;<br>market:market order;
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: 'cancel: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;'
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+        client_id:
+          type: string
+          description: order client id
+    PlaceLimitOrderRequest:
+      type: object
+      example: |
+        {
+          "access_id":" BFFA64957AA240F6BBEA26F4E07EC0D9",
+          "amount": "56.5",  # order count
+          "price": "10",   # order price
+          "type": "sell",    # order type
+          "market":"BTCBCH",  # market type
+          "tonce": 1513746038205,
+          "source_id": "123" # user defines number and return
+        }
+      properties:
+        access_id:
+          type: string
+          description: access_id
+        market:
+          type: string
+          description: See <API invocation description market>
+        type:
+          type: string
+          description: 'sell: sell order'
+      required:
+      - access_id
+      - market
+      - type
+    PlaceLimitOrderResponse:
+      type: object
+      description: PlaceLimitOrder Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "amount": "56.5",              # order count       
+            "avg_price": "11641.3",        # average order price
+            "create_time": 1496798479,     # order placing time 
+            "deal_amount": "56.5",         # executed amount
+            "deal_fee": "1315.4669122",    # transaction fee
+            "deal_money": "657733.4561",   # executed value
+            "id": 300032,                  # order no.
+            "left": "0",                   # unexecuted amount
+            "maker_fee_rate": "0.001",     # maker rate
+            "market": "BTCBCH",            # market
+            "order_type": "limit",         # order type: limit: limit order;market: market order;
+            "price": "10",                 # order price
+            "source_id": "123",            # user-defined no.
+            "status": "done",              # order status: done:executed;part_deal:partly executed;not_deal:unexecuted;
+            "taker_fee_rate": "0.002",     # taker rate
+            "type": "sell",                # order type: sell: sell;buy: buy;
+            "client_id": "xxx",            # client_id: return what you give
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: amount
+        finished_time:
+          type: integer
+          format: int64
+          description: complete time
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order;<br>market:market order;
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: |-
+            not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done: executed;
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+        client_id:
+          type: string
+          description: 'client_id: what you give'
+    PlaceMarketOrderRequest:
+      type: object
+      example: |
+        {
+          "access_id":" BFFA64957AA240F6BBEA26F4E07EC0D9",
+          "amount": "56.5",  # order count
+          "type": "sell",    # order type
+          "market":"BTCBCH",  # market type
+          "tonce: 1513746038205,
+          "source_id": "123" # user defines number and return
+        }
+      properties:
+        access_id:
+          type: string
+          description: access_id
+        market:
+          type: string
+          description: See <API invocation description market>
+        type:
+          type: string
+          description: 'sell: Sell order'
+      required:
+      - access_id
+      - market
+      - type
+    PlaceMarketOrderResponse:
+      type: object
+      description: PlaceMarketOrder Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "amount": "56.5",              # order count       
+            "avg_price": "11641.3",        # average order price
+            "create_time": 1496798479,     # order placing time 
+            "deal_amount": "56.5",         # executed amount
+            "deal_money": "657733.4561",   # executed value
+            "id": 300032,                  # order no.
+            "left": "0",                   # unexecuted amount
+            "maker_fee_rate": "0.001",     # maker rate
+            "market": "BTCBCH",            # market
+            "order_type": "market",        # order type: limit: limit order;market: market order;
+            "price": "7000",               # order price
+            "source_id": "123",            # user-defined no.
+            "status": "done",              # order status: done:executed;part_deal:partly executed;not_deal:unexecuted;
+            "taker_fee_rate": "0.002",     # taker rate
+            "type": "sell",                # order type: sell: sell;buy: buy;
+            "client_id": "xxxx",           # client id: return what you give
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: amount
+        finished_time:
+          type: integer
+          format: int64
+          description: complete time
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order;<br>market:market order;
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: |-
+            not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done: executed;
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+        client_id:
+          type: string
+          description: return what you give
+    PlaceIocOrderRequest:
+      type: object
+      example: |
+        {
+          "access_id":" BFFA64957AA240F6BBEA26F4E07EC0D9",
+          "amount": "56.5",  # order count
+          "price": "10",   # order price
+          "type": "sell",    # order type
+          "market":"BTCBCH",  # market type
+          "tonce": 1513746038205,
+          "source_id": "123" # user defines number and return
+        }
+      properties:
+        access_id:
+          type: string
+          description: access_id
+        market:
+          type: string
+          description: See <API invocation description market>
+        type:
+          type: string
+          description: 'sell: sell order'
+      required:
+      - access_id
+      - market
+      - type
+    PlaceIocOrderResponse:
+      type: object
+      description: PlaceIocOrder Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "amount": "56.5",              # order count       
+            "avg_price": "11641.3",        # average order price
+            "create_time": 1496798479,     # order placing time 
+            "deal_amount": "56.5",         # executed amount
+            "deal_fee": "1315.4669122",    # transaction fee
+            "deal_money": "657733.4561",   # executed value
+            "id": 300032,                  # order no.
+            "left": "0",                   # unexecuted amount
+            "maker_fee_rate": "0.001",     # maker rate
+            "market": "BTCBCH",            # market
+            "order_type": "limit",         # order type: limit: limit order;market: market order;
+            "price": "10",                 # order price
+            "source_id": "123",            # user-defined no.
+            "status": "done",              # order status: cancel;done;part_deal;
+            "taker_fee_rate": "0.002",     # taker rate
+            "type": "sell",                # order type: sell: sell;buy: buy;
+            "client_id": "xxxx"            # return what you give
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: amount
+        finished_time:
+          type: integer
+          format: int64
+          description: complete time
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: 'cancel: unexecuted;<br>part\_deal: partly executed;<br>done:
+            executed;'
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+        client_id:
+          type: string
+          description: return what you give
+    AcquireUnexecutedOrderListResponse:
+      type: object
+      description: AcquireUnexecutedOrderList Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "count": 1,                   # current page rows
+            "curr_page": 1,               # current page
+            "data": [                     # return in reverse of order time with latest order on top
+              {
+                "amount": "1.00",         # order count 
+                "avg_price": "0.00",      # average order price
+                "create_time": 1494320533,# order placing time
+                "deal_amount": "0.001",   # executed amount
+                "deal_fee": "130.3792",   # transaction fee
+                "deal_money": "65189.6",  # executed value
+                "id": 32,                 # order no.
+                "left": 32,               # unexecuted amount
+                "maker_fee_rate": "0",    # maker fee
+                "market": "BTCBCH",       # market type
+                "order_type": "limit",    # order type
+                "price": "10.00",         # order price
+                "status": "not_deal",     # order status
+                "taker_fee_rate": "0.002",# taker fee
+                "type": "sell",           # buy/sell type
+                "client_id": "xxxxx",     # order client id
+              }
+            ],
+            "has_next": true              # Is there a next page
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: executed value
+        finished_time:
+          type: integer
+          format: int64
+          description: complete time
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order;<br>market:market order;
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: |-
+            not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done: executed;<br>To guarantee server performance, all cancelled unexecuted orders will be deleted.
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+        client_id:
+          type: string
+          description: order client id
+    AcquireExecutedOrderListResponse:
+      type: object
+      description: AcquireExecutedOrderList Response Value
+      example: |-
+        {
+          "code": 0, 
+          "data": {
+            "count": 1,                   # current page rows
+            "curr_page": 1,               # current page 
+            "data": [                     # return in reverse of (executed) order time with latest order on top
+              {
+                "amount": "1.00",            # order amount
+                "avg_price": "0.00",         # average executed price
+                "create_time": 1494320533,   # order placing time
+                "deal_amount": "0.001",      # executed amount
+                "deal_fee": "130.3792",      # transaction fee
+                "deal_money": "65189.6",     # executed value
+                "finished_time": 1494320533, # order time
+                "id": 32,                    # order no.
+                "maker_fee_rate": "0",       # maker fee
+                "market": "BTCBCH",          # market type
+                "order_type": "limit",       # order type
+                "price": "10.00",            # order pricd
+                "status": "not_deal",        # order status
+                "taker_fee_rate": "0.002",   # taker fee
+                "type": "sell",              # buy/sell type
+                "client_id": "xxxxx",        # order client id
+              }
+            ], 
+            "has_next": true,             # is there a next page
+          }, 
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: executed value
+        finished_time:
+          type: integer
+          format: int64
+          description: complete time
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order;<br>market:market order;
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: |-
+            not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done: executed;<br>cancel: cancelled;<br>To guarantee server performance, all cancelled unexecuted orders will be deleted.
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+        client_id:
+          type: string
+          description: order client id
+    AcquireOrderStatusResponse:
+      type: object
+      description: AcquireOrderStatus Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {                           # order data
+            "amount": "1000",                 # order count
+            "avg_price": "11782.28",          # average executed price
+            "create_time": 1496761108,        # order placing time
+            "deal_amount": "1000",            # executed amount
+            "deal_fee": "23564.5798468",      # transaction fee
+            "deal_money": "11782289.9234",    # executed value
+            "id": 300021,                     # order no.
+            "left": "9.4",                    # unexecuted amount
+            "maker_fee_rate": "0.001",        # maker fee
+            "market": "BTCBCH",               # market
+            "order_type": "limit",            # order type
+            "price": "7000",                  # order price
+            "status": "done",                 # order status
+            "taker_fee_rate": "0.002",        # taker fee
+            "type": "sell"                    # order type
+            }
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: order count
+        avg_price:
+          type: string
+          description: average price
+        create_time:
+          type: integer
+          format: int64
+          description: time when placing order
+        deal_amount:
+          type: string
+          description: count
+        deal_fee:
+          type: string
+          description: transaction fee
+        deal_money:
+          type: string
+          description: executed value
+        id:
+          type: integer
+          format: int64
+          description: Order No.
+        maker_fee_rate:
+          type: string
+          description: maker fee
+        market:
+          type: string
+          description: See <API invocation description market>
+        order_type:
+          type: string
+          description: limit:limit order;<br>market:market order;
+        price:
+          type: string
+          description: order price
+        status:
+          type: string
+          description: |-
+            not\_deal: unexecuted;<br>part\_deal: partly executed;<br>done: executed;<br>cancel: cancelled;<br>To guarantee server performance, all cancelled unexecuted orders will be deleted.
+        taker_fee_rate:
+          type: string
+          description: taker fee
+        type:
+          type: string
+          description: 'sell: sell order;<br>buy: buy order;'
+    AcquireUserDealsResponse:
+      type: object
+      description: AcquireUserDeals Response Value
+      example: |-
+        {
+          "code": 0,
+          "data": {
+            "count": 1,
+            "curr_page": 1,
+            "data": [
+              {
+                "amount": "0.622",           # executed amount
+                "create_time": 1496799439,   # executed time 
+                "deal_money": "7240.6398",   # executed value
+                "fee": "0.008196",           # transaction fee 
+                "fee_asset": "CET",          # transaction fee asset
+                "id": 1012977,               # executed id
+                "order_id": 12977,           # order no.
+                "price": "10.9",             # order price
+                "role": "taker"              # order role
+                "type": "sell"               # order type
+              }
+            ],
+            "has_next": true
+          },
+          "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: executed amount
+        create_time:
+          type: integer
+          format: int64
+          description: executed time
+        deal_money:
+          type: string
+          description: executed value
+        fee:
+          type: string
+          description: transaction fee
+        fee_asset:
+          type: string
+          description: transaction fee asset
+        id:
+          type: integer
+          format: int64
+          description: executed id
+        order_id:
+          type: integer
+          format: int64
+          description: order no.
+        price:
+          type: string
+          description: order price
+        role:
+          type: string
+          description: order role
+        type:
+          type: string
+          description: sell:sell;<br>buy:buy
+    InquireAccountInfoResponse:
+      type: object
+      description: InquireAccountInfo Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": {
+           "BCH": {                     # BCH account
+             "available": "13.60109",   # Available BCH
+             "frozen": "0.00000"        # Frozen BCH
+           },
+           "BTC": {                     # BTC account
+             "available": "32590.16",   # Available BTC
+             "frozen": "7000.00"        # Frozen BTC
+           },
+           "ETH": {                     # ETH account
+             "available": "5.06000",    # Available ETH
+             "frozen": "0.00000"        # Frozen ETH
+           }
+         },
+         "message": "Ok"
+        }
+      properties:
+        frozen:
+          type: object
+          description: frozen amount
+        available:
+          type: object
+          description: available amount
+    InquireWithdrawalListResponse:
+      type: object
+      description: InquireWithdrawalList Response Value
+      example:
+      - actual_amount: '1.00000000'
+        amount: '1.00000000'
+        coin_address: 1KAv3pazbTk2JnQ5xTo6fpKK7p1it2RzD4
+        coin_type: BCH
+        coin_withdraw_id: 206
+        confirmations: 0
+        create_time: 1524228297
+        status: audit
+        tx_fee: '0'
+        tx_id: ''
+      - actual_amount: '0.10000000'
+        amount: '0.10000000'
+        coin_address: 15sr1VdyXQ6sVLqeJUJ1uPzLpmQtgUeBSB
+        coin_type: BCH
+        coin_withdraw_id: 203
+        confirmations: 11
+        create_time: 1515806440
+        status: finish
+        tx_fee: '0'
+        tx_id: 896371d0e23d64d1cac65a0b7c9e9093d835affb572fec89dd4547277fbdd2f6
+      - actual_amount: '0.01000000'
+        amount: '0.01000000'
+        coin_address: 1GVVx5UBddLKrckTprNi4VhHSymeQ8tsLF
+        coin_type: BCH
+        coin_withdraw_id: 68
+        confirmations: 6
+        create_time: 1514978728
+        status: finish
+        tx_fee: '0'
+        tx_id: f08802fea6745c07e420b92356cf3bcdaa78a00c4a062ef0b9e2de06a3f4d718
+      - actual_amount: '0.00100000'
+        amount: '0.00100000'
+        coin_address: 1GVVx5UBddLKrckTprNi4VhHSymeQ8tsLF
+        coin_type: BCH
+        coin_withdraw_id: 27
+        confirmations: 0
+        create_time: 1513933541
+        status: cancel
+        tx_fee: '0'
+        tx_id: ''
+      properties:
+        coin_withdraw_id:
+          type: object
+          description: coin withdrawal id
+        create_time:
+          type: object
+          description: create time
+        amount:
+          type: object
+          description: withdrawal amount
+        actual_amount:
+          type: object
+          description: actual withdrawal amount
+        tx_id:
+          type: object
+          description: tx id
+        coin_address:
+          type: object
+          description: withdrawal address
+        tx_fee:
+          type: object
+          description: tx fee
+        confirmations:
+          type: object
+          description: confirmations
+        coin_type:
+          type: object
+          description: coin type
+        status:
+          type: object
+          description: |-
+            audit;<br>pass;<br>processing;<br>confirming;<br>not\_pass;<br>cancel;<br>finish;<br>fail;
+    SubmitWithdrawalOrderResponse:
+      type: object
+      description: SubmitWithdrawalOrder Response Value
+      example:
+        actual_amount: '1.00000000'
+        amount: '1.00000000'
+        coin_address: 1KAv3pazbTk2JnQ5xTo6fpKK7p1it2RzD4
+        coin_type: BCH
+        coin_withdraw_id: 206
+        confirmations: 0
+        create_time: 1524228297
+        status: audit
+        tx_fee: '0'
+        tx_id: ''
+      properties:
+        coin_withdraw_id:
+          type: object
+          description: coin withdrawal id
+        create_time:
+          type: object
+          description: create time
+        amount:
+          type: object
+          description: withdrawal amount
+        actual_amount:
+          type: object
+          description: actual amount
+        tx_id:
+          type: object
+          description: tx id
+        coin_address:
+          type: object
+          description: coin address
+        tx_fee:
+          type: object
+          description: tx fee
+        confirmations:
+          type: object
+          description: confirmations
+        coin_type:
+          type: object
+          description: coin type
+        status:
+          type: object
+          description: status of withdrawal
+    InquireDepositListResponse:
+      type: object
+      description: InquireDepositList Response Value
+      example:
+        count: 2
+        curr_page: 1
+        data:
+        - actual_amount: '120.00000000'
+          actual_amount_display: '120'
+          add_explorer: XXX
+          amount: '120.00000000'
+          amount_display: '120'
+          coin_address: XXXXXXXX
+          coin_address_display: XXXXXXXX
+          coin_deposit_id: 1866
+          coin_type: USDT
+          confirmations: 0
+          create_time: 1539595701
+          explorer: ''
+          remark: ''
+          status: finish
+          status_display: finish
+          transfer_method: local
+          tx_id: ''
+          tx_id_display: XXXXXXXXXX
+        has_next: false
+        total: 2
+        total_page: 1
+      properties:
+        actual_amount:
+          type: object
+          description: actual deposit amount
+        actual_amount_display:
+          type: object
+          description: display of actual deposit amount
+        add_explorer:
+          type: object
+          description: Depositor
+        amount:
+          type: object
+          description: Amount
+        amount_display:
+          type: object
+          description: Amount displayed
+        coin_address:
+          type: object
+          description: Deposit add
+        coin_address_display:
+          type: object
+          description: Deposit add displayed
+        coin_deposit_id:
+          type: object
+          description: Deposit ID
+        coin_type:
+          type: object
+          description: Coin type
+        confirmations:
+          type: object
+          description: confirmations
+        create_time:
+          type: object
+          description: create time
+        explorer:
+          type: object
+          description: explorer
+        remark:
+          type: object
+          description: remark
+        status:
+          type: object
+          description: processing，confirming，cancel，finish
+        status_display:
+          type: object
+          description: Status displayed
+        transfer_method:
+          type: object
+          description: transfer method
+        tx_id:
+          type: object
+          description: tx id
+        tx_id_display:
+          type: object
+          description: tx id display
+    AcquireCurrencyRateResponse:
+      type: object
+      description: AcquireCurrencyRate Response Value
+      example:
+        BCH_to_USD:
+          rate: '1557.83670906'
+        BTC_to_USD:
+          rate: '9342.2889664'
+        CET_to_USD:
+          rate: '0.08061917'
+        ETH_to_USD:
+          rate: '139.52287566'
+        GUSD_to_USD:
+          rate: '1'
+        PAX_to_USD:
+          rate: '1'
+        TUSD_to_USD:
+          rate: '1'
+        USDC_to_USD:
+          rate: '1'
+        USDT_to_USD:
+          rate: '1.00239152'
+      properties:
+        rate:
+          type: string
+          description: currency rate
+    AcquireAssetConfigResponse:
+      type: object
+      description: AcquireAssetConfig Response Value
+      example: |-
+        {
+            "code": 0,
+            "data": {
+                "ADA": {
+                    "can_deposit": true,
+                    "can_withdraw": true,
+                    "deposit_least_amount": "140",
+                    "withdraw_least_amount": "140",
+                    "withdraw_tx_fee": "73"
+                },
+                "ARN": {
+                    "can_deposit": true,
+                    "can_withdraw": true,
+                    "deposit_least_amount": "140",
+                    "withdraw_least_amount": "140",
+                    "withdraw_tx_fee": "73"
+                },
+                "BCH": {
+                    "can_deposit": true,
+                    "can_withdraw": true,
+                    "deposit_least_amount": "140",
+                    "withdraw_least_amount": "140",
+                    "withdraw_tx_fee": "73"
+                }
+                ...
+            },
+            "message": "Ok"
+        }
+      properties:
+        can_deposit:
+          type: boolean
+          description: coin type deposit status
+        can_withdraw:
+          type: boolean
+          description: coin type withdraw status
+        deposit_least_amount:
+          type: string
+          description: deposit least amount
+        withdraw_least_amount:
+          type: string
+          description: withdraw least amount
+        withdraw_tx_fee:
+          type: string
+          description: withdraw tx fee
+    InquireMarginAccountInfoResponse:
+      type: object
+      description: InquireMarginAccountInfo Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": {
+               "account_id": 1,
+               "leverage": 5,
+               "market_type": "BTCUSDT",
+               "sell_asset_type": "BTC",
+               "buy_asst_type": "USDT",
+               "balance": {                 
+                 "sell_type": "13.60109",   
+                 "buy_type": "2590.16"
+               },
+               "frozen": {                 
+                 "sell_type": "0",   
+                 "buy_type": "90.01"
+               },
+               "loan": {                    # loaned amount info
+                 "sell_type": "3.60109",    # sell coin loaned amount
+                 "buy_type": "590.16"       # buy coin loaned amount
+               },
+               "interest": {                # interest amount
+                 "sell_type": "0.16",       # sell coin interested amount
+                 "buy_type": "0.01"         # buy coin interested amount
+               },
+               "can_transfer": {                 
+                 "sell_type": "0",   
+                 "buy_type": "0"
+               },
+               "warn_rate": "1.21",
+               "liquidation_price": "7078,831",
+           }
+         },
+         "message": "Ok"
+        }
+      properties:
+        account_id:
+          type: integer
+          format: int64
+          description: market account ID, See <  Inquire Margin Account Market Info>
+        leverage:
+          type: integer
+          format: int64
+          description: maximum leverage
+        market_type:
+          type: string
+          description: <API invocation description market>
+        sell_asset_type:
+          type: string
+          description: sell coin name, equal "sell_type"
+        buy_asset_type:
+          type: string
+          description: buy coin name, equal "buy_type"
+        balance:
+          type: object
+          description: balance
+        frozen:
+          type: object
+          description: amount frozen(not available)
+        loan:
+          type: object
+          description: amount loaned info
+        interest:
+          type: object
+          description: interest info
+        can_transfer:
+          type: object
+          description: available transfer amount
+        warn_rate:
+          type: string
+          description: warn rate
+        liquidation_price:
+          type: string
+          description: burst price
+    AcquireMarginAccountSettingsResponse:
+      type: object
+      description: AcquireMarginAccountSettings Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": [
+           {
+           "market": "BTCUSDT",
+           "BTC": {
+             "amount": "1.0",
+             "day_rate": "0.0001",
+             "leverage": 5,
+           },
+           "USDT": {
+             "amount": "500.0",
+             "day_rate": "0.0001",
+             "leverage": 5,
+           },
+           ...
+         ]
+         "message": "Ok"
+        }
+      properties:
+        amount:
+          type: string
+          description: maximum loan amount
+        day_rate:
+          type: string
+          description: daily interest rate
+        leverage:
+          type: integer
+          format: int64
+          description: maximum leverage
+    AcquireLoanListResponse:
+      type: object
+      description: AcquireLoanList Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": [
+           {
+             "loan_id": 89,
+             "create_time": 1515806440,
+             "market": "BTCUSDT",
+             "coin_type": "BTC",
+             "day_rate": "0.0001",
+             "loan_amount": "1.34216421",
+             "unflat_amount": "1.00321543",
+             "expire_time": 1515896440,
+             "renew": 0,
+             "status": "pass",
+           },
+           ...
+         ],
+         "message": "Ok"
+        }
+      properties:
+        loan_id:
+          type: integer
+          format: int64
+          description: loan record ID
+        create_time:
+          type: integer
+          format: int64
+          description: create timestamp
+        market:
+          type: string
+          description: See<API invocation description market>
+        coin_type:
+          type: string
+          description: coin token name
+        loan_amount:
+          type: string
+          description: borrow amount
+        unflat_amount:
+          type: string
+          description: amount and interest need to repay
+        expire_time:
+          type: integer
+          format: int64
+          description: expire timestamp
+        renew:
+          type: integer
+          format: int64
+          description: '0: close; <br>1: open;'
+        day_rate:
+          type: string
+          description: daily interest rate
+        status:
+          type: string
+          description: |-
+            pass: in loan;<br> burst: bankrupt;<br> arrears: in debt;<br> finish: paid off;
+    PlaceLoanResponse:
+      type: object
+      description: PlaceLoan Response Value
+      example: |-
+        {
+         "code": 0,
+         "data": {
+           "loan_id": 64,
+         },
+         "message": "Ok"
+        }
+      properties:
+        loan_id:
+          type: integer
+          format: int64
+          description: loan record ID

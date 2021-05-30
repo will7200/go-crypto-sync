@@ -28,6 +28,15 @@ tasks:
     # remove the go module files, we don't need those
     - rm pkg/binance/go.mod pkg/binance/go.sum pkg/binance/.travis.yml pkg/binance/git_push.sh
     silent: false
+  build-coinex-api:
+    cmds:
+    - >
+      env GO_POST_PROCESS_FILE='gofmt -w' openapi-generator-cli generate -i api/coinex.yml -o pkg/coinex
+      -g go -c api/coinex.config.yml --enable-post-process-file -t api/templates/coinex
+      --git-repo-id go-crypto-sync --git-user-id will7200
+    # remove the go module files, we don't need those
+    - rm pkg/coinex/go.mod pkg/coinex/go.sum pkg/coinex/.travis.yml pkg/coinex/git_push.sh
+    silent: false
   build:
     cmds:
     - go build github.com/will7200/go-crypto-sync/cmd/crypto-sync

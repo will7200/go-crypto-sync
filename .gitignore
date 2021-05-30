@@ -5,3 +5,5 @@
 *.gob
 *.exe
 log.txt
+
+tmp
