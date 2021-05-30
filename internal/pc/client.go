@@ -129,6 +129,9 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 				log.Fatal(err)
 			}
 			ticker := left.CurrencyName()
+			if len(ticker) == 0 {
+				ticker = left.CurrencySymbolName()
+			}
 			if len(ticker) < 5 {
 				ticker = ticker + " - " + "Cryptocurrency"
 			}
