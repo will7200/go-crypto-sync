@@ -65,10 +65,7 @@ func (s *SyncCmd) Run(ctx *Context) error {
 	}
 
 	log.Infof("setting pricing data provider to %s", ctx.Config.PriceDataSource)
-	pricingData, err := providers.OpenPricingProvider(ctx.Config.PriceDataSource, providers.Config{Logger: ctx.Logger, Config: ctx.Config}, ctx.Config.Pricing[ctx.Config.PriceDataSource])
-	if err != nil {
-		return err
-	}
+	pricingData = getPricingProvider(ctx)
 	switch s.Destination {
 	case "personalcapital":
 		raw := personCapitalValues.Execute(ctx.Tree)
