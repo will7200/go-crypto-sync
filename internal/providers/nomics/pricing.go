@@ -120,5 +120,8 @@ retry:
 	if len(resp) == 0 {
 		return "", errors.New("not a valid currency with nomics")
 	}
-	return *resp[0].Price, nil
+	if price, ok := resp[0].GetPriceOk(); ok {
+		return *price, nil
+	}
+	return "", errors.New("Price not available")
 }
