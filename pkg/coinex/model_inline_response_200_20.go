@@ -16,9 +16,10 @@ import (
 
 // InlineResponse20020 struct for InlineResponse20020
 type InlineResponse20020 struct {
-	Code    *int64                      `json:"code,omitempty"`
-	Message *string                     `json:"message,omitempty"`
-	Data    *InquireAccountInfoResponse `json:"data,omitempty"`
+	Code    *int64  `json:"code,omitempty"`
+	Message *string `json:"message,omitempty"`
+	// InquireAccountInfo Response Value
+	Data *map[string]map[string]interface{} `json:"data,omitempty"`
 }
 
 // NewInlineResponse20020 instantiates a new InlineResponse20020 object
@@ -103,9 +104,9 @@ func (o *InlineResponse20020) SetMessage(v string) {
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
-func (o *InlineResponse20020) GetData() InquireAccountInfoResponse {
+func (o *InlineResponse20020) GetData() map[string]map[string]interface{} {
 	if o == nil || o.Data == nil {
-		var ret InquireAccountInfoResponse
+		var ret map[string]map[string]interface{}
 		return ret
 	}
 	return *o.Data
@@ -113,7 +114,7 @@ func (o *InlineResponse20020) GetData() InquireAccountInfoResponse {
 
 // GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InlineResponse20020) GetDataOk() (*InquireAccountInfoResponse, bool) {
+func (o *InlineResponse20020) GetDataOk() (*map[string]map[string]interface{}, bool) {
 	if o == nil || o.Data == nil {
 		return nil, false
 	}
@@ -129,8 +130,8 @@ func (o *InlineResponse20020) HasData() bool {
 	return false
 }
 
-// SetData gets a reference to the given InquireAccountInfoResponse and assigns it to the Data field.
-func (o *InlineResponse20020) SetData(v InquireAccountInfoResponse) {
+// SetData gets a reference to the given map[string]map[string]interface{} and assigns it to the Data field.
+func (o *InlineResponse20020) SetData(v map[string]map[string]interface{}) {
 	o.Data = &v
 }
 

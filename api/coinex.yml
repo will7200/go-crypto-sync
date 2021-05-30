@@ -2704,13 +2704,15 @@ components:
          },
          "message": "Ok"
         }
-      properties:
-        frozen:
-          type: object
-          description: frozen amount
-        available:
-          type: object
-          description: available amount
+      additionalProperties:
+        type: object
+        properties:
+          frozen:
+            type: object
+            description: frozen amount
+          available:
+            type: object
+            description: available amount
     InquireWithdrawalListResponse:
       type: object
       description: InquireWithdrawalList Response Value

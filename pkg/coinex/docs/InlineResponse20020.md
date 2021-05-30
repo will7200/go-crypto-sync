@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Code** | Pointer to **int64** |  | [optional] 
 **Message** | Pointer to **string** |  | [optional] 
-**Data** | Pointer to [**InquireAccountInfoResponse**](InquireAccountInfoResponse.md) |  | [optional] 
+**Data** | Pointer to **map[string]map[string]interface{}** | InquireAccountInfo Response Value | [optional] 
 
 ## Methods
 
@@ -79,20 +79,20 @@ HasMessage returns a boolean if a field has been set.
 
 ### GetData
 
-`func (o *InlineResponse20020) GetData() InquireAccountInfoResponse`
+`func (o *InlineResponse20020) GetData() map[string]map[string]interface{}`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *InlineResponse20020) GetDataOk() (*InquireAccountInfoResponse, bool)`
+`func (o *InlineResponse20020) GetDataOk() (*map[string]map[string]interface{}, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *InlineResponse20020) SetData(v InquireAccountInfoResponse)`
+`func (o *InlineResponse20020) SetData(v map[string]map[string]interface{})`
 
 SetData sets Data field to given value.
 

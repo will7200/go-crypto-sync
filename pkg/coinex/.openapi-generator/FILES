@@ -58,7 +58,6 @@ docs/InlineResponse2006.md
 docs/InlineResponse2007.md
 docs/InlineResponse2008.md
 docs/InlineResponse2009.md
-docs/InquireAccountInfoResponse.md
 docs/InquireDepositListResponse.md
 docs/InquireMarginAccountInfoResponse.md
 docs/InquireWithdrawalListResponse.md
@@ -125,7 +124,6 @@ model_inline_response_200_6.go
 model_inline_response_200_7.go
 model_inline_response_200_8.go
 model_inline_response_200_9.go
-model_inquire_account_info_response.go
 model_inquire_deposit_list_response.go
 model_inquire_margin_account_info_response.go
 model_inquire_withdrawal_list_response.go

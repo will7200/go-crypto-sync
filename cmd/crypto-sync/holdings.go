@@ -9,7 +9,7 @@ import (
 )
 
 type HoldingsCmd struct {
-	Holdings []string `arg name:"holding-accounts" help:"Holdings to analyze"`
+	Holdings []string `arg name:"holding-accounts" help:"Holdings to analyze. specify all to use all listed in your config file"`
 }
 
 func (s *HoldingsCmd) Run(ctx *Context) error {
@@ -31,7 +31,7 @@ func (s *HoldingsCmd) Run(ctx *Context) error {
 			log.Warnf("Skipping holding %s since provider doesn't exist", holding)
 			continue
 		}
-		account, err := holdingsProvider.Open(providers.Config{Logger: ctx.Logger.Named("provider").Named(holding)}, ctx.Config.Holdings[holding])
+		account, err := holdingsProvider.Open(providers.Config{Logger: ctx.Logger.Named("provider").Named(holding), Config: ctx.Config}, ctx.Config.Holdings[holding])
 		if err != nil {
 			return err
 		}

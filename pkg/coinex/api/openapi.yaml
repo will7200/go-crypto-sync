@@ -2818,6 +2818,15 @@ components:
           type: string
       type: object
     InquireAccountInfoResponse:
+      additionalProperties:
+        properties:
+          frozen:
+            description: frozen amount
+            type: object
+          available:
+            description: available amount
+            type: object
+        type: object
       description: InquireAccountInfo Response Value
       example: |-
         {
@@ -2838,13 +2847,6 @@ components:
          },
          "message": "Ok"
         }
-      properties:
-        frozen:
-          description: frozen amount
-          type: object
-        available:
-          description: available amount
-          type: object
       type: object
     InquireWithdrawalListResponse:
       description: InquireWithdrawalList Response Value
@@ -3915,7 +3917,36 @@ components:
         message:
           type: string
         data:
-          $ref: '#/components/schemas/InquireAccountInfoResponse'
+          additionalProperties:
+            properties:
+              frozen:
+                description: frozen amount
+                type: object
+              available:
+                description: available amount
+                type: object
+            type: object
+          description: InquireAccountInfo Response Value
+          example: |-
+            {
+             "code": 0,
+             "data": {
+               "BCH": {                     # BCH account
+                 "available": "13.60109",   # Available BCH
+                 "frozen": "0.00000"        # Frozen BCH
+               },
+               "BTC": {                     # BTC account
+                 "available": "32590.16",   # Available BTC
+                 "frozen": "7000.00"        # Frozen BTC
+               },
+               "ETH": {                     # ETH account
+                 "available": "5.06000",    # Available ETH
+                 "frozen": "0.00000"        # Frozen ETH
+               }
+             },
+             "message": "Ok"
+            }
+          type: object
       type: object
     inline_response_200_21:
       example:

@@ -69,7 +69,7 @@ func (l logLevel) AfterApply() error {
 	case "4", "fatal", "FATAL":
 		level = zapcore.PanicLevel
 	default:
-		fmt.Printf("Invalid level %s. Defaulting to Info", l)
+		fmt.Printf("Invalid level %s. Defaulting to Info\n", l)
 		level = zapcore.InfoLevel
 	}
 	zapConfig.Level = zap.NewAtomicLevelAt(level)
