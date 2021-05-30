@@ -25,7 +25,7 @@ paths:
         example: pancake,hyperjump,blizzard
         explode: true
         in: query
-        name: platform
+        name: platforms
         required: false
         schema:
           type: string

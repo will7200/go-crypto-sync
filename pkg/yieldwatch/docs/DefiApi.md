@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## GetDefiPortfolioAll
 
-> InlineResponse200 GetDefiPortfolioAll(ctx, walletAddress).Platform(platform).Execute()
+> InlineResponse200 GetDefiPortfolioAll(ctx, walletAddress).Platforms(platforms).Execute()
 
 Get all providers for the waller address
 
@@ -30,11 +30,11 @@ import (
 
 func main() {
     walletAddress := "walletAddress_example" // string | wallet address to return values for
-    platform := "pancake,hyperjump,blizzard" // string | comma seperated list of platforms to speed up request (optional)
+    platforms := "pancake,hyperjump,blizzard" // string | comma seperated list of platforms to speed up request (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.DefiApi.GetDefiPortfolioAll(context.Background(), walletAddress).Platform(platform).Execute()
+    resp, r, err := api_client.DefiApi.GetDefiPortfolioAll(context.Background(), walletAddress).Platforms(platforms).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `DefiApi.GetDefiPortfolioAll``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -60,7 +60,7 @@ Other parameters are passed through a pointer to a apiGetDefiPortfolioAllRequest
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **platform** | **string** | comma seperated list of platforms to speed up request | 
+ **platforms** | **string** | comma seperated list of platforms to speed up request | 
 
 ### Return type
 

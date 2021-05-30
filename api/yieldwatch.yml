@@ -23,7 +23,7 @@ paths:
         schema:
           type: string
       - in: query
-        name: platform
+        name: platforms
         description: comma seperated list of platforms to speed up request
         required: false
         schema:

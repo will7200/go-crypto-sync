@@ -31,11 +31,11 @@ type ApiGetDefiPortfolioAllRequest struct {
 	ctx           _context.Context
 	ApiService    *DefiApiService
 	walletAddress string
-	platform      *string
+	platforms     *string
 }
 
-func (r ApiGetDefiPortfolioAllRequest) Platform(platform string) ApiGetDefiPortfolioAllRequest {
-	r.platform = &platform
+func (r ApiGetDefiPortfolioAllRequest) Platforms(platforms string) ApiGetDefiPortfolioAllRequest {
+	r.platforms = &platforms
 	return r
 }
 
@@ -84,8 +84,8 @@ func (a *DefiApiService) GetDefiPortfolioAllExecute(r ApiGetDefiPortfolioAllRequ
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.platform != nil {
-		localVarQueryParams.Add("platform", parameterToString(*r.platform, ""))
+	if r.platforms != nil {
+		localVarQueryParams.Add("platforms", parameterToString(*r.platforms, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
