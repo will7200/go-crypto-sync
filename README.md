@@ -16,17 +16,18 @@ Sync your Cryptocurrency Holdings to a Personal Capital Account
 
 ## Matrix Support
 
-|             | holdings   | pricing   |
-|:------------|:-----------|:----------|
-| binance     | [x]        | [x]       |
-| bscscan     | [x]        | [ ]       |
-| coinbase    | [x]        | [x]       |
-| coinbasepro | [x]        | [ ]       |
-| coinex      | [x]        | [ ]       |
-| coingecko   | [ ]        | [x]       |
-| etherscan   | [x]        | [ ]       |
-| nomics      | [ ]        | [x]       |
-| yieldwatch  | [x]        | [ ]       |
+|             | holdings           | pricing            |
+|:------------|:-------------------|:-------------------|
+| binance     | :heavy_check_mark: | :heavy_check_mark: |
+| bscscan     | :heavy_check_mark: | :x:                |
+| coinbase    | :heavy_check_mark: | :heavy_check_mark: |
+| coinbasepro | :heavy_check_mark: | :x:                |
+| coinex      | :heavy_check_mark: | :x:                |
+| coingecko   | :x:                | :heavy_check_mark: |
+| etherscan   | :heavy_check_mark: | :x:                |
+| nomics      | :x:                | :heavy_check_mark: |
+| yieldwatch  | :heavy_check_mark: | :x:                |
+
 
 ## Getting Started
 

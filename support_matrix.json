@@ -1,38 +1,38 @@
 {
   "binance": {
-    "holdings": "[x]",
-    "pricing": "[x]"
+    "holdings": ":heavy_check_mark:",
+    "pricing": ":heavy_check_mark:"
   },
   "bscscan": {
-    "holdings": "[x]",
-    "pricing": "[ ]"
+    "holdings": ":heavy_check_mark:",
+    "pricing": ":x:"
   },
   "coinbase": {
-    "holdings": "[x]",
-    "pricing": "[x]"
+    "holdings": ":heavy_check_mark:",
+    "pricing": ":heavy_check_mark:"
   },
   "coinbasepro": {
-    "holdings": "[x]",
-    "pricing": "[ ]"
+    "holdings": ":heavy_check_mark:",
+    "pricing": ":x:"
   },
   "coinex": {
-    "holdings": "[x]",
-    "pricing": "[ ]"
+    "holdings": ":heavy_check_mark:",
+    "pricing": ":x:"
   },
   "etherscan": {
-    "holdings": "[x]",
-    "pricing": "[ ]"
+    "holdings": ":heavy_check_mark:",
+    "pricing": ":x:"
   },
   "nomics": {
-    "holdings": "[ ]",
-    "pricing": "[x]"
+    "holdings": ":x:",
+    "pricing": ":heavy_check_mark:"
   },
   "yieldwatch": {
-    "holdings": "[x]",
-    "pricing": "[ ]"
+    "holdings": ":heavy_check_mark:",
+    "pricing": ":x:"
   },
   "coingecko": {
-    "pricing": "[x]",
-    "holdings": "[ ]"
+    "pricing": ":heavy_check_mark:",
+    "holdings": ":x:"
   }
 }
