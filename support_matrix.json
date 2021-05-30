@@ -1,0 +1,38 @@
+{
+  "binance": {
+    "holdings": "[x]",
+    "pricing": "[x]"
+  },
+  "bscscan": {
+    "holdings": "[x]",
+    "pricing": "[ ]"
+  },
+  "coinbase": {
+    "holdings": "[x]",
+    "pricing": "[x]"
+  },
+  "coinbasepro": {
+    "holdings": "[x]",
+    "pricing": "[ ]"
+  },
+  "coinex": {
+    "holdings": "[x]",
+    "pricing": "[ ]"
+  },
+  "etherscan": {
+    "holdings": "[x]",
+    "pricing": "[ ]"
+  },
+  "nomics": {
+    "holdings": "[ ]",
+    "pricing": "[x]"
+  },
+  "yieldwatch": {
+    "holdings": "[x]",
+    "pricing": "[ ]"
+  },
+  "coingecko": {
+    "pricing": "[x]",
+    "holdings": "[ ]"
+  }
+}

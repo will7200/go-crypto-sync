@@ -11,21 +11,35 @@ Sync your Cryptocurrency Holdings to a Personal Capital Account
 3. Coinbase Pro
 4. Binance Coin and derivatives via bscscan
 5. Binance and Binance.us
+6. CoinEx
+7. Yieldwatch (stacks and LP on binance network)
+
+## Matrix Support
+
+|             | holdings   | pricing   |
+|:------------|:-----------|:----------|
+| binance     | [x]        | [x]       |
+| bscscan     | [x]        | [ ]       |
+| coinbase    | [x]        | [x]       |
+| coinbasepro | [x]        | [ ]       |
+| coinex      | [x]        | [ ]       |
+| coingecko   | [ ]        | [x]       |
+| etherscan   | [x]        | [ ]       |
+| nomics      | [ ]        | [x]       |
+| yieldwatch  | [x]        | [ ]       |
 
 ## Getting Started
 
-1. Download from releases page for your operating system.
-   Current supported os are: Windows, Mac, and Linux
-   
-2. Copy the config.example.toml and rename to config.toml.
-   Remove/comment out any providers that you are not currently using.
-   Get the api keys you need for you use case.
-   
-3. Create a new investment account name `CryptoSync managed automatically` in Personal Capital or anything you would like,
-   just make sure to update the config file to reflect the change.
-   
-4. run `crypto-sync.exe sync --destination pc all` and check your account
-   The first time connecting you will be asked your MFA if setup in Personal Capital
+1. Download from releases page for your operating system. Current supported os are: Windows, Mac, and Linux
+
+2. Copy the config.example.toml and rename to config.toml. Remove/comment out any providers that you are not currently
+   using. Get the api keys you need for you use case.
+
+3. Create a new investment account name `CryptoSync managed automatically` in Personal Capital or anything you would
+   like, just make sure to update the config file to reflect the change.
+
+4. run `crypto-sync.exe sync --destination pc all` and check your account The first time connecting you will be asked
+   your MFA if setup in Personal Capital
 
 ## Example Commands
 
@@ -34,9 +48,12 @@ Sync your Cryptocurrency Holdings to a Personal Capital Account
 Sample Config
 
 ```toml
-# config.example.toml
 debug = false
 destination = "personalcapital"
+# you may also specify multiple sources seperated by a comma
+# this will allow get a value of a token from another provider should the other not provide any data
+# make sure to not have spaces between them
+# example: nomics,coinbase,coingecko
 priceDataSource = "coinbase"
 destinationCurrencyAs = "USD"
 onHoldingNotFound = "zeroQuantity"
@@ -55,6 +72,8 @@ debug = false
 [symbols.override]
 [symbols.override.nomics]
 IOTA = "IOT"
+[symbols.override.coingecko]
+Cake = "pancakeswap-token"
 
 [holdings]
 [holdings.coinbase]
@@ -107,6 +126,16 @@ secret = "some-secret"
 debug = false
 apiKey = "some-api-key"
 secret = "some-secret"
+
+[holdings.coinex]
+debug = false
+accessId = "someAccessId"
+secretKey = "someSecretKey"
+
+[holdings.yieldwatch]
+debug = true
+platforms = ["pancake"]
+walletAddresses = ["0xSomeWalletAddress"]
 [destinations]
 [destinations.personalcapital]
 email = "example@email.com"

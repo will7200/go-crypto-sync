@@ -1,5 +1,9 @@
 debug = false
 destination = "personalcapital"
+# you may also specify multiple sources seperated by a comma
+# this will allow get a value of a token from another provider should the other not provide any data
+# make sure to not have spaces between them
+# example: nomics,coinbase,coingecko
 priceDataSource = "coinbase"
 destinationCurrencyAs = "USD"
 onHoldingNotFound = "zeroQuantity"
@@ -18,6 +22,8 @@ onHoldingNotFound = "zeroQuantity"
         [symbols.override]
             [symbols.override.nomics]
             IOTA = "IOT"
+            [symbols.override.coingecko]
+            Cake = "pancakeswap-token"
 
 [holdings]
     [holdings.coinbase]
@@ -70,6 +76,16 @@ onHoldingNotFound = "zeroQuantity"
     debug = false
     apiKey = "some-api-key"
     secret = "some-secret"
+
+    [holdings.coinex]
+    debug = false
+    accessId = "someAccessId"
+    secretKey = "someSecretKey"
+
+    [holdings.yieldwatch]
+    debug = true
+    platforms = ["pancake"]
+    walletAddresses = ["0xSomeWalletAddress"]
 [destinations]
     [destinations.personalcapital]
     email = "example@email.com"
