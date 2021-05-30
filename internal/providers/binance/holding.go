@@ -66,7 +66,22 @@ type Provider struct {
 	logger *zap.SugaredLogger
 }
 
+func (p *Provider) GetExchange(currency1, currency2 string) (string, error) {
+	data, _, err := p.client.MarketDataApi.ApiV3AvgPriceGet(context.Background()).Symbol(currency1).Execute()
+	if err != nil {
+		return "", err
+	}
+	if currency2 != "USD" {
+		return "", errors.New("Binance only supports usd as a destination currency")
+	}
+	if price, ok := data.GetPriceOk(); ok {
+		return *price, nil
+	}
+	return "", errors.New("Pricing was not returned")
+}
+
 var _ providers.Account = &Provider{}
+var _ providers.Price = &Provider{}
 var _ providers.Provider = &Provider{}
 
 func (p *Provider) Name() string {
@@ -117,15 +132,22 @@ func (p *Provider) Once() {
 			httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger))
 		}
 
-		httpClient = httpClient.AddInterceptors(AddApiCreds(p.data.ApiKey, p.data.Secret))
+		httpClient = httpClient.AddInterceptors(AddApiCreds(p.data.ApiKey, p.data.Secret, p.logger))
 		config.HTTPClient = httpClient.Build()
 		p.client = binance.NewAPIClient(config)
 	})
 }
 
-func AddApiCreds(apiKey, secret string) func(req *http.Request, handler mediary.Handler) (*http.Response, error) {
+var excludeAPISignature = map[string]struct{}{"/api/v3/avgPrice": {}}
+
+func AddApiCreds(apiKey, secret string, logger *zap.SugaredLogger) func(req *http.Request, handler mediary.Handler) (*http.Response, error) {
 	return func(req *http.Request, handler mediary.Handler) (*http.Response, error) {
 		req.Header.Add("X-MBX-APIKEY", apiKey)
+		if _, found := excludeAPISignature[req.URL.Path]; found {
+			r, err := handler(req)
+			return r, err
+		}
+		logger.Debug(req.URL.Path)
 		query := req.URL.Query()
 		if query.Get("recvWindow") == "" {
 			query.Set("recvWindow", "10000")
