@@ -2,10 +2,12 @@ package main
 
 import (
 	"errors"
+	"regexp"
 	"strings"
 
 	"github.com/pelletier/go-toml"
 	"github.com/pelletier/go-toml/query"
+	"github.com/will7200/go-crypto-sync/internal/common"
 
 	"github.com/will7200/go-crypto-sync/internal/pc"
 	"github.com/will7200/go-crypto-sync/internal/providers"
@@ -23,7 +25,27 @@ var (
 type SyncCmd struct {
 	Destination string `help:"Sync to Destination"`
 
-	Holdings []string `arg name:"holding-accounts" help:"Holdings to fetch from"`
+	Holdings       []string `arg name:"holding-accounts" help:"Holdings to fetch from"`
+	TokenPatterns  []string `name:"token-pattern" help:"Only sync specific tokens"`
+	FilterTokensBy string   `name:"filter-by" help:"filter property" default:"symbol"`
+
+	AddHoldings        bool `name:"holdings-addition" help:"Allow adding new holdings in destination" default:"true"`
+	UpdateHoldings     bool `name:"holdings-update" help:"Allows updating holdings in destination" default:"true"`
+	SkipZeroQuantities bool `name:"skip-zero-quantities" help:"Skip updates/removals for zero quantity holdings use this if you are filtering tokens" default:"false"`
+}
+
+func (s *SyncCmd) holdingOperations() common.HoldingOperation {
+	ao := common.HoldingOperation(0)
+	if s.AddHoldings {
+		ao |= common.AddHolding
+	}
+	if s.UpdateHoldings {
+		ao |= common.UpdateHolding
+	}
+	if s.SkipZeroQuantities {
+		ao |= common.SkipZeroQuantity
+	}
+	return ao
 }
 
 func (s *SyncCmd) Run(ctx *Context) error {
@@ -66,6 +88,20 @@ func (s *SyncCmd) Run(ctx *Context) error {
 
 	log.Infof("setting pricing data provider to %s", ctx.Config.PriceDataSource)
 	pricingData = getPricingProvider(ctx)
+
+	allHoldings = allHoldings.MapReduce()
+	if len(s.TokenPatterns) > 0 {
+		log.Infof("Filtering holdings with property %s matching [%s]", s.FilterTokensBy, strings.Join(s.TokenPatterns, ","))
+		pats := make([]*regexp.Regexp, len(s.TokenPatterns))
+		for index, pattern := range s.TokenPatterns {
+			rex, err := regexp.Compile(pattern)
+			if err != nil {
+				log.Fatal(err)
+			}
+			pats[index] = rex
+		}
+		allHoldings = allHoldings.FilterTokens(s.FilterTokensBy, pats...)
+	}
 	switch s.Destination {
 	case "personalcapital":
 		raw := personCapitalValues.Execute(ctx.Tree)
@@ -74,7 +110,11 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		cfg := personalcapital.NewConfiguration()
 		cfg.Debug = ctx.Debug
 		cfg.Logger = ctx.Logger
-		pc.Sync(email, password, cfg, allHoldings.MapReduce(), pricingData)
+		pc.Sync(pc.SyncParams{
+			Email:      email,
+			Password:   password,
+			Operations: s.holdingOperations(),
+		}, cfg, allHoldings, pricingData)
 	}
 	return nil
 }

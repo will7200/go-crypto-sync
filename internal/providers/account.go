@@ -99,6 +99,48 @@ func (h Holdings) MapReduce() (final Holdings) {
 	return final
 }
 
+// FilterTokens by the provided regular expressions
+func (h Holdings) FilterTokens(by string, rexes ...*regexp.Regexp) (final Holdings) {
+	final = make(Holdings, 0, len(h))
+	var accessor func(holding Holding) string
+	switch by {
+	case "symbolname", "symbol-name", "symbol":
+		accessor = func(h Holding) string {
+			return h.CurrencySymbolName()
+		}
+	case "name", "full-name", "fullname":
+		accessor = func(h Holding) string {
+			return h.CurrencyName()
+		}
+	case "shares", "total-shares", "totalshares":
+		accessor = func(h Holding) string {
+			return h.TotalSharesString()
+		}
+	default:
+		accessor = func(h Holding) string {
+			return h.CurrencySymbolName()
+		}
+	}
+	for _, holding := range h {
+		keep := 1
+		for _, rex := range rexes {
+			matched := rex.Match([]byte(accessor(holding)))
+			res := 0
+			if matched {
+				res = 1
+			}
+			keep &= res
+			if keep == 0 {
+				continue
+			}
+		}
+		if keep == 1 {
+			final.AddHolding(holding)
+		}
+	}
+	return
+}
+
 type Existence int
 
 const (

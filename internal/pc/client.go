@@ -62,9 +62,14 @@ func askFor2FA() (string, error) {
 	return response, nil
 }
 
+type SyncParams struct {
+	Email, Password string
+	Operations      common.HoldingOperation
+}
+
 // Sync source holdings to personal capital account
 // Currently cookies will be saved in the working directory of where this command is run
-func Sync(email, password string, cfg *personalcapital.Configuration, holds providers.Holdings, pricing providers.Price) {
+func Sync(params SyncParams, cfg *personalcapital.Configuration, holds providers.Holdings, pricing providers.Price) {
 	log := cfg.Logger.Sugar().Named("personal-capital")
 	// Get saved cookies if available
 	var cookies []*http.Cookie
@@ -93,8 +98,8 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 
 	apiClient := personalcapital.NewAPIClient(cfg)
 	resp, err := apiClient.Authentication.Login(context.Background(), personalcapital.LoginParams{
-		Username: email,
-		Password: password,
+		Username: params.Email,
+		Password: params.Password,
 	})
 	// Handle two factor authentication
 	if err != nil && resp != nil {
@@ -123,7 +128,7 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 				log.Fatal(err)
 			}
 			err = apiClient.Authentication.AuthenticateWithPassword(context.Background(), personalcapital.AuthenticateWithPasswordParams{
-				Password: password,
+				Password: params.Password,
 				CSRF:     resp.CRSF,
 			})
 			if err != nil {
@@ -175,6 +180,9 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 			switch strings.ToLower(key) {
 			// Handle special case if is us dollar
 			case "usd", "us dollar", "cash":
+				if value.LPos == -1 {
+					continue
+				}
 				log.Info("updating PC cash amount")
 				left := holds[value.LPos]
 				quantity, err := decimal.NewFromString(left.TotalSharesString())
@@ -196,11 +204,19 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 		switch value.Result() {
 		case providers.ExistsInBoth:
 			left, right := holds[value.LPos], pcHoldings.Holdings[value.RPos]
+			if !params.Operations.Has(common.UpdateHolding) {
+				log.Warnf("%s will not be updated since updating holdings are not allowed", left.CurrencySymbolName())
+				continue
+			}
 			log.Infof("%s found in pc, updating holding", left.CurrencySymbolName())
 			holdingRequest = HoldingTypeToHoldingRequest(right)
 			target = left
 		case providers.ExistsInOriginationOnly:
 			left := holds[value.LPos]
+			if !params.Operations.Has(common.AddHolding) {
+				log.Warnf("%s will not be added since added holdings are not allowed", left.CurrencySymbolName())
+				continue
+			}
 			log.Infof("%s not found in pc, create new holding", left.CurrencySymbolName())
 			if err != nil {
 				log.Fatal(err)
@@ -222,7 +238,11 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 		case providers.ExistsInTargetOnly:
 			right := pcHoldings.Holdings[value.RPos]
 			currencySymbol := strings.TrimSpace(strings.Split(right.CurrencySymbolName(), "-")[0])
-			log.Infof("%s not found from source, setting quantity to zero\n", currencySymbol)
+			if !params.Operations.Has(common.UpdateHolding) || params.Operations.Has(common.SkipZeroQuantity) {
+				log.Warnf("%s will not be updated since updating holdings are not allowed", currencySymbol)
+				continue
+			}
+			log.Infof("%s not found from source, setting quantity to zero", currencySymbol)
 			if err != nil {
 				log.Fatal(err)
 			}
