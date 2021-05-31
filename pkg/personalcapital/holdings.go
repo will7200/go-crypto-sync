@@ -125,7 +125,7 @@ func (h *Holdings) GetHoldings(ctx context.Context, params *GetHoldingsParams) (
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		h.client.cfg.Logger.Sugar().Fatal(err)
+		return nil, err
 	}
 	ghr := GetHoldingsResponseExpecting{}
 	err = json.Unmarshal(body, &ghr)
@@ -265,7 +265,6 @@ func (h *Holdings) UpdateHoldings(ctx context.Context, holding HoldingsUpdateReq
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		h.client.cfg.Logger.Sugar().Fatal(err)
 		return nil, err
 	}
 	update := UpdateHoldingsResponse{}
@@ -372,7 +371,6 @@ func (h *Holdings) AddHolding(ctx context.Context, holding *HoldingAddRequest) (
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		h.client.cfg.Logger.Sugar().Fatal(err)
 		return nil, err
 	}
 	update := AddHoldingResponse{}
