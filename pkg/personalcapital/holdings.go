@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/google/go-querystring/query"
+	"github.com/will7200/go-crypto-sync/internal/common"
 
 	"github.com/will7200/go-crypto-sync/internal/providers"
 )
@@ -270,7 +271,15 @@ func (h *Holdings) UpdateHoldings(ctx context.Context, holding HoldingsUpdateReq
 	update := UpdateHoldingsResponse{}
 	err = json.Unmarshal(body, &update)
 	if len(update.SpHeader.Errors) > 0 {
-		return nil, errors.New(update.SpHeader.Errors[0].Message)
+		errs := new(common.Errors)
+		for i := range update.SpHeader.Errors {
+			b, err := json.Marshal(update.SpHeader.Errors[i])
+			if err != nil {
+				return nil, err
+			}
+			errs.Add(errors.New(string(b)))
+		}
+		return nil, errs.AsError()
 	}
 	if err != nil {
 		return nil, err
@@ -369,7 +378,15 @@ func (h *Holdings) AddHolding(ctx context.Context, holding *HoldingAddRequest) (
 	update := AddHoldingResponse{}
 	err = json.Unmarshal(body, &update)
 	if len(update.SpHeader.Errors) > 0 {
-		return nil, errors.New(update.SpHeader.Errors[0].Message)
+		errs := new(common.Errors)
+		for i := range update.SpHeader.Errors {
+			b, err := json.Marshal(update.SpHeader.Errors[i])
+			if err != nil {
+				return nil, err
+			}
+			errs.Add(errors.New(string(b)))
+		}
+		return nil, errs.AsError()
 	}
 	if err != nil {
 		return nil, err
