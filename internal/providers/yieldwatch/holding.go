@@ -109,7 +109,7 @@ func (p *Provider) Once() {
 		}
 		httpClient := mediary.Init().WithPreconfiguredClient(client)
 
-		if true {
+		if p.data.Debug {
 			httpClient = httpClient.AddInterceptors(common.DumpRequestResponseWrappedLogger(p.logger))
 		}
 
