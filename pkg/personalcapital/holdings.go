@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -125,7 +124,7 @@ func (h *Holdings) GetHoldings(ctx context.Context, params *GetHoldingsParams) (
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		h.client.cfg.Logger.Sugar().Fatal(err)
 	}
 	ghr := GetHoldingsResponseExpecting{}
 	err = json.Unmarshal(body, &ghr)
@@ -265,16 +264,13 @@ func (h *Holdings) UpdateHoldings(ctx context.Context, holding HoldingsUpdateReq
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		h.client.cfg.Logger.Sugar().Fatal(err)
 		return nil, err
 	}
 	update := UpdateHoldingsResponse{}
 	err = json.Unmarshal(body, &update)
 	if len(update.SpHeader.Errors) > 0 {
 		return nil, errors.New(update.SpHeader.Errors[0].Message)
-	}
-	if err != nil {
-		return nil, err
 	}
 	if err != nil {
 		return nil, err
@@ -367,7 +363,7 @@ func (h *Holdings) AddHolding(ctx context.Context, holding *HoldingAddRequest) (
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		h.client.cfg.Logger.Sugar().Fatal(err)
 		return nil, err
 	}
 	update := AddHoldingResponse{}

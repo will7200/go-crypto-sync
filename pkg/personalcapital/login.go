@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -37,7 +36,6 @@ func (a *Authentication) Login(ctx context.Context, params LoginParams) (*LoginR
 	}
 	if authLevel == UserRemembered {
 		err := a.AuthenticateWithPassword(ctx, AuthenticateWithPasswordParams{
-			Username: params.Username,
 			Password: params.Password,
 			CSRF:     csrf,
 		})
@@ -51,8 +49,8 @@ func (a *Authentication) Login(ctx context.Context, params LoginParams) (*LoginR
 }
 
 type AuthenticateWithPasswordParams struct {
-	Username, Password string
-	CSRF               string
+	Password string
+	CSRF     string
 }
 
 const (
@@ -72,6 +70,7 @@ type AuthenticateWithPasswordResponse struct {
 	} `json:"spData"`
 }
 
+// AuthenticateWithPassword signs a user in with their password
 func (a *Authentication) AuthenticateWithPassword(ctx context.Context, params AuthenticateWithPasswordParams) error {
 	baseURL := a.client.cfg.Host
 	client := a.client.cfg.HTTPClient
@@ -107,7 +106,7 @@ func (a *Authentication) AuthenticateWithPassword(ctx context.Context, params Au
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	bodyJSON := AuthenticateWithPasswordResponse{}
 	err = json.Unmarshal(body, &bodyJSON)
@@ -172,6 +171,9 @@ func (a *Authentication) identifyUser(ctx context.Context, username, inCsrf stri
 	return "", "", errors.New("unable to get csrf and authlevel")
 }
 
+// getCsrfFromHomePage
+//
+// Get the csrf embedded in the home page
 func (a *Authentication) getCsrfFromHomePage(ctx context.Context) (csrf string, err error) {
 	baseURL := a.client.cfg.Host
 	client := a.client.cfg.HTTPClient
@@ -203,11 +205,64 @@ func (a *Authentication) getCsrfFromHomePage(ctx context.Context) (csrf string, 
 	return "", errors.New("Unable to get csrf token")
 }
 
-func (a *Authentication) TwoFactorAuthentication() {
-
+type TwoFactorAuthenticationParams struct {
+	Code          string
+	CSRF          string
+	ChallengeType ChallengeType
 }
 
+const (
+	EmailAuthenticateEndpoint = "/api/credential/authenticateEmailByCode"
+	SmsAuthenticateEndpoint   = "/api/credential/authenticateSms"
+)
+
+// TwoFactorAuthentication is required if the user has setup 2FA and
+// doesn't have a saved session. "sms" and "email" 2FA can be used.
+func (a *Authentication) TwoFactorAuthentication(ctx context.Context, params TwoFactorAuthenticationParams) (*http.Response, error) {
+	baseURL := a.client.cfg.Host
+	client := a.client.cfg.HTTPClient
+	var (
+		endpoint string
+	)
+	switch params.ChallengeType {
+	case SMS:
+		endpoint = SmsAuthenticateEndpoint
+	case Email:
+		endpoint = EmailAuthenticateEndpoint
+	default:
+		return nil, errors.New("Unknown challenge type")
+	}
+	var urlBuffer bytes.Buffer
+	urlBuffer.WriteString(baseURL)
+	urlBuffer.WriteString(endpoint)
+
+	resp, err := client.PostForm(
+		urlBuffer.String(),
+		url.Values{
+			"challengeReason": {"DEVICE_AUTH"},
+			"challengeMethod": {"OP"},
+			"apiClient":       {"WEB"},
+			"bindDevice":      {"false"},
+			"code":            {params.Code},
+			"csrf":            {params.CSRF},
+		},
+	)
+	return resp, err
+}
+
+var (
+	challengeTypeToPCType = map[string]string{
+		"sms":   "challengeSMS",
+		"email": "challengeEmail",
+	}
+)
+
+// ChallengeType used to indicate which Two Factor Authentication Method to use
 type ChallengeType string
+
+func (c ChallengeType) AsPCChallengeType() string {
+	return challengeTypeToPCType[string(c)]
+}
 
 const (
 	SMS                    ChallengeType = "sms"
@@ -217,24 +272,22 @@ const (
 )
 
 type CredentialChallengeParams struct {
-	Username, Password string
-	CSRF               string
-	ChallengeType      ChallengeType
+	CSRF          string
+	ChallengeType ChallengeType
 }
 
+// CredentialChallenge starts a two factor authentication challenge
 func (a *Authentication) CredentialChallenge(ctx context.Context, params CredentialChallengeParams) (*http.Response, error) {
 	client := a.client.cfg.HTTPClient
 	var (
 		cType    string
 		endpoint string
 	)
-
+	cType = params.ChallengeType.AsPCChallengeType()
 	switch params.ChallengeType {
 	case SMS:
-		cType = string(params.ChallengeType)
 		endpoint = SmsChallengeEndpoint
 	case Email:
-		cType = string(params.ChallengeType)
 		endpoint = EmailChallengeEndpoint
 	default:
 		return nil, errors.New("Unknown challenge type")

@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
@@ -140,6 +139,7 @@ func (a *Accounts) GetAccounts(ctx context.Context, request *GetAccountsRequest)
 	baseURL := a.client.cfg.Host
 	client := a.client.cfg.HTTPClient
 	csrf := *a.client.CSRF
+	log := a.client.cfg.Logger
 
 	var urlBuffer bytes.Buffer
 	urlBuffer.WriteString(baseURL)
@@ -171,7 +171,7 @@ func (a *Accounts) GetAccounts(ctx context.Context, request *GetAccountsRequest)
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Sugar().Fatal(err)
 		return nil, err
 	}
 	update := GetAccountsResponse{}

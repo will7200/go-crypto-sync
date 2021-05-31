@@ -1,9 +1,10 @@
 package pc
 
 import (
+	"bufio"
 	"context"
-	"encoding/gob"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -24,19 +25,59 @@ var (
 	_ = spew.Dump
 )
 
+func askChallengeType() (personalcapital.ChallengeType, error) {
+	reader := bufio.NewReader(os.Stdin)
+
+	for {
+		fmt.Print("Select Challenge Type [email, sms] (defaults to email): ")
+
+		response, err := reader.ReadString('\n')
+		if err != nil {
+			return "", err
+		}
+
+		response = strings.ToLower(strings.TrimSpace(response))
+		if response == "" {
+			return personalcapital.Email, nil
+		}
+		switch response {
+		case string(personalcapital.SMS):
+			return personalcapital.SMS, nil
+		case string(personalcapital.Email):
+			return personalcapital.Email, nil
+		default:
+			fmt.Printf("Invalid Response: %s\n Defaulting to email\n", response)
+			return personalcapital.Email, nil
+		}
+	}
+}
+
+func askFor2FA() (string, error) {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Please enter 2FA code: ")
+	response, err := reader.ReadString('\n')
+	if err != nil {
+		return "", err
+	}
+	return response, nil
+}
+
 // Sync source holdings to personal capital account
 // Currently cookies will be saved in the working directory of where this command is run
 func Sync(email, password string, cfg *personalcapital.Configuration, holds providers.Holdings, pricing providers.Price) {
 	log := cfg.Logger.Sugar().Named("personal-capital")
 	// Get saved cookies if available
 	var cookies []*http.Cookie
-	personalcapital.LoadSession(&cookies, "cookies.json")
+	err := personalcapital.LoadSession(&cookies, "cookies.json")
+	if err != nil {
+		log.Error(err)
+	}
 
 	// Setup a cookie jar so the session can be saved
 	cookieJar, _ := cookiejar.New(nil)
 	client := &http.Client{
 		Jar:     cookieJar,
-		Timeout: 30 * time.Second,
+		Timeout: 45 * time.Second,
 	}
 	httpClient := mediary.Init().WithPreconfiguredClient(client)
 
@@ -58,14 +99,50 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 	// Handle two factor authentication
 	if err != nil && resp != nil {
 		if errors.Is(err, personalcapital.TwoFactorAuthenticationRequired) {
-			err = personalcapital.TwoFactorAuthentication(client, resp.CRSF, email, password, "email")
-			// csrf, err = personalcapital.Login(client, email, password, cookies)
-		}
-		if err != nil {
+			challengeType, err := askChallengeType()
+			if err != nil {
+				log.Fatal(err)
+			}
+			ccResponse, err := apiClient.Authentication.CredentialChallenge(context.Background(), personalcapital.CredentialChallengeParams{
+				CSRF:          resp.CRSF,
+				ChallengeType: challengeType,
+			})
+			if err != nil || ccResponse.StatusCode != http.StatusOK {
+				log.Fatal(err)
+			}
+			code, err := askFor2FA()
+			if err != nil {
+				log.Fatal(err)
+			}
+			twoFactorResponse, err := apiClient.Authentication.TwoFactorAuthentication(context.Background(), personalcapital.TwoFactorAuthenticationParams{
+				Code:          code,
+				CSRF:          resp.CRSF,
+				ChallengeType: challengeType,
+			})
+			if err != nil || twoFactorResponse.StatusCode != http.StatusOK {
+				log.Fatal(err)
+			}
+			err = apiClient.Authentication.AuthenticateWithPassword(context.Background(), personalcapital.AuthenticateWithPasswordParams{
+				Password: password,
+				CSRF:     resp.CRSF,
+			})
+			if err != nil {
+				log.Fatal(err)
+			}
+			err = personalcapital.SaveSession(client, cfg.Host, "cookies.json")
+			if err != nil {
+				log.Error(err)
+			}
+		} else {
 			log.Fatal(err)
 		}
 	} else if err != nil {
 		log.Fatal(err)
+	} else {
+		err := personalcapital.SaveSession(client, cfg.Host, "cookies.json")
+		if err != nil {
+			log.Error(err)
+		}
 	}
 	apiClient.CSRF = &resp.CRSF
 	pcHoldings, err := apiClient.Holdings.GetHoldings(context.Background(), &personalcapital.GetHoldingsParams{FilterUserCreated: true, FilterAccountName: "CryptoSync managed automatically"})
@@ -208,17 +285,5 @@ func Sync(email, password string, cfg *personalcapital.Configuration, holds prov
 				log.Fatal(err)
 			}
 		}
-	}
-	personalcapital.SaveSession(client, cfg.Host, "cookies.json")
-}
-
-func ToGlob(p interface{}, filename string) {
-	f, err := os.Create(filename)
-	if err != nil {
-		panic(err)
-	}
-	err = gob.NewEncoder(f).Encode(p)
-	if err != nil {
-		panic(err)
 	}
 }
