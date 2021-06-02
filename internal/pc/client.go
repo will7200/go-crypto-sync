@@ -9,6 +9,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"os"
+	"reflect"
 	"strings"
 	"time"
 
@@ -64,6 +65,7 @@ func askFor2FA() (string, error) {
 
 type SyncParams struct {
 	Email, Password string
+	AccountName     string
 	Operations      common.HoldingOperation
 }
 
@@ -75,7 +77,7 @@ func Sync(params SyncParams, cfg *personalcapital.Configuration, holds providers
 	var cookies []*http.Cookie
 	err := personalcapital.LoadSession(&cookies, "cookies.json")
 	if err != nil {
-		log.Error(err)
+		log.Warn(err)
 	}
 
 	// Setup a cookie jar so the session can be saved
@@ -146,11 +148,11 @@ func Sync(params SyncParams, cfg *personalcapital.Configuration, holds providers
 	} else {
 		err := personalcapital.SaveSession(client, cfg.Host, "cookies.json")
 		if err != nil {
-			log.Error(err)
+			log.Warn(err)
 		}
 	}
 	apiClient.CSRF = &resp.CRSF
-	pcHoldings, err := apiClient.Holdings.GetHoldings(context.Background(), &personalcapital.GetHoldingsParams{FilterUserCreated: true, FilterAccountName: "CryptoSync managed automatically"})
+	pcHoldings, err := apiClient.Holdings.GetHoldings(context.Background(), &personalcapital.GetHoldingsParams{FilterUserCreated: true, FilterAccountName: params.AccountName})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -160,10 +162,15 @@ func Sync(params SyncParams, cfg *personalcapital.Configuration, holds providers
 	}
 	var account personalcapital.AccountType
 	for index, account1 := range accounts.SpData.Accounts {
-		if account1.Name == "CryptoSync managed automatically" && account1.AccountTypeNew == "CRYPTO_CURRENCY" {
+		if account1.Name == params.AccountName {
 			account = accounts.SpData.Accounts[index]
+			break
 		}
 	}
+	if reflect.DeepEqual(personalcapital.AccountType{}, account) {
+		log.Fatalf("Was not able to find account with the name of %s in Personal Capital", params.AccountName)
+	}
+	log.Debugf("Using account number %d from Personal Capital to sync holdings", account.UserAccountID)
 	mappedResults := holds.HasCurrencyMap(func(l providers.IHolding) string {
 		return strings.ToLower(l.CurrencySymbolName())
 	}, func(r providers.IHolding) string {

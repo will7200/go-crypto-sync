@@ -107,13 +107,15 @@ func (s *SyncCmd) Run(ctx *Context) error {
 		raw := personCapitalValues.Execute(ctx.Tree)
 		email := raw.Values()[0].(*toml.Tree).Get("email").(string)
 		password := raw.Values()[0].(*toml.Tree).Get("password").(string)
+		accountName := raw.Values()[0].(*toml.Tree).Get("accountName").(string)
 		cfg := personalcapital.NewConfiguration()
 		cfg.Debug = ctx.Debug
 		cfg.Logger = ctx.Logger
 		pc.Sync(pc.SyncParams{
-			Email:      email,
-			Password:   password,
-			Operations: s.holdingOperations(),
+			Email:       email,
+			Password:    password,
+			Operations:  s.holdingOperations(),
+			AccountName: accountName,
 		}, cfg, allHoldings, pricingData)
 	}
 	return nil
