@@ -39,7 +39,7 @@ func (r ApiGetExchangeRateForRequest) Currency(currency string) ApiGetExchangeRa
 	return r
 }
 
-func (r ApiGetExchangeRateForRequest) Execute() (InlineResponse2001, *_nethttp.Response, error) {
+func (r ApiGetExchangeRateForRequest) Execute() (InlineResponse2002, *_nethttp.Response, error) {
 	return r.ApiService.GetExchangeRateForExecute(r)
 }
 
@@ -59,16 +59,16 @@ func (a *ExchangeRatesApiService) GetExchangeRateFor(ctx _context.Context) ApiGe
 
 /*
  * Execute executes the request
- * @return InlineResponse2001
+ * @return InlineResponse2002
  */
-func (a *ExchangeRatesApiService) GetExchangeRateForExecute(r ApiGetExchangeRateForRequest) (InlineResponse2001, *_nethttp.Response, error) {
+func (a *ExchangeRatesApiService) GetExchangeRateForExecute(r ApiGetExchangeRateForRequest) (InlineResponse2002, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  InlineResponse2001
+		localVarReturnValue  InlineResponse2002
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ExchangeRatesApiService.GetExchangeRateFor")
@@ -146,7 +146,7 @@ type ApiGetSellPriceRequest struct {
 	currencyPair2 string
 }
 
-func (r ApiGetSellPriceRequest) Execute() (InlineResponse2002, *_nethttp.Response, error) {
+func (r ApiGetSellPriceRequest) Execute() (InlineResponse2003, *_nethttp.Response, error) {
 	return r.ApiService.GetSellPriceExecute(r)
 }
 
@@ -172,16 +172,16 @@ func (a *ExchangeRatesApiService) GetSellPrice(ctx _context.Context, currencyPai
 
 /*
  * Execute executes the request
- * @return InlineResponse2002
+ * @return InlineResponse2003
  */
-func (a *ExchangeRatesApiService) GetSellPriceExecute(r ApiGetSellPriceRequest) (InlineResponse2002, *_nethttp.Response, error) {
+func (a *ExchangeRatesApiService) GetSellPriceExecute(r ApiGetSellPriceRequest) (InlineResponse2003, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  InlineResponse2002
+		localVarReturnValue  InlineResponse2003
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ExchangeRatesApiService.GetSellPrice")

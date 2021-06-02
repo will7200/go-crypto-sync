@@ -19,6 +19,7 @@ docs/ExchangeRatesApi.md
 docs/InlineResponse200.md
 docs/InlineResponse2001.md
 docs/InlineResponse2002.md
+docs/InlineResponse2003.md
 docs/Pagination.md
 docs/User.md
 docs/UsersApi.md
@@ -35,6 +36,7 @@ model_exchange_rates.go
 model_inline_response_200.go
 model_inline_response_200_1.go
 model_inline_response_200_2.go
+model_inline_response_200_3.go
 model_pagination.go
 model_user.go
 response.go

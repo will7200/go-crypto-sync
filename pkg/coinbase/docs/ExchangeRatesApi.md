@@ -11,7 +11,7 @@ Method | HTTP request | Description
 
 ## GetExchangeRateFor
 
-> InlineResponse2001 GetExchangeRateFor(ctx).Currency(currency).Execute()
+> InlineResponse2002 GetExchangeRateFor(ctx).Currency(currency).Execute()
 
 Get current exchange rates. Default base currency is USD but it can be defined as any supported currency. Returned rates will define the exchange rate for one unit of the base currency.
 
@@ -39,7 +39,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `ExchangeRatesApi.GetExchangeRateFor``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `GetExchangeRateFor`: InlineResponse2001
+    // response from `GetExchangeRateFor`: InlineResponse2002
     fmt.Fprintf(os.Stdout, "Response from `ExchangeRatesApi.GetExchangeRateFor`: %v\n", resp)
 }
 ```
@@ -59,7 +59,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2001**](InlineResponse2001.md)
+[**InlineResponse2002**](InlineResponse2002.md)
 
 ### Authorization
 
@@ -77,7 +77,7 @@ No authorization required
 
 ## GetSellPrice
 
-> InlineResponse2002 GetSellPrice(ctx, currencyPair1, currencyPair2).Execute()
+> InlineResponse2003 GetSellPrice(ctx, currencyPair1, currencyPair2).Execute()
 
 Exchanges Rates for currency pair
 
@@ -106,7 +106,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `ExchangeRatesApi.GetSellPrice``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `GetSellPrice`: InlineResponse2002
+    // response from `GetSellPrice`: InlineResponse2003
     fmt.Fprintf(os.Stdout, "Response from `ExchangeRatesApi.GetSellPrice`: %v\n", resp)
 }
 ```
@@ -132,7 +132,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2002**](InlineResponse2002.md)
+[**InlineResponse2003**](InlineResponse2003.md)
 
 ### Authorization
 

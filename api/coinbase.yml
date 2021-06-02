@@ -7,22 +7,22 @@ info:
     This API reference provides information on available endpoints and how to interact with it. To read more about the API, visit our API documentation.
   version: 2019-11-15
 servers:
-  - url: https://api.coinbase.com/v2
-    description: Coinbases Production Server
+- url: https://api.coinbase.com/v2
+  description: Coinbases Production Server
 paths:
   /user:
     get:
       security:
-        - ApiKeyAuth: ["wallet:user:read"]
+      - ApiKeyAuth: [ "wallet:user:read" ]
       tags:
-        - users
+      - users
       summary: Show current user
       operationId: CurrentUser
       description: |
         Get current user’s public information. To get user’s email or private information, use permissions wallet:user:email and wallet:user:read. If current request has a wallet:transactions:send scope, then the response will contain a boolean sends_disabled field that indicates if the user’s send functionality has been disabled.
       parameters:
-        - $ref: '#/components/parameters/CB-ACCESS-SIGN'
-        - $ref: '#/components/parameters/CB-ACCESS-TIMESTAMP'
+      - $ref: '#/components/parameters/CB-ACCESS-SIGN'
+      - $ref: '#/components/parameters/CB-ACCESS-TIMESTAMP'
       responses:
         '200':
           description: OK
@@ -33,44 +33,44 @@ paths:
   /accounts:
     get:
       security:
-        - ApiKeyAuth: ["wallet:accounts:read"]
+      - ApiKeyAuth: [ "wallet:accounts:read" ]
       tags:
-        - accounts
+      - accounts
       summary: List Accounts
       operationId: ListAccounts
       description: Lists current user’s accounts to which the authentication method has access to.
       parameters:
-        - $ref: '#/components/parameters/CB-ACCESS-SIGN'
-        - $ref: '#/components/parameters/CB-ACCESS-TIMESTAMP'
-        - in: query
-          name: ending_before
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: starting_after
-          schema:
-            type: string
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            minimum: 0
-            maximum: 100
-            default: 25
-        - in: query
-          name: order
-          schema:
-            enum: [ "desc", "asc" ]
-            default: "desc"
-        - in: query
-          name: previous_uri
-          schema:
-            type: string
-        - in: query
-          name: next_uri
-          schema:
-            type: string
+      - $ref: '#/components/parameters/CB-ACCESS-SIGN'
+      - $ref: '#/components/parameters/CB-ACCESS-TIMESTAMP'
+      - in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: starting_after
+        schema:
+          type: string
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 100
+          default: 25
+      - in: query
+        name: order
+        schema:
+          enum: [ "desc", "asc" ]
+          default: "desc"
+      - in: query
+        name: previous_uri
+        schema:
+          type: string
+      - in: query
+        name: next_uri
+        schema:
+          type: string
       responses:
         '200':
           description: OK
@@ -86,26 +86,26 @@ paths:
                     items:
                       $ref: '#/components/schemas/Account'
                 required:
-                  - pagination
-                  - data
+                - pagination
+                - data
   /accounts/{account_id}:
     get:
       security:
-        - ApiKeyAuth: ["wallet:accounts:read"]
+      - ApiKeyAuth: [ "wallet:accounts:read" ]
       tags:
-        - accounts
+      - accounts
       summary: Retrieve Account
       operationId: GetAccount
       description: Show current user’s account. To access the primary account for a given currency, a currency string (BTC or ETH) can be used instead of the account id in the URL.
       parameters:
-        - $ref: '#/components/parameters/CB-ACCESS-SIGN'
-        - $ref: '#/components/parameters/CB-ACCESS-TIMESTAMP'
-        - in: path
-          name: account_id   # Note the name is the same as in the path
-          required: true
-          schema:
-            type: string
-          description: The id of the account
+      - $ref: '#/components/parameters/CB-ACCESS-SIGN'
+      - $ref: '#/components/parameters/CB-ACCESS-TIMESTAMP'
+      - in: path
+        name: account_id   # Note the name is the same as in the path
+        required: true
+        schema:
+          type: string
+        description: The id of the account
       responses:
         '200':
           description: OK
@@ -113,6 +113,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
+        '401':
+          $ref: '#/components/responses/ErrorMessage'
+  /accounts/{account_id}/transactions:
+    get:
+      security:
+      - ApiKeyAuth: [ "wallet:accounts:read" ]
+      tags:
+      - accounts
+      summary: List transactions
+      operationId: ListTransactions
+      description: |
+        Lists account’s transactions. See transaction resource for more information.
+      parameters:
+      - $ref: '#/components/parameters/CB-ACCESS-SIGN'
+      - $ref: '#/components/parameters/CB-ACCESS-TIMESTAMP'
+      - in: path
+        name: account_id   # Note the name is the same as in the path
+        required: true
+        schema:
+          type: string
+        description: The id of the account
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    $ref: '#/components/schemas/pagination'
+                  data:
+                    $ref: '#/components/schemas/ListTransactionResponse'
         '401':
           $ref: '#/components/responses/ErrorMessage'
   /exchange-rates:
@@ -144,7 +177,7 @@ paths:
   /prices/{currency_pair_1}-{currency_pair_2}/sell:
     get:
       tags:
-        - ExchangeRates
+      - ExchangeRates
       summary: Exchanges Rates for currency pair
       operationId: GetSellPrice
       description: |
@@ -152,20 +185,20 @@ paths:
 
         Note that exchange rates fluctuates so the price is only correct for seconds at the time. This buy price includes standard Coinbase fee (1%) but excludes any other fees including bank fees. If you need more accurate price estimate for a specific payment method or amount, see buy bitcoin endpoint and quote: true option.
       parameters:
-        - in: path
-          required: true
-          name: currency_pair_1
-          description: |
-            currency 1
-          schema:
-            type: string
-        - in: path
-          required: true
-          description: |
-            currency 2
-          schema:
-            type: string
-          name: currency_pair_2
+      - in: path
+        required: true
+        name: currency_pair_1
+        description: |
+          currency 1
+        schema:
+          type: string
+      - in: path
+        required: true
+        description: |
+          currency 2
+        schema:
+          type: string
+        name: currency_pair_2
       responses:
         '200':
           description: OK
@@ -232,7 +265,7 @@ components:
           maximum: 100
           default: 25
         order:
-          enum: ["desc", "asc"]
+          enum: [ "desc", "asc" ]
           default: "desc"
         previous_uri:
           type: string
@@ -260,14 +293,14 @@ components:
         slug:
           type: string
       required:
-        - code
-        - name
-        - color
-        - sort_index
-        - exponent
-        - type
-        - asset_id
-        - slug
+      - code
+      - name
+      - color
+      - sort_index
+      - exponent
+      - type
+      - asset_id
+      - slug
     Account:
       type: object
       properties:
@@ -289,8 +322,8 @@ components:
             currency:
               type: string
           required:
-            - amount
-            - currency
+          - amount
+          - currency
         created_at:
           type: string
           format: date-time
@@ -308,17 +341,17 @@ components:
         allow_withdrawals:
           type: boolean
       required:
-        - id
-        - name
-        - primary
-        - type
-        - currency
-        - balance
-        - created_at
-        - updated_at
-        - resource
-        - resource_path
-        - ready
+      - id
+      - name
+      - primary
+      - type
+      - currency
+      - balance
+      - created_at
+      - updated_at
+      - resource
+      - resource_path
+      - ready
     ErrorResponse:
       type: object
       properties:
@@ -332,10 +365,10 @@ components:
               message:
                 type: string
             required:
-              - id
-              - message
+            - id
+            - message
       required:
-        - errors
+      - errors
     User:
       type:
         object
@@ -369,9 +402,9 @@ components:
         base:
           type: string
       required:
-        - amount
-        - currency
-        - base
+      - amount
+      - currency
+      - base
     ExchangeRates:
       type: object
       properties:
@@ -384,3 +417,64 @@ components:
       required:
       - currency
       - rates
+    ListTransactionResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          type:
+            type: string
+          status:
+            type: string
+          amount:
+            type: object
+            properties:
+              amount:
+                type: string
+              currency:
+                type: string
+          native_amount:
+            type: object
+            properties:
+              amount:
+                type: string
+              currency:
+                type: string
+          description:
+            type: string
+          created_at:
+            type: string
+          updated_at:
+            type: string
+          resource:
+            type: string
+          resource_path:
+            type: string
+          buy:
+            type: object
+            properties:
+              id:
+                type: string
+              resource:
+                type: string
+              resource_path:
+                type: string
+          details:
+            type: object
+            properties:
+              title:
+                type: string
+              subtitle:
+                type: string
+        required:
+        - id
+        - type
+        - status
+        - amount
+        - native_amount
+        - created_at
+        - updated_at
+        - resource
+        - resource_path

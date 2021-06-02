@@ -4,7 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | Pointer to [**ExchangeRates**](ExchangeRates.md) |  | [optional] 
+**Pagination** | Pointer to [**Pagination**](Pagination.md) |  | [optional] 
+**Data** | Pointer to **[]map[string]interface{}** |  | [optional] 
 
 ## Methods
 
@@ -25,22 +26,47 @@ NewInlineResponse2001WithDefaults instantiates a new InlineResponse2001 object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
+### GetPagination
+
+`func (o *InlineResponse2001) GetPagination() Pagination`
+
+GetPagination returns the Pagination field if non-nil, zero value otherwise.
+
+### GetPaginationOk
+
+`func (o *InlineResponse2001) GetPaginationOk() (*Pagination, bool)`
+
+GetPaginationOk returns a tuple with the Pagination field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPagination
+
+`func (o *InlineResponse2001) SetPagination(v Pagination)`
+
+SetPagination sets Pagination field to given value.
+
+### HasPagination
+
+`func (o *InlineResponse2001) HasPagination() bool`
+
+HasPagination returns a boolean if a field has been set.
+
 ### GetData
 
-`func (o *InlineResponse2001) GetData() ExchangeRates`
+`func (o *InlineResponse2001) GetData() []map[string]interface{}`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *InlineResponse2001) GetDataOk() (*ExchangeRates, bool)`
+`func (o *InlineResponse2001) GetDataOk() (*[]map[string]interface{}, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *InlineResponse2001) SetData(v ExchangeRates)`
+`func (o *InlineResponse2001) SetData(v []map[string]interface{})`
 
 SetData sets Data field to given value.
 

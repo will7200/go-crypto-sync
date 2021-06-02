@@ -16,7 +16,8 @@ import (
 
 // InlineResponse2001 struct for InlineResponse2001
 type InlineResponse2001 struct {
-	Data *ExchangeRates `json:"data,omitempty"`
+	Pagination *Pagination               `json:"pagination,omitempty"`
+	Data       *[]map[string]interface{} `json:"data,omitempty"`
 }
 
 // NewInlineResponse2001 instantiates a new InlineResponse2001 object
@@ -36,10 +37,42 @@ func NewInlineResponse2001WithDefaults() *InlineResponse2001 {
 	return &this
 }
 
+// GetPagination returns the Pagination field value if set, zero value otherwise.
+func (o *InlineResponse2001) GetPagination() Pagination {
+	if o == nil || o.Pagination == nil {
+		var ret Pagination
+		return ret
+	}
+	return *o.Pagination
+}
+
+// GetPaginationOk returns a tuple with the Pagination field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InlineResponse2001) GetPaginationOk() (*Pagination, bool) {
+	if o == nil || o.Pagination == nil {
+		return nil, false
+	}
+	return o.Pagination, true
+}
+
+// HasPagination returns a boolean if a field has been set.
+func (o *InlineResponse2001) HasPagination() bool {
+	if o != nil && o.Pagination != nil {
+		return true
+	}
+
+	return false
+}
+
+// SetPagination gets a reference to the given Pagination and assigns it to the Pagination field.
+func (o *InlineResponse2001) SetPagination(v Pagination) {
+	o.Pagination = &v
+}
+
 // GetData returns the Data field value if set, zero value otherwise.
-func (o *InlineResponse2001) GetData() ExchangeRates {
+func (o *InlineResponse2001) GetData() []map[string]interface{} {
 	if o == nil || o.Data == nil {
-		var ret ExchangeRates
+		var ret []map[string]interface{}
 		return ret
 	}
 	return *o.Data
@@ -47,7 +80,7 @@ func (o *InlineResponse2001) GetData() ExchangeRates {
 
 // GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InlineResponse2001) GetDataOk() (*ExchangeRates, bool) {
+func (o *InlineResponse2001) GetDataOk() (*[]map[string]interface{}, bool) {
 	if o == nil || o.Data == nil {
 		return nil, false
 	}
@@ -63,13 +96,16 @@ func (o *InlineResponse2001) HasData() bool {
 	return false
 }
 
-// SetData gets a reference to the given ExchangeRates and assigns it to the Data field.
-func (o *InlineResponse2001) SetData(v ExchangeRates) {
+// SetData gets a reference to the given []map[string]interface{} and assigns it to the Data field.
+func (o *InlineResponse2001) SetData(v []map[string]interface{}) {
 	o.Data = &v
 }
 
 func (o InlineResponse2001) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
+	if o.Pagination != nil {
+		toSerialize["pagination"] = o.Pagination
+	}
 	if o.Data != nil {
 		toSerialize["data"] = o.Data
 	}

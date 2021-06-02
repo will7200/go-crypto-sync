@@ -16,7 +16,7 @@ import (
 
 // InlineResponse2002 struct for InlineResponse2002
 type InlineResponse2002 struct {
-	Data *CurrencyExchange `json:"data,omitempty"`
+	Data *ExchangeRates `json:"data,omitempty"`
 }
 
 // NewInlineResponse2002 instantiates a new InlineResponse2002 object
@@ -37,9 +37,9 @@ func NewInlineResponse2002WithDefaults() *InlineResponse2002 {
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
-func (o *InlineResponse2002) GetData() CurrencyExchange {
+func (o *InlineResponse2002) GetData() ExchangeRates {
 	if o == nil || o.Data == nil {
-		var ret CurrencyExchange
+		var ret ExchangeRates
 		return ret
 	}
 	return *o.Data
@@ -47,7 +47,7 @@ func (o *InlineResponse2002) GetData() CurrencyExchange {
 
 // GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InlineResponse2002) GetDataOk() (*CurrencyExchange, bool) {
+func (o *InlineResponse2002) GetDataOk() (*ExchangeRates, bool) {
 	if o == nil || o.Data == nil {
 		return nil, false
 	}
@@ -63,8 +63,8 @@ func (o *InlineResponse2002) HasData() bool {
 	return false
 }
 
-// SetData gets a reference to the given CurrencyExchange and assigns it to the Data field.
-func (o *InlineResponse2002) SetData(v CurrencyExchange) {
+// SetData gets a reference to the given ExchangeRates and assigns it to the Data field.
+func (o *InlineResponse2002) SetData(v ExchangeRates) {
 	o.Data = &v
 }
 
