@@ -120,6 +120,8 @@ decimals = 18
 
 [holdings.binance-us]
 debug = false
+# Time Window in milliseconds recvWindow for Binance
+recvWindow = 9000
 apiKey = "some-api-key"
 secret = "some-secret"
 

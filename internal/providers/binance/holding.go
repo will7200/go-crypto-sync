@@ -29,10 +29,11 @@ func init() {
 }
 
 type Data struct {
-	ApiKey  string `mapstructure:"apiKey"`
-	Secret  string `mapstructure:"secret"`
-	BaseURL string `mapstructure:"baseUrl"`
-	Debug   bool   `mapstructure:"debug"`
+	ApiKey     string `mapstructure:"apiKey"`
+	Secret     string `mapstructure:"secret"`
+	BaseURL    string `mapstructure:"baseUrl"`
+	Debug      bool   `mapstructure:"debug"`
+	RecvWindow int    `mapstructure:"recvWindow"`
 }
 
 func (d *Data) SetDefaults(p *Provider) {
@@ -41,6 +42,9 @@ func (d *Data) SetDefaults(p *Provider) {
 		d.BaseURL = "api.binance.com"
 	case "binance-us":
 		d.BaseURL = "api.binance.us"
+	}
+	if d.RecvWindow == 0 {
+		d.RecvWindow = 10000
 	}
 }
 
@@ -190,7 +194,7 @@ func generateSignature(message, secret string) (string, error) {
 }
 
 func (p *Provider) GetHoldings() (providers.Holdings, error) {
-	account, _, err := p.client.TradeApi.ApiV3AccountGet(context.Background()).RecvWindow(10000).Execute()
+	account, _, err := p.client.TradeApi.ApiV3AccountGet(context.Background()).RecvWindow(int32(p.data.RecvWindow)).Execute()
 	if err != nil {
 		return nil, err
 	}
