@@ -279,6 +279,7 @@ func Sync(params SyncParams, cfg *personalcapital.Configuration, holds providers
 		switch value.Result() {
 		case providers.ExistsInBoth, providers.ExistsInTargetOnly:
 			d := holdingRequest.(personalcapital.HoldingsUpdateRequest)
+			d.Description = fmt.Sprintf("%s - %s actual shares", target.CurrencySymbolName(), quantity.StringFixed(10))
 			d.Value = v.StringFixed(2)
 			if quantity.GreaterThan(decimal.NewFromFloat(1)) {
 				d.Quantity = quantity.StringFixed(2)
