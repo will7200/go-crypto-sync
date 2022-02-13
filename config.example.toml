@@ -88,6 +88,10 @@ onHoldingNotFound = "zeroQuantity"
     debug = true
     platforms = ["pancake"]
     walletAddresses = ["0xSomeWalletAddress"]
+
+    [holdings.flatfile]
+    debug = true
+    filename = "manual_holdings.csv"
 [destinations]
     [destinations.personalcapital]
     email = "example@email.com"

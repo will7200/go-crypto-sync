@@ -16,18 +16,18 @@ Sync your Cryptocurrency Holdings to a Personal Capital Account
 
 ## Matrix Support
 
-|             | holdings           | pricing            |
-|:------------|:-------------------|:-------------------|
-| binance     | :heavy_check_mark: | :heavy_check_mark: |
-| bscscan     | :heavy_check_mark: | :x:                |
-| coinbase    | :heavy_check_mark: | :heavy_check_mark: |
-| coinbasepro | :heavy_check_mark: | :x:                |
-| coinex      | :heavy_check_mark: | :x:                |
-| coingecko   | :x:                | :heavy_check_mark: |
-| etherscan   | :heavy_check_mark: | :x:                |
-| nomics      | :x:                | :heavy_check_mark: |
-| yieldwatch  | :heavy_check_mark: | :x:                |
-
+|                | holdings           | pricing            |
+|:---------------|:-------------------|:-------------------|
+| binance        | :heavy_check_mark: | :heavy_check_mark: |
+| bscscan        | :heavy_check_mark: | :x:                |
+| coinbase       | :heavy_check_mark: | :heavy_check_mark: |
+| coinbasepro    | :heavy_check_mark: | :x:                |
+| coinex         | :heavy_check_mark: | :x:                |
+| coingecko      | :x:                | :heavy_check_mark: |
+| etherscan      | :heavy_check_mark: | :x:                |
+| nomics         | :x:                | :heavy_check_mark: |
+| yieldwatch     | :heavy_check_mark: | :x:                |
+| flatfile (csv) | :heavy_check_mark: | :x:                |
 
 ## Getting Started
 
@@ -139,6 +139,9 @@ secretKey = "someSecretKey"
 debug = true
 platforms = ["pancake"]
 walletAddresses = ["0xSomeWalletAddress"]
+[holdings.flatfile]
+debug = true
+filename = "manual_holdings.csv"
 [destinations]
 [destinations.personalcapital]
 email = "example@email.com"
