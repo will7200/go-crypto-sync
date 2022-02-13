@@ -21,6 +21,7 @@ import (
 	_ "github.com/will7200/go-crypto-sync/internal/providers/coingecko"
 	_ "github.com/will7200/go-crypto-sync/internal/providers/flatfile"
 	_ "github.com/will7200/go-crypto-sync/internal/providers/nomics"
+	_ "github.com/will7200/go-crypto-sync/internal/providers/ravencoin"
 	_ "github.com/will7200/go-crypto-sync/internal/providers/yieldwatch"
 )
 
