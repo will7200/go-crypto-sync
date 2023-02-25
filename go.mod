@@ -15,7 +15,7 @@ require (
 	github.com/stretchr/testify v1.5.1
 	go.uber.org/zap v1.16.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/sys v0.0.0-20190412213103-97732733099d
+	golang.org/x/sys v0.1.0
 )
 
 replace github.com/nanmu42/etherscan-api v1.2.0 => github.com/will7200/etherscan-api v1.2.1-0.20210516225556-39daf32d6557
